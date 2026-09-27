@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Platform Pembelajaran Interaktif Array: Dasar Array, Pengondisian Bertingkat (Nested If), Pengulangan Bersarang (Nested Loop), dan Latihan Praktik Koding langsung di browser.">
+  <meta name="keywords" content="belajar array, dasar array, nested if, nested loop, pengondisian bertingkat, pengulangan bersarang, latihan praktik koding">
+  <meta name="author" content="Belajar Array Academy">
+  <title>🧩 Belajar Array - Dasar Array, Nested If & Nested Loop</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-navbar">
+    <div class="brand-wrap">
+      <div class="brand-logo-icon">🧩</div>
+      <div>
+        <div class="brand-name">Belajar Array</div>
+      </div>
+    </div>
+
+    <!-- Progress Tracker di Header -->
+    <div class="header-progress-wrap">
+      <div class="header-progress-label">
+        <span>Kemajuan Belajar</span>
+        <span id="overallProgressText">0% Selesai</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-bar-glow" id="overallProgressBar" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="nav-actions">
+      <!-- Language Switcher: JS vs Python -->
+      <div class="lang-switch-group">
+        <button class="lang-pill-btn active" id="btnLangJs" onclick="App.setLanguage('js')" title="Mode JavaScript">⚡ JavaScript</button>
+        <button class="lang-pill-btn" id="btnLangPy" onclick="App.setLanguage('py')" title="Mode Python">🐍 Python</button>
+      </div>
+
+      <!-- Theme Switcher Button -->
+      <button class="btn btn-sm btn-outline theme-toggle-btn" id="themeToggleBtn" onclick="App.toggleTheme()" title="Ganti tema terang/gelap">
+        <span id="themeToggleIcon">🌓</span> <span id="themeToggleText">Ganti tema terang/gelap</span>
+      </button>
+
+      <button class="btn btn-sm btn-secondary" onclick="App.openSandbox()" title="Buka editor kode bebas">
+        <span>💻 Sandbox</span>
+      </button>
+      <button class="btn btn-sm btn-outline disabled" id="btnClaimCert" onclick="App.openCertificateModal()" title="Selesaikan latihan untuk mengklaim sertifikat">
+        <span>🎓 E-Sertifikat</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Application Layout -->
+  <main class="main-layout">
+    <!-- Left Sidebar: Curriculum Modules -->
+    <aside class="curriculum-sidebar">
+      <div class="sidebar-title-row">
+        <span class="sidebar-heading">Menu Pembelajaran</span>
+      </div>
+      <ul class="curriculum-nav" id="curriculumList">
+        <!-- Rendered dynamically by app.js: 1. Dasar Array, 2. Nested If, 3. Nested Loop, 4. Latihan Praktik -->
+      </ul>
+
+      <div class="sidebar-card-info" style="margin-top: auto; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+        <button class="btn btn-sm btn-outline" style="width: 100%; margin-bottom: 0.75rem; justify-content: center;" onclick="App.toggleTheme()">
+          🌓 Ganti tema terang/gelap
+        </button>
+        <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6;">
+          🧩 <strong>4 Materi Inti:</strong><br>
+          1. Dasar Array<br>
+          2. Nested If<br>
+          3. Nested Loop<br>
+          4. Latihan Praktik
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center/Right: Interactive Content Viewport -->
+    <article class="content-viewport" id="moduleContentArea">
+      <!-- Konten modul dan visualizer di-render oleh app.js -->
+    </article>
+  </main>
+
+  <!-- MODAL 1: SANDBOX / PLAYGROUND BEBAS PYTHON -->
+  <div class="modal-overlay" id="sandboxModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>💻 Sandbox Bebas Python (Eksperimen Mandiri)</h3>
+        <button class="modal-close-btn" onclick="App.closeSandbox()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+          Tulis kode Python apa pun untuk mencoba List, perulangan bersarang (Nested Loop), atau percabangan bertingkat (Nested If). Output <code>print()</code> akan langsung tampil di konsol terminal di bawah.
+        </p>
+
+        <div class="code-editor-box">
+          <div class="editor-topbar">
+            <span class="filename">sandbox.py</span>
+            <button class="btn btn-xs btn-primary" onclick="App.runSandboxCode()">▶️ Jalankan Kode Python</button>
+          </div>
+          <div class="editor-area-wrap">
+            <textarea id="sandboxEditor" class="ide-textarea" rows="11" spellcheck="false"># Coba eksperimen kode Python di sini:
+matriks = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+print("Menelusuri matriks 2D dengan Nested Loop & Nested If:")
+for i in range(len(matriks)):
+    for j in range(len(matriks[i])):
+        nilai = matriks[i][j]
+        # Nested If di Python:
+        if nilai > 2:
+            if nilai % 2 == 0:
+                print(f"Angka genap > 2 ditemukan: {nilai} pada baris {i}, kolom {j}")</textarea>
+          </div>
+          <div class="console-terminal">
+            <div class="terminal-bar">Output Konsol Python:</div>
+            <div class="terminal-body" id="sandboxOutput">
+              <div class="term-line term-muted">Tekan "Jalankan Kode Python" untuk melihat hasil eksekusi.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: E-SERTIFIKAT KELULUSAN PYTHON -->
+  <div class="modal-overlay" id="certificateModal">
+    <div class="modal-card" style="max-width: 850px;">
+      <div class="modal-header">
+        <h3>🎓 Sertifikat Kelulusan Pemrograman Python</h3>
+        <button class="modal-close-btn" onclick="App.closeCertificateModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="cert-input-wrap" style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1.5rem;">
+          <label style="font-weight: 600; font-size: 0.9rem;">Nama Lengkap Siswa:</label>
+          <input type="text" id="certStudentNameInput" class="vis-input" placeholder="Ketik nama Anda..." style="flex: 1;" oninput="App.updateCertificatePreview()">
+          <button class="btn btn-primary" onclick="App.printCertificate()">🖨️ Cetak / Simpan PDF</button>
+        </div>
+
+        <!-- Sertifikat Digital Elegan -->
+        <div class="certificate-preview-box" id="certificatePreviewArea">
+          <div class="cert-border-ornament"></div>
+          <div class="cert-watermark">SERTIFIKAT KOMPETENSI PYTHON</div>
+          <h2 class="cert-title">SERTIFIKAT PENGHARGAAN</h2>
+          <div class="cert-presented-to">Diberikan dengan bangga kepada:</div>
+          <div class="cert-student-name" id="certDisplayName">Siswa Python Berbakat</div>
+          <p class="cert-desc">
+            Telah berhasil mempelajari dan menuntaskan kurikulum interaktif: <strong>Dasar Array, Cara Membuat Array, Pengondisian Bertingkat (Nested If), dan Pengulangan Bersarang (Nested Loop) dalam Bahasa Python</strong>, serta menuntaskan seluruh tantangan latihan pemecahan masalah algoritma di ArrayMaster Python Academy.
+          </p>
+
+          <div class="cert-signatures">
+            <div class="sign-col">
+              <div class="sign-title">Tanggal Kelulusan</div>
+              <div class="sign-name" id="certDate">28 September 2026</div>
+            </div>
+            <div class="sign-col">
+              <div class="cert-badge-gold">🐍</div>
+              <div class="sign-title" style="margin-top: 0.5rem;">Verified Python Certificate</div>
+            </div>
+            <div class="sign-col">
+              <div class="sign-title">Dewan Instruktur</div>
+              <div class="sign-name">ArrayMaster Python Board</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: Skulpt Python In-Browser Engine -->
+  <script src="js/skulpt.min.js"></script>
+  <script src="js/skulpt-stdlib.js"></script>
+
+  <!-- Application Logic -->
+  <script src="js/data-modules.js"></script>
+  <script src="js/code-runner.js"></script>
+  <script src="js/visualizer.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

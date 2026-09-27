@@ -1,0 +1,63 @@
+# 🧩 Belajar Array - Platform Pembelajaran Interaktif
+
+Platform web pembelajaran interaktif materi **Array / List**, **Pengondisian Bertingkat (Nested If)**, dan **Pengulangan Bersarang (Nested Loop)** sesuai standar kurikulum Informatika / Koding SMA/MA Kelas X.
+
+Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan otomatis (*automated unit tests*), dan dukungan dual-bahasa (**JavaScript ⚡** dan **Python 🐍**).
+
+---
+
+## 📚 Menu & Struktur Kurikulum
+
+1. **1. Dasar Array**
+   - Pengertian array dan konsep indeks mulai dari 0.
+   - Cara membuat dan mengakses elemen array.
+   - Perulangan isi array menggunakan loop `for`.
+   - Konsep matriks / Array 2 Dimensi.
+   - Operasi penjumlahan elemen array (`A[1] + A[3]`).
+   - Visualizer memori interaktif & box tantangan *"Coba sendiri: Cetak semua nama siswa"*.
+
+2. **2. Nested If (Pengondisian Bertingkat)**
+   - Pengertian percabangan di dalam percabangan.
+   - Bentuk algoritma dan cara kerja pohon keputusan (*decision tree*).
+   - Contoh penentuan predikat nilai (A, B, C, D).
+   - Contoh sistem pakar *rule-based* diagnosa kesehatan AI.
+   - Simulator interaktif kondisi kelulusan.
+
+3. **3. Nested Loop (Pengulangan Bersarang)**
+   - Pengertian *outer loop* dan *inner loop*.
+   - Algoritma pembuatan tabel perkalian matriks ($1 \times 1$ s.d. $3 \times 5$).
+   - Penelusuran koordinat baris & kolom matriks 2D.
+   - Konsep algoritma *Searching* (*Sequential Search*, *Binary Search*) dan *Sorting* (*Selection*, *Insertion*).
+   - Simulator visualisasi traversal sel matriks.
+
+4. **4. Latihan Praktik Koding**
+   - 6 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
+     - **Latihan 1:** Operasi Penjumlahan dalam Array (Hal. 47)
+     - **Latihan 2:** Aktivitas Mandiri AP-K10-07 Kelulusan Siswa (Hal. 56)
+     - **Latihan 3:** Algoritma Predikat Nilai Akhir (Hal. 48)
+     - **Latihan 4:** Cetak Tabel Perkalian Matriks (Hal. 49)
+     - **Latihan 5:** Sequential Search pada Array (Hal. 50-51)
+     - **Latihan 6:** Rule-Based Diagnosa AI Kesehatan (Hal. 57-58)
+
+---
+
+## ✨ Fitur Unggulan
+
+- **Dual-Engine (JavaScript & Python):** Siswa dapat beralih bahasa kapan saja hanya dengan 1 klik.
+- **Eksekusi 100% di Browser:** Menggunakan JavaScript Native dan Skulpt Python Engine tanpa perlu install compiler di PC siswa.
+- **🌓 Tema Gelap / Terang (Dark / Light Mode):** Tampilan ramah mata dengan kontras tinggi di setiap tema.
+- **💻 Sandbox Bebas:** Ruang bereksperimen mengetik dan menjalankan kode apa saja.
+- **🎓 E-Sertifikat Kelulusan:** Terbuka otomatis setelah siswa menyelesaikan minimal 4 latihan dan dapat langsung dicetak atau disimpan sebagai PDF.
+
+---
+
+## 🚀 Cara Menjalankan Secara Lokal
+
+Cukup buka file `index.html` di browser web favorit Anda, atau gunakan web server lokal (seperti XAMPP, Live Server, atau Python):
+
+```bash
+# Menggunakan Python HTTP Server
+python -m http.server 3000
+```
+
+Buka browser di `http://localhost:3000/`.
