@@ -2,10 +2,10 @@
  * data-modules.js
  * Modul Pembelajaran Interaktif Resmi:
  * 1. Dasar Array
- * 2. Algoritma Pencarian (Sequential Search)
- * 3. Nested If
- * 4. Nested Loop
- * 5. Latihan Praktik
+ * 2. Nested If
+ * 3. Nested Loop
+ * 4. Latihan Praktik
+ * 5. Algoritma Pencarian (Sequential Search)
  */
 
 const CURRICULUM_DATA = [
@@ -114,8 +114,290 @@ for i in range(len(siswa)):
   },
 
   {
+    id: "modul-2",
+    badge: "2. Nested If",
+    title: "Nested If (Pengondisian Bertingkat)",
+    subtitle: "Satu pernyataan if berada di dalam blok if atau else lainnya untuk pengambilan keputusan kompleks",
+    readTime: "12 menit baca & praktik",
+    summary: "Nested if memungkinkan pengambilan keputusan berlapis ketika sebuah keputusan bergantung pada hasil keputusan sebelumnya. Pelajari cara kerja, algoritma predikat nilai akhir, dan sistem rule-based.",
+    sections: [
+      {
+        heading: "1. Pengertian & Cara Kerja Nested If",
+        content: `
+          <p><strong>Nested if</strong> adalah sebuah struktur pengondisian di dalam pemrograman. Satu pernyataan <code>if</code> berada di dalam blok <code>if</code> atau <code>else</code> lainnya, sehingga memungkinkan pengambilan keputusan yang lebih kompleks dan bertingkat.</p>
+          <p>Struktur ini berguna ketika sebuah keputusan bergantung pada hasil dari keputusan sebelumnya.</p>
+          <div class="alert-box tip">
+            <span class="icon">🔄</span>
+            <div><strong>Cara Kerja:</strong> Ketika program menemukan pernyataan if, program memeriksa apakah kondisi tersebut benar atau salah. Jika benar, kode di dalam blok if dijalankan. Jika di dalamnya terdapat if lain, program lanjut memeriksa kondisi baru tersebut. Jika kondisi awal tidak terpenuhi, program beralih ke blok else.</div>
+          </div>
+        `
+      },
+      {
+        heading: "2. Bentuk Algoritma Nested If",
+        content: `
+          <div class="code-preview">
+            <pre><code>if (kondisi pertama) then
+    if (kondisi kedua) then
+        ……………..
+        ……………..
+    endIf
+endIf</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "3. Contoh Algoritma Prediksi Nilai Akhir",
+        content: `
+          <div class="code-preview">
+            <pre><code class="lang-code-block" data-lang="js">let nilai = 82;
+let predikat = "";
+
+if (nilai >= 90) {
+  predikat = "A";
+} else if (nilai >= 75) {
+  predikat = "B";
+} else if (nilai >= 60) {
+  predikat = "C";
+} else {
+  predikat = "D";
+}
+
+console.log("Predikat nilai: " + predikat); // Output: B</code>
+<code class="lang-code-block" data-lang="py" style="display:none;">nilai = 82
+
+if nilai >= 90:
+    predikat = "A"
+elif nilai >= 75:
+    predikat = "B"
+elif nilai >= 60:
+    predikat = "C"
+else:
+    predikat = "D"
+
+print(f"Predikat nilai: {predikat}") # Output: B</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "4. Algoritma Rule-Based Kecerdasan Artifisial",
+        content: `
+          <p>Sistem berbasis aturan (<em>Rule-Based AI</em>) menggunakan struktur nested if bertingkat untuk mengambil keputusan medis berdasarkan suhu badan, gejala batuk, dan sakit kepala:</p>
+          <div class="code-preview">
+            <pre><code class="lang-code-block" data-lang="js">let suhubadan = 38.2;
+let batuk = "ya";
+let sakitkepala = "ya";
+
+if (suhubadan > 37.5) {
+  if (batuk === "ya") {
+    if (sakitkepala === "ya") {
+      console.log("Diagnosa: Flu atau Infeksi Virus");
+    } else {
+      console.log("Diagnosa: Demam dan Batuk");
+    }
+  } else {
+    if (sakitkepala === "ya") {
+      console.log("Diagnosa: Demam biasa");
+    } else {
+      console.log("Diagnosa: Demam ringan");
+    }
+  }
+} else {
+  console.log("Kondisi suhu normal.");
+}</code>
+<code class="lang-code-block" data-lang="py" style="display:none;">suhubadan = 38.2
+batuk = "ya"
+sakitkepala = "ya"
+
+if suhubadan > 37.5:
+    if batuk == "ya":
+        if sakitkepala == "ya":
+            print("Diagnosa: Flu atau Infeksi Virus")
+        else:
+            print("Diagnosa: Demam dan Batuk")
+    else:
+        if sakitkepala == "ya":
+            print("Diagnosa: Demam biasa")
+        else:
+            print("Diagnosa: Demam ringan")
+else:
+    print("Kondisi suhu normal.")</code></pre>
+          </div>
+        `
+      }
+    ],
+    interactiveTool: "nested-if-simulator",
+    cobaSendiri: {
+      id: "coba_nested_if",
+      title: "Coba sendiri: Pengecekan Kelulusan Bertingkat",
+      description: "Cek kelulusan peserta: jika kehadiran >= 80%, periksa nilai jika >= 75 maka 'LULUS', selain itu 'TIDAK LULUS'.",
+      starterCodeJs: `let nilai = 85;
+let kehadiran = 90;
+
+// Gunakan Nested If:
+if (kehadiran >= 80) {
+  if (nilai >= 75) {
+    console.log("Status: LULUS!");
+  } else {
+    console.log("Status: TIDAK LULUS (Nilai kurang)");
+  }
+} else {
+  console.log("Status: TIDAK LULUS (Kehadiran kurang)");
+}`,
+      starterCodePy: `nilai = 85
+kehadiran = 90
+
+# Gunakan Nested If di Python:
+if kehadiran >= 80:
+    if nilai >= 75:
+        print("Status: LULUS!")
+    else:
+        print("Status: TIDAK LULUS (Nilai kurang)")
+else:
+    print("Status: TIDAK LULUS (Kehadiran kurang)")`,
+      hint: "Periksa `kehadiran >= 80` di tingkat luar. Di dalam bloknya, buat kondisi kedua `if (nilai >= 75)` untuk menentukan status kelulusan."
+    }
+  },
+
+  {
+    id: "modul-3",
+    badge: "3. Nested Loop",
+    title: "Nested Loop (Pengulangan Bersarang)",
+    subtitle: "Satu pengulangan di dalam pengulangan lainnya untuk tabel perkalian, matriks, searching, dan sorting",
+    readTime: "15 menit baca & praktik",
+    summary: "Saat loop luar berjalan sekali, loop dalam berjalan sepenuhnya sebelum loop luar berlanjut. Pelajari penerapannya pada tabel perkalian, matriks 2D, sequential search, dan sorting.",
+    sections: [
+      {
+        heading: "1. Pengertian & Cara Kerja Nested Loop",
+        content: `
+          <p><strong>Pengulangan bersarang atau nested loop</strong> adalah struktur kontrol yang terdiri atas satu pengulangan (loop) di dalam pengulangan lainnya.</p>
+          <p>Saat loop luar berjalan sekali, loop dalam akan berjalan sepenuhnya sebelum loop luar melanjutkan ke iterasi berikutnya.</p>
+          <div class="code-preview">
+            <pre><code>for i = 1 to n do
+    for j = 1 to n do
+        ……………..
+        ……………..
+    endFor
+endFor</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "2. Contoh: Algoritma Cetak Tabel Perkalian",
+        content: `
+          <p>Mencetak hasil perkalian dari 1 hingga 3 terhadap 1 hingga 5 menghasilkan:</p>
+          <div class="table-responsive">
+            <table class="modern-table" style="text-align: center;">
+              <tbody>
+                <tr><td><strong>1</strong></td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+                <tr><td><strong>2</strong></td><td>4</td><td>6</td><td>8</td><td>10</td></tr>
+                <tr><td><strong>3</strong></td><td>6</td><td>9</td><td>12</td><td>15</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="code-preview">
+            <pre><code class="lang-code-block" data-lang="js">for (let i = 1; i <= 3; i++) {
+  let baris = "";
+  for (let j = 1; j <= 5; j++) {
+    let hasil = i * j;
+    baris += hasil + " ";
+  }
+  console.log(baris);
+}</code>
+<code class="lang-code-block" data-lang="py" style="display:none;">for i in range(1, 4):
+    baris = ""
+    for j in range(1, 6):
+        hasil = i * j
+        baris += f"{hasil} "
+    print(baris)</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "3. Penelusuran Matriks 2 Dimensi (Baris & Kolom)",
+        content: `
+          <p>Kombinasi nested loop sangat ampuh untuk membaca koordinat matriks 2 dimensi baris demi baris:</p>
+          <div class="code-preview">
+            <pre><code class="lang-code-block" data-lang="js">let matriks = [
+  [10, 20, 30],
+  [40, 50, 60]
+];
+
+for (let i = 0; i < matriks.length; i++) {
+  for (let j = 0; j < matriks[i].length; j++) {
+    console.log("Matriks [" + i + "][" + j + "] = " + matriks[i][j]);
+  }
+}</code>
+<code class="lang-code-block" data-lang="py" style="display:none;">matriks = [
+    [10, 20, 30],
+    [40, 50, 60]
+]
+
+for i in range(len(matriks)):
+    for j in range(len(matriks[i])):
+        print(f"Matriks [{i}][{j}] = {matriks[i][j]}")</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "4. Algoritma Searching & Sorting pada Array",
+        content: `
+          <p><strong>Sequential Search:</strong> Memeriksa elemen satu per satu dari awal sampai ketemu.</p>
+          <p><strong>Binary Search:</strong> Membagi dua array secara berulang pada data yang sudah terurut.</p>
+          <p><strong>Selection Sort:</strong> Memilih elemen terkecil lalu menukarnya ke posisi awal.</p>
+          <p><strong>Insertion Sort:</strong> Menyisipkan elemen ke posisi yang tepat seperti menyusun kartu di tangan.</p>
+        `
+      }
+    ],
+    interactiveTool: "nested-loop-visualizer",
+    cobaSendiri: {
+      id: "coba_perkalian",
+      title: "Coba sendiri: Cetak Pola Perkalian",
+      description: "Gunakan nested loop for i dan for j untuk mencetak tabel perkalian 1 s.d. 3 dikali 1 s.d. 3.",
+      starterCodeJs: `for (let i = 1; i <= 3; i++) {
+  let baris = "";
+  for (let j = 1; j <= 3; j++) {
+    baris += (i * j) + " ";
+  }
+  console.log(baris);
+}`,
+      starterCodePy: `for i in range(1, 4):
+    baris = ""
+    for j in range(1, 4):
+        baris += f"{i * j} "
+    print(baris)`,
+      hint: "Outer loop `for i` mengontrol baris dari 1 sampai 3. Inner loop `for j` mengontrol kolom dari 1 sampai 3. Cetak hasil perkalian `i * j`."
+    }
+  },
+
+  {
+    id: "modul-4",
+    badge: "4. Latihan Praktik",
+    title: "Latihan Praktik Koding",
+    subtitle: "Praktekkan langsung keahlian koding Anda dengan sistem verifikasi otomatis!",
+    readTime: "Praktik Mengetik & Uji Solusi",
+    summary: "Selesaikan 6 tantangan koding terstruktur: operasi array, evaluasi kelulusan nested if, predikat nilai, tabel perkalian matriks, sequential search, dan sistem rule-based diagnosis AI.",
+    sections: [
+      {
+        heading: "Ayo Berlatih! Ruang Latihan Koding Mandiri",
+        content: `
+          <p>Pilih nomor latihan di bawah ini untuk mulai mengetik kode Anda dan mengujinya dengan tombol <strong>"🧪 Cek Jawaban & Uji Solusi"</strong>:</p>
+          <ul>
+            <li><strong>Latihan 1:</strong> Operasi Penjumlahan dalam Array</li>
+            <li><strong>Latihan 2:</strong> Evaluasi Kelulusan Siswa (Nested If)</li>
+            <li><strong>Latihan 3:</strong> Algoritma Predikat Nilai Akhir</li>
+            <li><strong>Latihan 4:</strong> Nested Loop Cetak Tabel Perkalian Matriks</li>
+            <li><strong>Latihan 5:</strong> Algoritma Pencarian Sequential Search pada Array</li>
+            <li><strong>Latihan 6:</strong> Algoritma Rule-Based Diagnosa Kesehatan AI</li>
+          </ul>
+        `
+      }
+    ],
+    interactiveTool: "coding-lab"
+  },
+
+  {
     id: "modul-searching",
-    badge: "2. Algoritma Pencarian",
+    badge: "5. Algoritma Pencarian",
     title: "Algoritma Pencarian (Searching) - Sequential Search",
     subtitle: "Sequential Search (Linear Search) memeriksa elemen array satu per satu dari indeks pertama sampai dengan elemen terakhir",
     readTime: "12 menit baca & praktik",
@@ -265,288 +547,6 @@ if posisi == -1:
     print("Tidak ketemu")`,
       hint: "Periksa kondisi `A[i] === x` di dalam loop for. Jika cocok, simpan `posisi = i` lalu panggil `break`. Setelah loop berakhir, jika `posisi === -1` cetak 'Tidak ketemu'."
     }
-  },
-
-  {
-    id: "modul-2",
-    badge: "3. Nested If",
-    title: "Nested If (Pengondisian Bertingkat)",
-    subtitle: "Satu pernyataan if berada di dalam blok if atau else lainnya untuk pengambilan keputusan kompleks",
-    readTime: "12 menit baca & praktik",
-    summary: "Nested if memungkinkan pengambilan keputusan berlapis ketika sebuah keputusan bergantung pada hasil keputusan sebelumnya. Pelajari cara kerja, algoritma predikat nilai akhir, dan sistem rule-based.",
-    sections: [
-      {
-        heading: "1. Pengertian & Cara Kerja Nested If",
-        content: `
-          <p><strong>Nested if</strong> adalah sebuah struktur pengondisian di dalam pemrograman. Satu pernyataan <code>if</code> berada di dalam blok <code>if</code> atau <code>else</code> lainnya, sehingga memungkinkan pengambilan keputusan yang lebih kompleks dan bertingkat.</p>
-          <p>Struktur ini berguna ketika sebuah keputusan bergantung pada hasil dari keputusan sebelumnya.</p>
-          <div class="alert-box tip">
-            <span class="icon">🔄</span>
-            <div><strong>Cara Kerja:</strong> Ketika program menemukan pernyataan if, program memeriksa apakah kondisi tersebut benar atau salah. Jika benar, kode di dalam blok if dijalankan. Jika di dalamnya terdapat if lain, program lanjut memeriksa kondisi baru tersebut. Jika kondisi awal tidak terpenuhi, program beralih ke blok else.</div>
-          </div>
-        `
-      },
-      {
-        heading: "2. Bentuk Algoritma Nested If",
-        content: `
-          <div class="code-preview">
-            <pre><code>if (kondisi pertama) then
-    if (kondisi kedua) then
-        ……………..
-        ……………..
-    endIf
-endIf</code></pre>
-          </div>
-        `
-      },
-      {
-        heading: "3. Contoh Algoritma Prediksi Nilai Akhir",
-        content: `
-          <div class="code-preview">
-            <pre><code class="lang-code-block" data-lang="js">let nilai = 82;
-let predikat = "";
-
-if (nilai >= 90) {
-  predikat = "A";
-} else if (nilai >= 75) {
-  predikat = "B";
-} else if (nilai >= 60) {
-  predikat = "C";
-} else {
-  predikat = "D";
-}
-
-console.log("Predikat nilai: " + predikat); // Output: B</code>
-<code class="lang-code-block" data-lang="py" style="display:none;">nilai = 82
-
-if nilai >= 90:
-    predikat = "A"
-elif nilai >= 75:
-    predikat = "B"
-elif nilai >= 60:
-    predikat = "C"
-else:
-    predikat = "D"
-
-print(f"Predikat nilai: {predikat}") # Output: B</code></pre>
-          </div>
-        `
-      },
-      {
-        heading: "4. Algoritma Rule-Based Kecerdasan Artifisial",
-        content: `
-          <p>Sistem berbasis aturan (<em>Rule-Based AI</em>) menggunakan struktur nested if bertingkat untuk mengambil keputusan medis berdasarkan suhu badan, gejala batuk, dan sakit kepala:</p>
-          <div class="code-preview">
-            <pre><code class="lang-code-block" data-lang="js">let suhubadan = 38.2;
-let batuk = "ya";
-let sakitkepala = "ya";
-
-if (suhubadan > 37.5) {
-  if (batuk === "ya") {
-    if (sakitkepala === "ya") {
-      console.log("Diagnosa: Flu atau Infeksi Virus");
-    } else {
-      console.log("Diagnosa: Demam dan Batuk");
-    }
-  } else {
-    if (sakitkepala === "ya") {
-      console.log("Diagnosa: Demam biasa");
-    } else {
-      console.log("Diagnosa: Demam ringan");
-    }
-  }
-} else {
-  console.log("Kondisi suhu normal.");
-}</code>
-<code class="lang-code-block" data-lang="py" style="display:none;">suhubadan = 38.2
-batuk = "ya"
-sakitkepala = "ya"
-
-if suhubadan > 37.5:
-    if batuk == "ya":
-        if sakitkepala == "ya":
-            print("Diagnosa: Flu atau Infeksi Virus")
-        else:
-            print("Diagnosa: Demam dan Batuk")
-    else:
-        if sakitkepala == "ya":
-            print("Diagnosa: Demam biasa")
-        else:
-            print("Diagnosa: Demam ringan")
-else:
-    print("Kondisi suhu normal.")</code></pre>
-          </div>
-        `
-      }
-    ],
-    interactiveTool: "nested-if-simulator",
-    cobaSendiri: {
-      id: "coba_nested_if",
-      title: "Coba sendiri: Pengecekan Kelulusan Bertingkat",
-      description: "Cek kelulusan peserta: jika kehadiran >= 80%, periksa nilai jika >= 75 maka 'LULUS', selain itu 'TIDAK LULUS'.",
-      starterCodeJs: `let nilai = 85;
-let kehadiran = 90;
-
-// Gunakan Nested If:
-if (kehadiran >= 80) {
-  if (nilai >= 75) {
-    console.log("Status: LULUS!");
-  } else {
-    console.log("Status: TIDAK LULUS (Nilai kurang)");
-  }
-} else {
-  console.log("Status: TIDAK LULUS (Kehadiran kurang)");
-}`,
-      starterCodePy: `nilai = 85
-kehadiran = 90
-
-# Gunakan Nested If di Python:
-if kehadiran >= 80:
-    if nilai >= 75:
-        print("Status: LULUS!")
-    else:
-        print("Status: TIDAK LULUS (Nilai kurang)")
-else:
-    print("Status: TIDAK LULUS (Kehadiran kurang)")`,
-      hint: "Periksa `kehadiran >= 80` di tingkat luar. Di dalam bloknya, buat kondisi kedua `if (nilai >= 75)` untuk menentukan status kelulusan."
-    }
-  },
-
-  {
-    id: "modul-3",
-    badge: "4. Nested Loop",
-    title: "Nested Loop (Pengulangan Bersarang)",
-    subtitle: "Satu pengulangan di dalam pengulangan lainnya untuk tabel perkalian, matriks, searching, dan sorting",
-    readTime: "15 menit baca & praktik",
-    summary: "Saat loop luar berjalan sekali, loop dalam berjalan sepenuhnya sebelum loop luar berlanjut. Pelajari penerapannya pada tabel perkalian, matriks 2D, sequential search, dan sorting.",
-    sections: [
-      {
-        heading: "1. Pengertian & Cara Kerja Nested Loop",
-        content: `
-          <p><strong>Pengulangan bersarang atau nested loop</strong> adalah struktur kontrol yang terdiri atas satu pengulangan (loop) di dalam pengulangan lainnya.</p>
-          <p>Saat loop luar berjalan sekali, loop dalam akan berjalan sepenuhnya sebelum loop luar melanjutkan ke iterasi berikutnya.</p>
-          <div class="code-preview">
-            <pre><code>for i = 1 to n do
-    for j = 1 to n do
-        ……………..
-        ……………..
-    endFor
-endFor</code></pre>
-          </div>
-        `
-      },
-      {
-        heading: "2. Contoh: Algoritma Cetak Tabel Perkalian",
-        content: `
-          <p>Mencetak hasil perkalian dari 1 hingga 3 terhadap 1 hingga 5 menghasilkan:</p>
-          <div class="table-responsive">
-            <table class="modern-table" style="text-align: center;">
-              <tbody>
-                <tr><td><strong>1</strong></td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
-                <tr><td><strong>2</strong></td><td>4</td><td>6</td><td>8</td><td>10</td></tr>
-                <tr><td><strong>3</strong></td><td>6</td><td>9</td><td>12</td><td>15</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="code-preview">
-            <pre><code class="lang-code-block" data-lang="js">for (let i = 1; i <= 3; i++) {
-  let baris = "";
-  for (let j = 1; j <= 5; j++) {
-    let hasil = i * j;
-    baris += hasil + " ";
-  }
-  console.log(baris);
-}</code>
-<code class="lang-code-block" data-lang="py" style="display:none;">for i in range(1, 4):
-    baris = ""
-    for j in range(1, 6):
-        hasil = i * j
-        baris += f"{hasil} "
-    print(baris)</code></pre>
-          </div>
-        `
-      },
-      {
-        heading: "3. Penelusuran Matriks 2 Dimensi (Baris & Kolom)",
-        content: `
-          <p>Kombinasi nested loop sangat ampuh untuk membaca koordinat matriks 2 dimensi baris demi baris:</p>
-          <div class="code-preview">
-            <pre><code class="lang-code-block" data-lang="js">let matriks = [
-  [10, 20, 30],
-  [40, 50, 60]
-];
-
-for (let i = 0; i < matriks.length; i++) {
-  for (let j = 0; j < matriks[i].length; j++) {
-    console.log("Matriks [" + i + "][" + j + "] = " + matriks[i][j]);
-  }
-}</code>
-<code class="lang-code-block" data-lang="py" style="display:none;">matriks = [
-    [10, 20, 30],
-    [40, 50, 60]
-]
-
-for i in range(len(matriks)):
-    for j in range(len(matriks[i])):
-        print(f"Matriks [{i}][{j}] = {matriks[i][j]}")</code></pre>
-          </div>
-        `
-      },
-      {
-        heading: "4. Algoritma Searching & Sorting pada Array",
-        content: `
-          <p><strong>Sequential Search:</strong> Memeriksa elemen satu per satu dari awal sampai ketemu.</p>
-          <p><strong>Binary Search:</strong> Membagi dua array secara berulang pada data yang sudah terurut.</p>
-          <p><strong>Selection Sort:</strong> Memilih elemen terkecil lalu menukarnya ke posisi awal.</p>
-          <p><strong>Insertion Sort:</strong> Menyisipkan elemen ke posisi yang tepat seperti menyusun kartu di tangan.</p>
-        `
-      }
-    ],
-    interactiveTool: "nested-loop-visualizer",
-    cobaSendiri: {
-      id: "coba_perkalian",
-      title: "Coba sendiri: Cetak Pola Perkalian",
-      description: "Gunakan nested loop for i dan for j untuk mencetak tabel perkalian 1 s.d. 3 dikali 1 s.d. 3.",
-      starterCodeJs: `for (let i = 1; i <= 3; i++) {
-  let baris = "";
-  for (let j = 1; j <= 3; j++) {
-    baris += (i * j) + " ";
-  }
-  console.log(baris);
-}`,
-      starterCodePy: `for i in range(1, 4):
-    baris = ""
-    for j in range(1, 4):
-        baris += f"{i * j} "
-    print(baris)`,
-      hint: "Outer loop `for i` mengontrol baris dari 1 sampai 3. Inner loop `for j` mengontrol kolom dari 1 sampai 3. Cetak hasil perkalian `i * j`."
-    }
-  },
-
-  {
-    id: "modul-4",
-    badge: "5. Latihan Praktik",
-    title: "Latihan Praktik Koding",
-    subtitle: "Praktekkan langsung keahlian koding Anda dengan sistem verifikasi otomatis!",
-    readTime: "Praktik Mengetik & Uji Solusi",
-    summary: "Selesaikan 6 tantangan koding terstruktur: operasi array, evaluasi kelulusan nested if, predikat nilai, tabel perkalian matriks, sequential search, dan sistem rule-based diagnosis AI.",
-    sections: [
-      {
-        heading: "Ayo Berlatih! Ruang Latihan Koding Mandiri",
-        content: `
-          <p>Pilih nomor latihan di bawah ini untuk mulai mengetik kode Anda dan mengujinya dengan tombol <strong>"🧪 Cek Jawaban & Uji Solusi"</strong>:</p>
-          <ul>
-            <li><strong>Latihan 1:</strong> Operasi Penjumlahan dalam Array</li>
-            <li><strong>Latihan 2:</strong> Evaluasi Kelulusan Siswa (Nested If)</li>
-            <li><strong>Latihan 3:</strong> Algoritma Predikat Nilai Akhir</li>
-            <li><strong>Latihan 4:</strong> Nested Loop Cetak Tabel Perkalian Matriks</li>
-            <li><strong>Latihan 5:</strong> Algoritma Pencarian Sequential Search pada Array</li>
-            <li><strong>Latihan 6:</strong> Algoritma Rule-Based Diagnosa Kesehatan AI</li>
-          </ul>
-        `
-      }
-    ],
-    interactiveTool: "coding-lab"
   }
 ];
 

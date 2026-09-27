@@ -266,7 +266,7 @@ const App = (function () {
     `).join("");
 
     const prevBtn = idx > 0 ? `<button class="btn btn-outline" onclick="App.loadModule(${idx - 1})">&larr; Modul Sebelumnya</button>` : `<div></div>`;
-    const nextBtn = idx < CURRICULUM_DATA.length - 1 ? `<button class="btn btn-primary" onclick="App.loadModule(${idx + 1})">Lanjut Modul Berikutnya &rarr;</button>` : `<button class="btn btn-success" onclick="App.loadExercise(0)">Mulai Latihan Coding &rarr;</button>`;
+    const nextBtn = idx < CURRICULUM_DATA.length - 1 ? `<button class="btn btn-primary" onclick="App.loadModule(${idx + 1})">Lanjut Modul Berikutnya &rarr;</button>` : `<button class="btn btn-success" onclick="App.loadModule(3)">🎯 Buka Ruang Latihan Praktik &rarr;</button>`;
 
     contentArea.innerHTML = `
       <div class="module-header-hero">
