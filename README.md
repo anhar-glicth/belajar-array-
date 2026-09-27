@@ -1,6 +1,7 @@
 # 🧩 Belajar Array - Platform Pembelajaran Interaktif
+*by Muhammad Anhar Solihin*
 
-Platform web pembelajaran interaktif materi **Array / List**, **Pengondisian Bertingkat (Nested If)**, dan **Pengulangan Bersarang (Nested Loop)** sesuai standar kurikulum Informatika / Koding SMA/MA Kelas X.
+Platform web pembelajaran interaktif materi **Array / List**, **Pengondisian Bertingkat (Nested If)**, dan **Pengulangan Bersarang (Nested Loop)**.
 
 Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan otomatis (*automated unit tests*), dan dukungan dual-bahasa (**JavaScript ⚡** dan **Python 🐍**).
 
@@ -32,12 +33,12 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
 
 4. **4. Latihan Praktik Koding**
    - 6 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
-     - **Latihan 1:** Operasi Penjumlahan dalam Array (Hal. 47)
-     - **Latihan 2:** Aktivitas Mandiri AP-K10-07 Kelulusan Siswa (Hal. 56)
-     - **Latihan 3:** Algoritma Predikat Nilai Akhir (Hal. 48)
-     - **Latihan 4:** Cetak Tabel Perkalian Matriks (Hal. 49)
-     - **Latihan 5:** Sequential Search pada Array (Hal. 50-51)
-     - **Latihan 6:** Rule-Based Diagnosa AI Kesehatan (Hal. 57-58)
+     - **Latihan 1:** Operasi Penjumlahan dalam Array
+     - **Latihan 2:** Evaluasi Kelulusan Siswa (Nested If)
+     - **Latihan 3:** Algoritma Predikat Nilai Akhir
+     - **Latihan 4:** Nested Loop Cetak Tabel Perkalian Matriks
+     - **Latihan 5:** Algoritma Pencarian Sequential Search pada Array
+     - **Latihan 6:** Algoritma Rule-Based Diagnosa Kesehatan AI
 
 ---
 

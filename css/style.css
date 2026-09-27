@@ -128,6 +128,25 @@ body {
   background: linear-gradient(135deg, #fff 40%, var(--accent-cyan));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.brand-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-author {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  margin-top: 1px;
+}
+
+body.light-theme .brand-author {
+  color: var(--accent-indigo);
 }
 
 .nav-actions {

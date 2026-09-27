@@ -78,7 +78,7 @@ print(matriks[1][0]) # 4 -> baris 1, kolom 0</code></pre>
         `
       },
       {
-        heading: "5. Operasi Penjumlahan dalam Array (Buku Teks Hal. 47)",
+        heading: "5. Operasi Penjumlahan dalam Array",
         content: `
           <p>Kita dapat melakukan operasi aritmatika langsung antar elemen array:</p>
           <div class="code-preview">
@@ -145,7 +145,7 @@ endIf</code></pre>
         `
       },
       {
-        heading: "3. Contoh Algoritma Prediksi Nilai Akhir (Hal. 48)",
+        heading: "3. Contoh Algoritma Prediksi Nilai Akhir",
         content: `
           <div class="code-preview">
             <pre><code class="lang-code-block" data-lang="js">let nilai = 82;
@@ -178,7 +178,7 @@ print(f"Predikat nilai: {predikat}") # Output: B</code></pre>
         `
       },
       {
-        heading: "4. Algoritma Rule-Based Kecerdasan Artifisial (Hal. 57-58)",
+        heading: "4. Algoritma Rule-Based Kecerdasan Artifisial",
         content: `
           <p>Sistem berbasis aturan (<em>Rule-Based AI</em>) menggunakan struktur nested if bertingkat untuk mengambil keputusan medis berdasarkan suhu badan, gejala batuk, dan sakit kepala:</p>
           <div class="code-preview">
@@ -281,7 +281,7 @@ endFor</code></pre>
         `
       },
       {
-        heading: "2. Contoh: Algoritma Cetak Tabel Perkalian (Hal. 49)",
+        heading: "2. Contoh: Algoritma Cetak Tabel Perkalian",
         content: `
           <p>Mencetak hasil perkalian dari 1 hingga 3 terhadap 1 hingga 5 menghasilkan:</p>
           <div class="table-responsive">
@@ -374,19 +374,19 @@ for i in range(len(matriks)):
     title: "Latihan Praktik Koding",
     subtitle: "Praktekkan langsung keahlian koding Anda dengan sistem verifikasi otomatis!",
     readTime: "Praktik Mengetik & Uji Solusi",
-    summary: "Selesaikan 6 tantangan koding resmi dari buku teks: operasi array, aktivitas mandiri AP-K10-07 kelulusan, predikat nilai, tabel perkalian matriks, sequential search, dan sistem rule-based diagnosis AI.",
+    summary: "Selesaikan 6 tantangan koding terstruktur: operasi array, evaluasi kelulusan nested if, predikat nilai, tabel perkalian matriks, sequential search, dan sistem rule-based diagnosis AI.",
     sections: [
       {
         heading: "Ayo Berlatih! Ruang Latihan Koding Mandiri",
         content: `
           <p>Pilih nomor latihan di bawah ini untuk mulai mengetik kode Anda dan mengujinya dengan tombol <strong>"🧪 Cek Jawaban & Uji Solusi"</strong>:</p>
           <ul>
-            <li><strong>Latihan 1:</strong> Operasi Penjumlahan dalam Array (Hal. 47)</li>
-            <li><strong>Latihan 2:</strong> Aktivitas Mandiri AP-K10-07: Nested If Kelulusan Peserta Didik (Hal. 56)</li>
-            <li><strong>Latihan 3:</strong> Algoritma Predikat Nilai Akhir (Hal. 48)</li>
-            <li><strong>Latihan 4:</strong> Nested Loop Cetak Tabel Perkalian Matriks (Hal. 49)</li>
-            <li><strong>Latihan 5:</strong> Algoritma Pencarian Sequential Search pada Array (Hal. 50-51)</li>
-            <li><strong>Latihan 6:</strong> Algoritma Rule-Based Diagnosa Kesehatan AI (Hal. 57-58)</li>
+            <li><strong>Latihan 1:</strong> Operasi Penjumlahan dalam Array</li>
+            <li><strong>Latihan 2:</strong> Evaluasi Kelulusan Siswa (Nested If)</li>
+            <li><strong>Latihan 3:</strong> Algoritma Predikat Nilai Akhir</li>
+            <li><strong>Latihan 4:</strong> Nested Loop Cetak Tabel Perkalian Matriks</li>
+            <li><strong>Latihan 5:</strong> Algoritma Pencarian Sequential Search pada Array</li>
+            <li><strong>Latihan 6:</strong> Algoritma Rule-Based Diagnosa Kesehatan AI</li>
           </ul>
         `
       }
@@ -395,15 +395,15 @@ for i in range(len(matriks)):
   }
 ];
 
-// 6 Latihan Lengkap Terintegrasi Sesuai Buku Teks (Dual Language Support: JS & Python)
+// 6 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
 const PRACTICE_EXERCISES = [
   {
     id: "latihan-1",
     level: "Dasar Array",
-    category: "Operasi Penjumlahan Array (Hal. 47)",
+    category: "Operasi Penjumlahan Array",
     title: "Latihan 1: Operasi Penjumlahan dalam Array",
     description: `
-      Berdasarkan materi Buku Teks Halaman 47:<br>
+      Tantangan Operasi Array:<br>
       Diketahui array <code>A = [10, 2, 30, 4]</code>.<br>
       Buatlah fungsi <code>operasi_array(A)</code> yang melakukan langkah berikut:
       <ol>
@@ -459,11 +459,11 @@ const PRACTICE_EXERCISES = [
 
   {
     id: "latihan-2",
-    level: "Aktivitas AP-K10-07",
-    category: "Nested If Kelulusan (Hal. 56)",
-    title: "Latihan 2: Aktivitas Mandiri AP-K10-07 (Kelulusan Peserta Didik)",
+    level: "Aktivitas Logika",
+    category: "Nested If Kelulusan",
+    title: "Latihan 2: Evaluasi Kelulusan Siswa (Nested If)",
     description: `
-      Berdasarkan soal <strong>Ayo Berlatih! No Aktivitas: AP-K10-07 (Halaman 56)</strong>:<br>
+      Selesaikan evaluasi kelulusan peserta didik berikut:<br>
       Buatlah fungsi <code>cek_kelulusan(nilai, kehadiran)</code> yang menentukan kelulusan peserta didik dengan ketentuan <strong>Nested If</strong>:
       <ul>
         <li>Ketentuan a: Nilai akhir minimal 75.</li>
@@ -569,10 +569,10 @@ const PRACTICE_EXERCISES = [
   {
     id: "latihan-3",
     level: "Algoritma Pemrograman",
-    category: "Predikat Nilai Akhir (Hal. 48)",
+    category: "Predikat Nilai Akhir",
     title: "Latihan 3: Algoritma Predikat Nilai Akhir",
     description: `
-      Berdasarkan algoritma pada <strong>Buku Teks Halaman 48</strong>:<br>
+      Selesaikan algoritma penentuan predikat nilai berikut:<br>
       Buatlah fungsi <code>predikat_nilai(nilai)</code> yang menerima input sebuah bilangan bulat <code>nilai</code> ujian dan mengembalikan predikat huruf dengan aturan:
       <ul>
         <li>Jika <code>nilai >= 90</code>, kembalikan <code>"A"</code></li>
@@ -635,10 +635,10 @@ const PRACTICE_EXERCISES = [
   {
     id: "latihan-4",
     level: "Nested Loop",
-    category: "Tabel Perkalian Matriks (Hal. 49)",
+    category: "Tabel Perkalian Matriks",
     title: "Latihan 4: Nested Loop Cetak Tabel Perkalian",
     description: `
-      Berdasarkan contoh pada <strong>Buku Teks Halaman 49</strong>:<br>
+      Buat algoritma pencetakan tabel perkalian berikut:<br>
       Buatlah fungsi <code>buat_tabel_perkalian(baris, kolom)</code> yang menghasilkan sebuah matriks 2D berisi hasil perkalian <code>i * j</code>.<br>
       Perulangan luar <code>i</code> berjalan dari 1 hingga <code>baris</code>.<br>
       Perulangan dalam <code>j</code> berjalan dari 1 hingga <code>kolom</code>.<br><br>
@@ -697,7 +697,7 @@ const PRACTICE_EXERCISES = [
           [2, 4, 6, 8, 10],
           [3, 6, 9, 12, 15]
         ],
-        description: "Tabel perkalian 1-3 terhadap 1-5 (Persis seperti buku teks hal. 49)"
+        description: "Tabel perkalian 1-3 terhadap 1-5"
       },
       {
         input: [2, 2],
@@ -713,10 +713,10 @@ const PRACTICE_EXERCISES = [
   {
     id: "latihan-5",
     level: "Algoritma Pencarian",
-    category: "Sequential Search (Hal. 50-51)",
+    category: "Sequential Search",
     title: "Latihan 5: Algoritma Sequential Search pada Array",
     description: `
-      Berdasarkan algoritma pada <strong>Buku Teks Halaman 50–51</strong>:<br>
+      Implementasikan algoritma Sequential Search berikut:<br>
       Buatlah fungsi <code>sequential_search(A, x)</code> yang mencari suatu nilai <code>x</code> di dalam array <code>A</code>.<br>
       <ul>
         <li>Periksa elemen satu per satu dari indeks ke-0 hingga akhir.</li>
@@ -782,10 +782,10 @@ const PRACTICE_EXERCISES = [
   {
     id: "latihan-6",
     level: "Kecerdasan Artifisial",
-    category: "Rule-Based Expert System (Hal. 58)",
+    category: "Rule-Based Expert System",
     title: "Latihan 6: Algoritma Rule-Based Diagnosa Kesehatan AI",
     description: `
-      Berdasarkan algoritma AI pada <strong>Buku Teks Halaman 57–58</strong>:<br>
+      Implementasikan sistem pakar inferensi AI berikut:<br>
       Buatlah fungsi <code>diagnosa_kesehatan(suhubadan, batuk, sakitkepala)</code> yang menghasilkan keputusan diagnosa berdasarkan aturan sistem pakar:
       <ul>
         <li>Jika <code>suhubadan > 37.5</code>:

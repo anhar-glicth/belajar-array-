@@ -5,10 +5,10 @@
  */
 
 const Visualizer = (function () {
-  // State untuk List 1D Visualizer (Sesuai Buku Teks Hal. 46: A = [10, 2, 30, 4])
+  // State untuk List 1D Visualizer (Array A = [10, 2, 30, 4])
   let list1DData = [10, 2, 30, 4];
 
-  // State untuk Nested Loop 2D Visualizer (Tabel Perkalian 1-3 x 1-5 Buku Teks Hal. 49)
+  // State untuk Nested Loop 2D Visualizer (Tabel Perkalian 1-3 x 1-5)
   let matrix2DData = [
     [1, 2, 3, 4, 5],
     [2, 4, 6, 8, 10],
@@ -89,7 +89,7 @@ const Visualizer = (function () {
               <span>Ubah Nilai A[i]</span>
             </button>
             <button class="btn btn-sm btn-outline" onclick="Visualizer.reset1D()">
-              <span>Reset Contoh Buku (A = [10, 2, 30, 4])</span>
+              <span>Reset Contoh (A = [10, 2, 30, 4])</span>
             </button>
           </div>
         </div>
@@ -175,7 +175,7 @@ const Visualizer = (function () {
   function reset1D() {
     list1DData = [10, 2, 30, 4];
     render1DArray(document.getElementById("vis1DContainer"));
-    set1DFeedback("Array A telah dikembalikan ke contoh buku teks: A = [10, 2, 30, 4].");
+    set1DFeedback("Array A telah dikembalikan ke nilai awal: A = [10, 2, 30, 4].");
   }
 
 
@@ -357,7 +357,7 @@ const Visualizer = (function () {
       <div class="visualizer-panel">
         <div class="vis-header">
           <div class="vis-title">
-            <span class="badge-tag">Animasi Traversal Matriks (Hal. 49)</span>
+            <span class="badge-tag">Animasi Traversal Matriks</span>
             <h4>Tabel Perkalian 1-3 x 1-5 (Nested Loop)</h4>
           </div>
           <div class="vis-stats">
