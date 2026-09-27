@@ -99,8 +99,8 @@ const App = (function () {
       }
     }
 
-    // Jika sedang di Modul 4 (Latihan Praktik), re-render latihan aktif
-    if (currentModuleIndex === 3) {
+    // Jika sedang di Modul Latihan Praktik, re-render latihan aktif
+    if (curMod && curMod.interactiveTool === "coding-lab") {
       loadExercise(currentExerciseIndex);
     }
   }
@@ -184,7 +184,7 @@ const App = (function () {
   }
 
   function getModuleIcon(idx) {
-    const icons = ["📦", "🔀", "🔄", "🎯"];
+    const icons = ["📦", "🔍", "🔀", "🔄", "🎯"];
     return icons[idx] || "📄";
   }
 
@@ -208,6 +208,8 @@ const App = (function () {
     let visualizerHtml = "";
     if (mod.interactiveTool === "1d-visualizer") {
       visualizerHtml = `<div id="vis1DContainer" class="vis-mount-point"></div>`;
+    } else if (mod.interactiveTool === "sequential-search-simulator") {
+      visualizerHtml = `<div id="visSearchingContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "nested-if-simulator") {
       visualizerHtml = `<div id="visNestedIfContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "nested-loop-visualizer" || mod.interactiveTool === "matrix-analyzer") {
@@ -310,6 +312,8 @@ const App = (function () {
 
     if (mod.interactiveTool === "1d-visualizer") {
       Visualizer.init1DVisualizer("vis1DContainer");
+    } else if (mod.interactiveTool === "sequential-search-simulator") {
+      Visualizer.initSequentialSearchSimulator("visSearchingContainer");
     } else if (mod.interactiveTool === "nested-if-simulator") {
       Visualizer.initNestedIfSimulator("visNestedIfContainer");
     } else if (mod.interactiveTool === "nested-loop-visualizer" || mod.interactiveTool === "matrix-analyzer") {

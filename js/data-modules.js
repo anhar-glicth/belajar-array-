@@ -2,9 +2,10 @@
  * data-modules.js
  * Modul Pembelajaran Interaktif Resmi:
  * 1. Dasar Array
- * 2. Nested If
- * 3. Nested Loop
- * 4. Latihan Praktik
+ * 2. Algoritma Pencarian (Sequential Search)
+ * 3. Nested If
+ * 4. Nested Loop
+ * 5. Latihan Praktik
  */
 
 const CURRICULUM_DATA = [
@@ -113,8 +114,162 @@ for i in range(len(siswa)):
   },
 
   {
+    id: "modul-searching",
+    badge: "2. Algoritma Pencarian",
+    title: "Algoritma Pencarian (Searching) - Sequential Search",
+    subtitle: "Sequential Search (Linear Search) memeriksa elemen array satu per satu dari indeks pertama sampai dengan elemen terakhir",
+    readTime: "12 menit baca & praktik",
+    summary: "Sequential Search atau Linear Search adalah algoritma pencarian dengan memeriksa elemen array satu per satu dari indeks ke-0 hingga indeks terakhir. Pencarian berhasil saat elemen sama dengan nilai x yang dicari.",
+    sections: [
+      {
+        heading: "1. Pengertian Sequential Search (Linear Search)",
+        content: `
+          <p><strong>Sequential search</strong> atau sering disebut juga sebagai <strong>linear search</strong> adalah salah satu algoritma pencarian paling sederhana yang digunakan untuk mencari suatu elemen dalam sebuah struktur data seperti array.</p>
+          <p>Algoritma ini bekerja dengan cara memeriksa elemen <strong>satu per satu</strong>, dimulai dari indeks pertama sampai dengan elemen terakhir.</p>
+          <div class="alert-box tip">
+            <span class="icon">🔍</span>
+            <div><strong>Cara Kerja:</strong> Pencarian dimulai dengan membandingkan elemen pertama dengan nilai yang dicari. Jika berhasil, maka pencarian selesai. Jika tidak, algoritma melanjutkan ke elemen berikutnya dan mengulangi proses tersebut sampai dengan indeks terakhir. Jika sampai dengan indeks terakhir tidak ditemukan, maka hasilnya adalah <em>&ldquo;tidak ditemukan&rdquo;</em>.</div>
+          </div>
+        `
+      },
+      {
+        heading: "2. Contoh & Notasi Algoritma SequentialSearch",
+        content: `
+          <p>Jika diketahui ketentuan data sebagai berikut:</p>
+          <ul>
+            <li><strong>Data array:</strong> <code>A = [1, 5, 10, 7, 15]</code></li>
+            <li><strong>n</strong> adalah banyaknya data, yaitu <code>5</code>.</li>
+            <li><strong>x</strong> adalah nilai yang dicari.</li>
+            <li><strong>i</strong> adalah indeks array.</li>
+            <li><strong>posisi</strong> adalah posisi elemen array.</li>
+          </ul>
+
+          <div class="code-preview">
+            <pre><code>Algoritma SequentialSearch
+Kamus
+  A : array of integer
+  n : integer
+  x : integer // nilai yang dicari
+  i : integer // indeks array
+  posisi : integer
+Deskripsi
+  // Data A
+  A[0] = 1
+  A[1] = 5
+  A[2] = 10
+  A[3] = 7
+  A[4] = 15
+  // Jumlah Elemen A
+  n = 5
+  Output("Nilai yang dicari?")
+  Input(x)
+  posisi = -1
+  for i = 0 to n - 1 do
+      if A[i] = x then
+          posisi = i
+          Output("Ketemu, nilai yang dicari berada pada indeks ke-", posisi)
+          break
+      endIf
+  endFor
+  if posisi = -1 then
+      Output("Tidak ketemu")
+  endIf
+EndAlgoritma</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "3. Implementasi Program dalam JavaScript dan Python",
+        content: `
+          <p>Berikut implementasi algoritma Sequential Search di atas menggunakan <span class="lang-text" data-lang-js="JavaScript" data-lang-py="Python">JavaScript</span>:</p>
+          <div class="code-preview">
+            <pre><code class="lang-code-block" data-lang="js">// Data A dan Jumlah Elemen n
+let A = [1, 5, 10, 7, 15];
+let n = 5;
+let x = 7; // nilai yang dicari
+let posisi = -1;
+
+for (let i = 0; i < n; i++) {
+  if (A[i] === x) {
+    posisi = i;
+    console.log("Ketemu, nilai yang dicari berada pada indeks ke-" + posisi);
+    break;
+  }
+}
+
+if (posisi === -1) {
+  console.log("Tidak ketemu");
+}</code>
+<code class="lang-code-block" data-lang="py" style="display:none;"># Data A dan Jumlah Elemen n
+A = [1, 5, 10, 7, 15]
+n = 5
+x = 7  # nilai yang dicari
+posisi = -1
+
+for i in range(n):
+    if A[i] == x:
+        posisi = i
+        print(f"Ketemu, nilai yang dicari berada pada indeks ke-{posisi}")
+        break
+
+if posisi == -1:
+    print("Tidak ketemu")</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "4. Analisis & Karakteristik Algoritma",
+        content: `
+          <p>Karakteristik penting dari algoritma Sequential Search:</p>
+          <ul>
+            <li><strong>Fleksibilitas Data:</strong> Dapat dijalankan pada array yang elemennya belum terurut maupun sudah terurut.</li>
+            <li><strong>Kasus Terbaik (Best Case):</strong> Ketika nilai yang dicari berada pada indeks pertama (<code>A[0]</code>), proses selesai hanya dalam 1 langkah ($O(1)$).</li>
+            <li><strong>Kasus Terburuk (Worst Case):</strong> Ketika nilai yang dicari berada pada elemen paling akhir (<code>A[n - 1]</code>) atau tidak ditemukan sama sekali di dalam array, proses memeriksa seluruh $n$ elemen ($O(n)$).</li>
+          </ul>
+        `
+      }
+    ],
+    interactiveTool: "sequential-search-simulator",
+    cobaSendiri: {
+      id: "coba_searching",
+      title: "Coba sendiri: Algoritma Sequential Search pada Array A",
+      description: "Uji pencarian nilai <code>x = 7</code> atau ubah nilai <code>x</code> untuk melihat apakah program menghasilkan indeks yang tepat atau 'Tidak ketemu'.",
+      starterCodeJs: `let A = [1, 5, 10, 7, 15];
+let n = 5;
+let x = 7; // ubah nilai ini untuk mencoba angka lain
+let posisi = -1;
+
+for (let i = 0; i < n; i++) {
+  if (A[i] === x) {
+    posisi = i;
+    console.log("Ketemu, nilai yang dicari berada pada indeks ke-" + posisi);
+    break;
+  }
+}
+
+if (posisi === -1) {
+  console.log("Tidak ketemu");
+}`,
+      starterCodePy: `A = [1, 5, 10, 7, 15]
+n = 5
+x = 7  # ubah nilai ini untuk mencoba angka lain
+posisi = -1
+
+for i in range(n):
+    if A[i] == x:
+        posisi = i
+        print(f"Ketemu, nilai yang dicari berada pada indeks ke-{posisi}")
+        break
+
+if posisi == -1:
+    print("Tidak ketemu")`,
+      hint: "Periksa kondisi `A[i] === x` di dalam loop for. Jika cocok, simpan `posisi = i` lalu panggil `break`. Setelah loop berakhir, jika `posisi === -1` cetak 'Tidak ketemu'."
+    }
+  },
+
+  {
     id: "modul-2",
-    badge: "2. Nested If",
+    badge: "3. Nested If",
     title: "Nested If (Pengondisian Bertingkat)",
     subtitle: "Satu pernyataan if berada di dalam blok if atau else lainnya untuk pengambilan keputusan kompleks",
     readTime: "12 menit baca & praktik",
@@ -259,7 +414,7 @@ else:
 
   {
     id: "modul-3",
-    badge: "3. Nested Loop",
+    badge: "4. Nested Loop",
     title: "Nested Loop (Pengulangan Bersarang)",
     subtitle: "Satu pengulangan di dalam pengulangan lainnya untuk tabel perkalian, matriks, searching, dan sorting",
     readTime: "15 menit baca & praktik",
@@ -370,7 +525,7 @@ for i in range(len(matriks)):
 
   {
     id: "modul-4",
-    badge: "4. Latihan Praktik",
+    badge: "5. Latihan Praktik",
     title: "Latihan Praktik Koding",
     subtitle: "Praktekkan langsung keahlian koding Anda dengan sistem verifikasi otomatis!",
     readTime: "Praktik Mengetik & Uji Solusi",

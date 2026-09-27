@@ -569,6 +569,225 @@ const Visualizer = (function () {
     }
   }
 
+  /**
+   * 4. Simulator Interaktif Sequential Search (Linear Search)
+   * Array A = [1, 5, 10, 7, 15], n = 5, target x, posisi = -1
+   */
+  let searchData = [1, 5, 10, 7, 15];
+  let searchState = {
+    targetX: 7,
+    currentIndex: -1,
+    posisi: -1,
+    isFinished: false,
+    isRunning: false,
+    intervalId: null,
+    speed: 800,
+    containerId: "visSearchingContainer"
+  };
+
+  function initSequentialSearchSimulator(containerId) {
+    if (containerId) searchState.containerId = containerId;
+    pauseAutoSearch();
+    searchState.currentIndex = -1;
+    searchState.posisi = -1;
+    searchState.isFinished = false;
+    renderSequentialSearch();
+  }
+
+  function renderSequentialSearch() {
+    const container = document.getElementById(searchState.containerId);
+    if (!container) return;
+
+    const { targetX, currentIndex, posisi, isFinished, isRunning, speed } = searchState;
+    const n = searchData.length;
+
+    let statusText = "Siap Mencari";
+    if (isFinished) {
+      if (posisi !== -1) {
+        statusText = "Ketemu (Posisi: " + posisi + ")";
+      } else {
+        statusText = "Tidak Ketemu";
+      }
+    } else if (currentIndex >= 0) {
+      statusText = "Memeriksa indeks ke-" + currentIndex;
+    }
+
+    let explanationHtml = "";
+    if (currentIndex === -1) {
+      explanationHtml = "Pencarian dimulai dengan inisialisasi <code>posisi = -1</code>. Tekan tombol <strong>'Langkah Berikutnya (Step)'</strong> atau <strong>'Mulai Otomatis'</strong> untuk mulai membandingkan <code>A[i]</code> dengan <code>x = " + targetX + "</code>.";
+    } else if (posisi !== -1) {
+      explanationHtml = '<span style="color: #10b981; font-weight: bold;">🎉 KETEMU!</span> Pada indeks <code>i = ' + posisi + '</code>, nilai <code>A[' + posisi + '] == ' + targetX + '</code> bernilai <strong>BENAR (True)</strong>. Nilai <code>posisi</code> diubah menjadi <strong>' + posisi + '</strong> dan perulangan dihentikan dengan <code>break</code>.';
+    } else if (isFinished && posisi === -1) {
+      explanationHtml = '<span style="color: #ef4444; font-weight: bold;">❌ TIDAK KETEMU:</span> Seluruh ' + n + ' elemen dari indeks 0 s.d. ' + (n - 1) + ' telah diperiksa dan tidak ada yang cocok dengan <code>x = ' + targetX + '</code>. Nilai <code>posisi</code> tetap <strong>-1</strong>.';
+    } else {
+      const curVal = searchData[currentIndex];
+      explanationHtml = "Iterasi <code>i = " + currentIndex + "</code>: Memeriksa apakah <code>A[" + currentIndex + "] == " + targetX + "</code> (" + curVal + " == " + targetX + ") &rarr; <span style=" + '"color: #ef4444; font-weight: bold;"' + ">SALAH (False)</span>. Algoritma melanjutkan ke elemen berikutnya.";
+    }
+
+    container.innerHTML = `
+      <div class="visualizer-panel">
+        <div class="vis-header">
+          <div class="vis-title">
+            <span class="badge-tag">Simulasi Algoritma Pencarian</span>
+            <h4>Sequential Search pada Array A = [1, 5, 10, 7, 15]</h4>
+          </div>
+          <div class="vis-stats">
+            <span class="stat-pill">Jumlah Elemen (n): <strong>${n}</strong></span>
+            <span class="stat-pill">Nilai Dicari (x): <strong>${targetX}</strong></span>
+            <span class="stat-pill">Indeks (i): <strong>${currentIndex >= 0 ? currentIndex : '-'}</strong></span>
+            <span class="stat-pill">Posisi: <strong>${posisi}</strong></span>
+          </div>
+        </div>
+
+        <div class="memory-grid-wrapper">
+          <div class="memory-boxes" id="memSearchBoxes">
+            ${searchData.map((val, idx) => {
+              let slotClass = "mem-slot";
+              let badgeHtml = "";
+              let statusLabel = "";
+
+              if (posisi === idx) {
+                slotClass += " scan-matched";
+                badgeHtml = `<div class="search-pointer-badge" style="background: #10b981; color: #fff;">✅ i = ${idx} (Ketemu!)</div>`;
+                statusLabel = `<div class="slot-pointer" style="color: #10b981; font-weight: 700;">✓ Cocok (${val} == ${targetX})</div>`;
+              } else if (currentIndex === idx) {
+                slotClass += " scan-active pulse";
+                badgeHtml = `<div class="search-pointer-badge">👇 i = ${idx}</div>`;
+                statusLabel = `<div class="slot-pointer" style="color: #f59e0b; font-weight: 700;">? Cek (${val} == ${targetX})</div>`;
+              } else if (currentIndex > idx) {
+                slotClass += " scan-mismatch";
+                statusLabel = `<div class="slot-pointer" style="color: #ef4444;">≠ Tidak cocok</div>`;
+              } else {
+                statusLabel = `<div class="slot-pointer">Belum diperiksa</div>`;
+              }
+
+              return `
+                <div class="${slotClass}">
+                  ${badgeHtml}
+                  <div class="slot-idx">Indeks: ${idx}</div>
+                  <div class="slot-val">${val}</div>
+                  ${statusLabel}
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <div class="search-step-tracker">
+          <div class="search-step-row">
+            <span class="search-status-badge ${posisi !== -1 ? 'badge-success' : (isFinished ? 'badge-danger' : 'badge-primary')}">
+              ${statusText}
+            </span>
+            <span style="font-size: 0.95rem;">${explanationHtml}</span>
+          </div>
+        </div>
+
+        <div class="vis-controls">
+          <div class="control-row">
+            <label style="font-size: 0.88rem; color: var(--text-muted);">Nilai x yang dicari:</label>
+            <input type="number" id="inputSearchX" value="${targetX}" class="vis-input-small" onchange="Visualizer.setSearchTarget(this.value)">
+            <button class="btn btn-sm btn-primary" onclick="Visualizer.stepSearch()" ${isFinished ? 'disabled' : ''}>
+              <span>⏩ Langkah Berikutnya (Step)</span>
+            </button>
+            <button class="btn btn-sm btn-secondary" onclick="Visualizer.toggleAutoSearch()">
+              <span id="searchAutoText">${isRunning ? '⏸️ Jeda' : '▶️ Cari Otomatis'}</span>
+            </button>
+            <button class="btn btn-sm btn-outline" onclick="Visualizer.resetSearch()">
+              <span>🔄 Reset</span>
+            </button>
+          </div>
+
+          <div class="control-row secondary">
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Uji Cepat Target:</span>
+            <button class="btn btn-xs btn-outline" onclick="Visualizer.quickSetTarget(7)">x = 7 (Ada di i=3)</button>
+            <button class="btn btn-xs btn-outline" onclick="Visualizer.quickSetTarget(10)">x = 10 (Ada di i=2)</button>
+            <button class="btn btn-xs btn-outline" onclick="Visualizer.quickSetTarget(1)">x = 1 (Elemen pertama)</button>
+            <button class="btn btn-xs btn-outline" onclick="Visualizer.quickSetTarget(15)">x = 15 (Elemen terakhir)</button>
+            <button class="btn btn-xs btn-outline" onclick="Visualizer.quickSetTarget(99)">x = 99 (Tidak ditemukan)</button>
+            <span style="margin-left: auto; font-size: 0.82rem; color: var(--text-muted);">Kecepatan:</span>
+            <input type="range" min="300" max="1500" step="100" value="${1800 - speed}" class="vis-range-small" onchange="Visualizer.setSearchSpeed(this.value)">
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function stepSearch() {
+    if (searchState.isFinished) return;
+
+    searchState.currentIndex++;
+
+    if (searchState.currentIndex >= searchData.length) {
+      searchState.isFinished = true;
+      searchState.posisi = -1;
+      pauseAutoSearch();
+    } else {
+      if (searchData[searchState.currentIndex] === searchState.targetX) {
+        searchState.posisi = searchState.currentIndex;
+        searchState.isFinished = true;
+        pauseAutoSearch();
+      }
+    }
+
+    renderSequentialSearch();
+  }
+
+  function toggleAutoSearch() {
+    if (searchState.isRunning) {
+      pauseAutoSearch();
+    } else {
+      startAutoSearch();
+    }
+  }
+
+  function startAutoSearch() {
+    if (searchState.isFinished) {
+      resetSearch();
+    }
+    searchState.isRunning = true;
+    renderSequentialSearch();
+    searchState.intervalId = setInterval(() => {
+      stepSearch();
+    }, searchState.speed);
+  }
+
+  function pauseAutoSearch() {
+    searchState.isRunning = false;
+    clearInterval(searchState.intervalId);
+    searchState.intervalId = null;
+    const btn = document.getElementById("searchAutoText");
+    if (btn) btn.textContent = "▶️ Cari Otomatis";
+  }
+
+  function resetSearch() {
+    pauseAutoSearch();
+    searchState.currentIndex = -1;
+    searchState.posisi = -1;
+    searchState.isFinished = false;
+    renderSequentialSearch();
+  }
+
+  function quickSetTarget(val) {
+    pauseAutoSearch();
+    searchState.targetX = parseInt(val, 10);
+    resetSearch();
+  }
+
+  function setSearchTarget(val) {
+    const num = parseInt(val, 10);
+    if (!isNaN(num)) {
+      quickSetTarget(num);
+    }
+  }
+
+  function setSearchSpeed(val) {
+    searchState.speed = 1800 - parseInt(val, 10);
+    if (searchState.isRunning) {
+      pauseAutoSearch();
+      startAutoSearch();
+    }
+  }
+
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, "&amp;")
@@ -595,6 +814,15 @@ const Visualizer = (function () {
     stepForwardLoop,
     toggleAutoPlayLoop,
     resetLoop,
-    setLoopSpeed
+    setLoopSpeed,
+
+    initSequentialSearchSimulator,
+    stepSearch,
+    toggleAutoSearch,
+    resetSearch,
+    setSearchTarget,
+    setSearchSpeed,
+    quickSetTarget
   };
 })();
+

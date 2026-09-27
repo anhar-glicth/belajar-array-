@@ -744,6 +744,90 @@ body.light-theme .code-preview .lang-code-block {
   color: var(--text-dim);
 }
 
+/* Sequential Search States */
+.mem-slot.scan-active {
+  border-color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.15) !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.35) !important;
+  transform: translateY(-4px);
+}
+
+.mem-slot.scan-active .slot-idx {
+  color: #f59e0b !important;
+}
+
+.mem-slot.scan-mismatch {
+  opacity: 0.55;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  background: rgba(239, 68, 68, 0.05) !important;
+}
+
+.mem-slot.scan-matched {
+  border-color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.2) !important;
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.5) !important;
+  transform: translateY(-6px) scale(1.04);
+}
+
+.mem-slot.scan-matched .slot-idx {
+  color: #10b981 !important;
+}
+
+.mem-slot.scan-matched .slot-val {
+  color: #a7f3d0 !important;
+}
+
+.search-pointer-badge {
+  position: absolute;
+  top: -24px;
+  background: #f59e0b;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 99px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  white-space: nowrap;
+  animation: bouncePointer 0.6s infinite alternate ease-in-out;
+}
+
+@keyframes bouncePointer {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px); }
+}
+
+.search-step-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.search-step-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  flex-wrap: wrap;
+}
+
+.search-status-badge {
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.badge-danger {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fda4af;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
 /* Visualizer Controls */
 .vis-controls {
   display: flex;
@@ -2426,6 +2510,53 @@ body.light-theme .mem-slot.active {
   background: rgba(99, 102, 241, 0.08);
   border-color: var(--accent-indigo);
   box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+}
+
+body.light-theme .mem-slot.scan-active {
+  background: #fef3c7 !important;
+  border-color: #d97706 !important;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25) !important;
+}
+
+body.light-theme .mem-slot.scan-active .slot-idx {
+  color: #b45309 !important;
+}
+
+body.light-theme .mem-slot.scan-matched {
+  background: #d1fae5 !important;
+  border-color: #059669 !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3) !important;
+}
+
+body.light-theme .mem-slot.scan-matched .slot-idx {
+  color: #047857 !important;
+}
+
+body.light-theme .mem-slot.scan-matched .slot-val {
+  color: #065f46 !important;
+}
+
+body.light-theme .mem-slot.scan-mismatch {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  opacity: 0.65;
+}
+
+body.light-theme .search-pointer-badge {
+  background: #d97706;
+  color: #fff;
+}
+
+body.light-theme .search-step-tracker {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+body.light-theme .badge-danger {
+  background: #ffe4e6;
+  color: #e11d48;
+  border-color: #fecdd3;
 }
 
 body.light-theme .slot-idx {

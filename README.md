@@ -17,21 +17,29 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
    - Operasi penjumlahan elemen array (`A[1] + A[3]`).
    - Visualizer memori interaktif & box tantangan *"Coba sendiri: Cetak semua nama siswa"*.
 
-2. **2. Nested If (Pengondisian Bertingkat)**
+2. **2. Algoritma Pencarian (Sequential Search / Linear Search)**
+   - Pengertian Sequential Search dan cara kerja membandingkan elemen satu per satu.
+   - Contoh kasus pencarian data pada array `A = [1, 5, 10, 7, 15]` dengan target `x`.
+   - Notasi algoritma pseudocode (Kamus & Deskripsi).
+   - Implementasi kode nyata dalam JavaScript dan Python.
+   - Analisis performa: *Best Case* $O(1)$ dan *Worst Case* $O(n)$.
+   - Simulator visualisasi pencarian sequential interaktif langkah demi langkah & box *"Coba sendiri"*.
+
+3. **3. Nested If (Pengondisian Bertingkat)**
    - Pengertian percabangan di dalam percabangan.
    - Bentuk algoritma dan cara kerja pohon keputusan (*decision tree*).
    - Contoh penentuan predikat nilai (A, B, C, D).
    - Contoh sistem pakar *rule-based* diagnosa kesehatan AI.
    - Simulator interaktif kondisi kelulusan.
 
-3. **3. Nested Loop (Pengulangan Bersarang)**
+4. **4. Nested Loop (Pengulangan Bersarang)**
    - Pengertian *outer loop* dan *inner loop*.
    - Algoritma pembuatan tabel perkalian matriks ($1 \times 1$ s.d. $3 \times 5$).
    - Penelusuran koordinat baris & kolom matriks 2D.
    - Konsep algoritma *Searching* (*Sequential Search*, *Binary Search*) dan *Sorting* (*Selection*, *Insertion*).
    - Simulator visualisasi traversal sel matriks.
 
-4. **4. Latihan Praktik Koding**
+5. **5. Latihan Praktik Koding**
    - 6 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
      - **Latihan 1:** Operasi Penjumlahan dalam Array
      - **Latihan 2:** Evaluasi Kelulusan Siswa (Nested If)
