@@ -54,7 +54,7 @@ for (let i = 0; i < nilai.length; i++) {
 }</code>
 <code class="lang-code-block" data-lang="py" style="display:none;">nilai = [80, 90, 75, 60]
 for i in range(len(nilai)):
-    print(f"Data ke-{i + 1}: {nilai[i]}")</code></pre>
+    print("Data ke-" + str(i + 1) + ": " + str(nilai[i]))</code></pre>
           </div>
         `
       },
@@ -88,7 +88,7 @@ let Jumlah = A[1] + A[3];
 console.log("Jumlah = A[1] + A[3] -> " + Jumlah); // 2 + 4 = 6</code>
 <code class="lang-code-block" data-lang="py" style="display:none;">A = [10, 2, 30, 4]
 Jumlah = A[1] + A[3]
-print(f"Jumlah = A[1] + A[3] -> {Jumlah}") # 2 + 4 = 6</code></pre>
+print("Jumlah = A[1] + A[3] -> " + str(Jumlah)) # 2 + 4 = 6</code></pre>
           </div>
         `
       }
@@ -108,7 +108,7 @@ for (let i = 0; i < siswa.length; i++) {
 
 # tulis kode kamu di sini
 for i in range(len(siswa)):
-    print(f"{i + 1}. {siswa[i]}")`,
+    print(str(i + 1) + ". " + siswa[i])`,
       hint: "Gunakan perulangan for dengan variabel `i` dari 0 sampai panjang array. Cetak nomor urut `(i + 1)` diikuti nama siswa `siswa[i]`."
     }
   },
@@ -174,7 +174,7 @@ elif nilai >= 60:
 else:
     predikat = "D"
 
-print(f"Predikat nilai: {predikat}") # Output: B</code></pre>
+print("Predikat nilai: " + predikat) # Output: B</code></pre>
           </div>
         `
       },
@@ -307,7 +307,7 @@ endFor</code></pre>
     baris = ""
     for j in range(1, 6):
         hasil = i * j
-        baris += f"{hasil} "
+        baris += str(hasil) + " "
     print(baris)</code></pre>
           </div>
         `
@@ -334,7 +334,7 @@ for (let i = 0; i < matriks.length; i++) {
 
 for i in range(len(matriks)):
     for j in range(len(matriks[i])):
-        print(f"Matriks [{i}][{j}] = {matriks[i][j]}")</code></pre>
+        print("Matriks [" + str(i) + "][" + str(j) + "] = " + str(matriks[i][j]))</code></pre>
           </div>
         `
       },
@@ -363,7 +363,7 @@ for i in range(len(matriks)):
       starterCodePy: `for i in range(1, 4):
     baris = ""
     for j in range(1, 4):
-        baris += f"{i * j} "
+        baris += str(i * j) + " "
     print(baris)`,
       hint: "Outer loop `for i` mengontrol baris dari 1 sampai 3. Inner loop `for j` mengontrol kolom dari 1 sampai 3. Cetak hasil perkalian `i * j`."
     }
@@ -491,7 +491,7 @@ posisi = -1
 for i in range(n):
     if A[i] == x:
         posisi = i
-        print(f"Ketemu, nilai yang dicari berada pada indeks ke-{posisi}")
+        print("Ketemu, nilai yang dicari berada pada indeks ke-" + str(posisi))
         break
 
 if posisi == -1:
@@ -540,7 +540,7 @@ posisi = -1
 for i in range(n):
     if A[i] == x:
         posisi = i
-        print(f"Ketemu, nilai yang dicari berada pada indeks ke-{posisi}")
+        print("Ketemu, nilai yang dicari berada pada indeks ke-" + str(posisi))
         break
 
 if posisi == -1:
