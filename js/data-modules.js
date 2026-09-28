@@ -390,6 +390,7 @@ for i in range(len(matriks)):
             <li><strong>Latihan 6:</strong> Algoritma Rule-Based Diagnosa Kesehatan AI</li>
             <li><strong>Latihan 7:</strong> Algoritma Pencarian Binary Search pada Array Terurut</li>
             <li><strong>Latihan 8:</strong> Algoritma Pengurutan Selection Sort pada Array</li>
+            <li><strong>Latihan 9:</strong> Algoritma Pengurutan Insertion Sort pada Array</li>
           </ul>
         `
       }
@@ -1059,10 +1060,290 @@ for i in range(n - 1):
 print("Selesai! Array terurut: " + str(A))`,
       hint: "Perhatikan inner loop `for (let j = i + 1; j < n; j++)` untuk mencari nilai minimum. Setelah loop dalam selesai, lakukan pertukaran nilai `A[i]` dengan `A[min_idx]` jika `min_idx !== i`."
     }
+  },
+
+  {
+    id: "modul-insertion-sort",
+    badge: "8. Insertion Sort",
+    title: "Insertion Sort (Pengurutan Penyisipan)",
+    subtitle: "Menyisipkan elemen satu per satu ke posisi yang tepat seperti menyusun kartu di tangan",
+    readTime: "15 menit baca & praktik",
+    summary: "Insertion sort adalah salah satu algoritma pengurutan (sorting) yang bekerja seperti seseorang menyusun kartu di tangan saat bermain kartu. Setiap elemen dipilih satu per satu dan ditempatkan pada posisi yang sesuai dalam bagian data yang sudah terurut. Proses ini diulang hingga seluruh elemen dalam array berada dalam urutan yang benar.",
+    sections: [
+      {
+        heading: "1. Pengertian & Analogi Kartu (Insertion Sort)",
+        content: `
+          <p><strong>Insertion sort</strong> adalah salah satu algoritma pengurutan (<em>sorting</em>) yang bekerja seperti seseorang <strong>menyusun kartu di tangan saat bermain kartu</strong>. Setiap elemen dipilih satu per satu dan ditempatkan pada posisi yang sesuai dalam bagian data yang sudah terurut. Proses ini diulang hingga seluruh elemen dalam array berada dalam urutan yang benar.</p>
+          <div class="note-box" style="border-left-color: var(--accent-purple); background: rgba(168, 85, 247, 0.08);">
+            <strong>🃏 Analogi Kartu Remi di Tangan:</strong>
+            <p>Bayangkan Anda sedang memegang kartu remi di tangan:</p>
+            <ol style="margin-top: 0.5rem; padding-left: 1.25rem;">
+              <li>Kartu pertama di tangan kiri dianggap sudah <strong>terurut dengan sendirinya</strong>.</li>
+              <li>Ambil kartu berikutnya (disebut <em>key</em>) dengan tangan kanan.</li>
+              <li>Bandingkan kartu baru tersebut ke belakang (dari kanan ke kiri) dengan kartu-kartu yang sudah ada di tangan kiri.</li>
+              <li>Jika kartu di tangan kiri bernilai lebih besar dari kartu baru, <strong>geser kartu tersebut ke kanan</strong>.</li>
+              <li>Sisipkan kartu baru ke celah kosong yang tepat. Ulangi proses ini hingga semua kartu di tangan terurut rapi!</li>
+            </ol>
+          </div>
+        `
+      },
+      {
+        heading: "2. Langkah-Langkah Kerja pada Array [5, 2, 4, 6, 1]",
+        content: `
+          <p>Sesuai buku teks <em>Bab 2 Algoritma dan Pemrograman Lanjut</em> (Halaman 55), mari kita bedah langkah demi langkah pengurutan pada array: <code>[5, 2, 4, 6, 1]</code>:</p>
+          <div class="steps-timeline">
+            <div class="step-item">
+              <div class="step-number" style="background: var(--accent-cyan); color: #0b0f19;">1</div>
+              <div class="step-content">
+                <h4>Langkah 1: Elemen ke-2 (angka 2)</h4>
+                <p>Mulai dari elemen ke-2 (yaitu <strong>2</strong>, indeks 1), bandingkan dengan <strong>5</strong>. Karena <code>2 &lt; 5</code>, <strong>geser 5 ke kanan</strong>, masukkan <strong>2</strong> ke indeks 0.</p>
+                <p>Hasil: <code style="color: #38bdf8; font-weight: bold;">[2, 5, 4, 6, 1]</code></p>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-number" style="background: var(--accent-indigo); color: #fff;">2</div>
+              <div class="step-content">
+                <h4>Langkah 2: Elemen berikutnya (angka 4)</h4>
+                <p>Elemen berikutnya <strong>4</strong> (indeks 2), bandingkan ke belakang. Karena <code>5 &gt; 4</code>, maka <strong>geser 5 ke kanan</strong>. Lalu bandingkan 4 dengan 2: karena <code>2 &lt; 4</code>, stop geser. Masukkan <strong>4</strong> ke indeks 1.</p>
+                <p>Hasil: <code style="color: #38bdf8; font-weight: bold;">[2, 4, 5, 6, 1]</code></p>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-number" style="background: #f59e0b; color: #0b0f19;">3</div>
+              <div class="step-content">
+                <h4>Langkah 3: Elemen berikutnya (angka 6)</h4>
+                <p>Elemen berikutnya <strong>6</strong> (indeks 3), ini nilainya sudah lebih besar dari sebelumnya (<code>6 &gt; 5</code>), maka <strong>biarkan</strong> pada posisinya (tidak ada elemen yang digeser).</p>
+                <p>Hasil: <code style="color: #38bdf8; font-weight: bold;">[2, 4, 5, 6, 1]</code></p>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-number" style="background: #10b981; color: #0b0f19;">4</div>
+              <div class="step-content">
+                <h4>Langkah 4: Elemen berikutnya (angka 1)</h4>
+                <p>Elemen berikutnya <strong>1</strong> (indeks 4), bandingkan dengan sebelumnya. Jika elemen sebelumnya lebih besar maka digeser: <code>6 &gt; 1</code> (geser 6), <code>5 &gt; 1</code> (geser 5), <code>4 &gt; 1</code> (geser 4), <code>2 &gt; 1</code> (geser 2). Jadi <strong>geser 6, 5, 4, 2 ke kanan</strong>, dan masukkan <strong>1</strong> ke indeks 0.</p>
+                <p>Hasil Akhir: <code style="color: #10b981; font-weight: bold;">[1, 2, 4, 5, 6]</code> (Seluruh array telah terurut sempurna!)</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        heading: "3. Tabel 2.2 Perbandingan Selection Sort dan Insertion Sort",
+        content: `
+          <p>Berikut adalah perbandingan mendalam antara <strong>Selection Sort</strong> dan <strong>Insertion Sort</strong> berdasarkan <em>Tabel 2.2 Buku Teks Bab 2 Algoritma dan Pemrograman Lanjut</em>:</p>
+          <div class="table-responsive" style="margin: 1.25rem 0;">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th style="width: 22%;">Aspek Perbandingan</th>
+                  <th style="width: 39%;">Selection Sort</th>
+                  <th style="width: 39%;">Insertion Sort</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Metode Pengurutan</strong></td>
+                  <td>Memilih elemen terkecil lalu menukarnya.</td>
+                  <td>Menyisipkan elemen ke posisi yang tepat.</td>
+                </tr>
+                <tr>
+                  <td><strong>Cara Kerja</strong></td>
+                  <td>Seleksi elemen terkecil dan tukar ke depan.</td>
+                  <td>Bandingkan ke belakang, geser dan sisipkan.</td>
+                </tr>
+                <tr>
+                  <td><strong>Jumlah Pertukaran / Pergeseran</strong></td>
+                  <td><span class="badge-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">Lebih sedikit</span> dari insertion sort (maksimal hanya $n - 1$ kali swap).</td>
+                  <td><span class="badge-tag" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">Lebih banyak</span>, karena sering menggeser elemen ke kanan.</td>
+                </tr>
+                <tr>
+                  <td><strong>Kompleksitas Kasus Terbaik (Best Case)</strong></td>
+                  <td>$O(n^2)$ — tetap membandingkan seluruh pasangan data meskipun data sudah terurut.</td>
+                  <td><strong>$O(n)$</strong> — sangat cepat jika data hampir terurut (hanya 1 perbandingan tanpa pergeseran).</td>
+                </tr>
+                <tr>
+                  <td><strong>Kestabilan (Stability)</strong></td>
+                  <td>Secara umum <em>Unstable</em> (dapat mengubah posisi relatif elemen kembar).</td>
+                  <td><strong>Stable</strong> (mempertahankan urutan asli elemen kembar).</td>
+                </tr>
+                <tr>
+                  <td><strong>Analogi Kehidupan Sehari-hari</strong></td>
+                  <td>Mencari orang terpendek dalam antrean, lalu menukarnya ke barisan paling depan satu per satu.</td>
+                  <td>Mengatur kartu remi di tangan, menyisipkan kartu baru ke sela-sela kartu yang sudah tersusun rapi.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `
+      },
+      {
+        heading: "4. Notasi Pseudocode Algoritma Insertion Sort",
+        content: `
+          <p>Notasi pseudocode algoritma Insertion Sort standar kurikulum SMA/MA Kelas X:</p>
+          <div class="code-preview-box">
+            <pre><code>Algoritma InsertionSort
+Kamus
+  A : array of integer
+  n : integer
+  i, j : integer
+  key : integer
+Deskripsi
+  // Asumsikan elemen pertama A[0] sudah berada pada posisi terurut
+  for i &larr; 1 to n - 1 do
+    key &larr; A[i]           // Simpan elemen yang akan disisipkan
+    j &larr; i - 1            // Mulai membandingkan ke elemen sebelah kiri
+
+    // Geser elemen-elemen A[0..i-1] yang lebih besar dari key ke kanan satu posisi
+    while (j &ge; 0 and A[j] &gt; key) do
+      A[j + 1] &larr; A[j]   // Geser elemen ke kanan
+      j &larr; j - 1         // Bergerak mundur ke kiri
+    endwhile
+
+    // Tempatkan key pada celah kosong yang tepat
+    A[j + 1] &larr; key
+  endfor
+  Output(A)</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "5. Implementasi Kode Program (JavaScript & Python)",
+        content: `
+          <p>Berikut implementasi algoritma Insertion Sort lengkap dalam <span class="lang-text" data-lang-js="JavaScript" data-lang-py="Python">JavaScript</span>:</p>
+
+          <div class="lang-block lang-block-js">
+            <div class="code-preview-box">
+              <div class="code-preview-header">
+                <span>⚡ JavaScript: Algoritma Insertion Sort</span>
+              </div>
+              <pre><code>function insertionSort(A) {
+  let n = A.length;
+
+  // Dimulai dari indeks ke-1 karena A[0] dianggap sudah terurut
+  for (let i = 1; i < n; i++) {
+    let key = A[i]; // Ambil kartu/elemen yang akan disisipkan
+    let j = i - 1;
+
+    // Geser elemen A[0..i-1] yang lebih besar dari key ke kanan
+    while (j >= 0 && A[j] > key) {
+      A[j + 1] = A[j]; // Geser elemen ke kanan
+      j = j - 1;
+    }
+
+    // Sisipkan key pada posisi yang tepat
+    A[j + 1] = key;
+  }
+  return A;
+}
+
+// Uji coba dengan data buku teks SMA Hal. 55:
+let data = [5, 2, 4, 6, 1];
+console.log("Array awal :", data);
+insertionSort(data);
+console.log("Hasil akhir:", data); // [1, 2, 4, 5, 6]</code></pre>
+            </div>
+          </div>
+
+          <div class="lang-block lang-block-py">
+            <div class="code-preview-box">
+              <div class="code-preview-header">
+                <span>🐍 Python: Algoritma Insertion Sort</span>
+              </div>
+              <pre><code>def insertion_sort(A):
+    n = len(A)
+
+    # Dimulai dari indeks ke-1 karena A[0] dianggap sudah terurut
+    for i in range(1, n):
+        key = A[i] # Ambil elemen yang akan disisipkan
+        j = i - 1
+
+        # Geser elemen A[0..i-1] yang lebih besar dari key ke kanan
+        while j >= 0 and A[j] > key:
+            A[j + 1] = A[j] # Geser ke kanan
+            j -= 1
+
+        # Sisipkan key pada posisi yang tepat
+        A[j + 1] = key
+    return A
+
+# Uji coba dengan data buku teks SMA Hal. 55:
+data = [5, 2, 4, 6, 1]
+print("Array awal :", data)
+insertion_sort(data)
+print("Hasil akhir:", data) # [1, 2, 4, 5, 6]</code></pre>
+            </div>
+          </div>
+        `
+      },
+      {
+        heading: "6. Analisis Karakteristik & Kapan Digunakan",
+        content: `
+          <p>Karakteristik penting dari algoritma Insertion Sort:</p>
+          <ul>
+            <li><strong>Efisiensi pada Data Kecil:</strong> Untuk array berukuran kecil (kurang dari 50 elemen), Insertion Sort sering kali lebih cepat dalam praktiknya daripada algoritma kompleks seperti Quick Sort atau Merge Sort karena overhead yang sangat rendah.</li>
+            <li><strong>Sangat Cepat pada Data yang Hampir Terurut (Adaptive):</strong> Jika data sudah hampir terurut, Insertion Sort hanya membutuhkan waktu linear <strong>$O(n)$</strong> karena kondisi <code>while</code> langsung berhenti tanpa melakukan banyak pergeseran.</li>
+            <li><strong>Online Algorithm:</strong> Insertion Sort dapat mengurutkan data yang masuk secara bertahap (aliran data / <em>streaming</em>) tanpa perlu menunggu semua data tersedia terlebih dahulu.</li>
+            <li><strong>In-Place & Stable:</strong> Memori tambahan konstan $O(1)$ dan mempertahankan posisi relatif elemen dengan nilai yang sama.</li>
+          </ul>
+        `
+      }
+    ],
+    interactiveTool: "insertion-sort-simulator",
+    cobaSendiri: {
+      id: "coba_insertion_sort",
+      title: "Coba sendiri: Algoritma Insertion Sort pada Array A = [5, 2, 4, 6, 1]",
+      description: "Jalankan kode Insertion Sort untuk mengamati pergeseran elemen dan penyisipan nilai key pada posisi yang tepat hingga array terurut menjadi <code>[1, 2, 4, 5, 6]</code>.",
+      starterCodeJs: `let A = [5, 2, 4, 6, 1];
+let n = A.length;
+
+console.log("Array awal: " + JSON.stringify(A));
+
+for (let i = 1; i < n; i++) {
+  let key = A[i];
+  let j = i - 1;
+  let geser = [];
+
+  while (j >= 0 && A[j] > key) {
+    geser.push(A[j]);
+    A[j + 1] = A[j];
+    j = j - 1;
+  }
+  A[j + 1] = key;
+
+  let infoGeser = geser.length > 0 ? "Geser " + geser.join(", ") : "Tidak ada pergeseran";
+  console.log("Langkah " + i + " (key = " + key + ", sisip ke indeks " + (j + 1) + "): " + infoGeser + " -> " + JSON.stringify(A));
+}
+
+console.log("Selesai! Array terurut: " + JSON.stringify(A));`,
+      starterCodePy: `A = [5, 2, 4, 6, 1]
+n = len(A)
+
+print("Array awal:", A)
+
+for i in range(1, n):
+    key = A[i]
+    j = i - 1
+    geser = []
+
+    while j >= 0 and A[j] > key:
+        geser.append(A[j])
+        A[j + 1] = A[j]
+        j -= 1
+    A[j + 1] = key
+
+    info_geser = "Geser " + ", ".join(map(str, geser)) if geser else "Tidak ada pergeseran"
+    print(f"Langkah {i} (key = {key}, sisip ke indeks {j + 1}): {info_geser} -> {A}")
+
+print("Selesai! Array terurut:", A)`,
+      hint: "Perhatikan perulangan luar yang dimulai dari `i = 1`. Nilai `key = A[i]` disimpan, lalu perulangan `while (j >= 0 && A[j] > key)` menggeser elemen yang lebih besar ke kanan. Setelah perulangan selesai, letakkan `key` di `A[j + 1]`."
+    }
   }
 ];
 
-// 8 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
+// 9 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
 const PRACTICE_EXERCISES = [
   {
     id: "latihan-1",
@@ -1831,5 +2112,101 @@ const PRACTICE_EXERCISES = [
         description: "Array yang sudah terurut tetap terurut [10, 20, 30]"
       }
     ]
+  },
+  {
+    id: "latihan-9",
+    level: "Pengurutan Array",
+    category: "Insertion Sort",
+    title: "Latihan 9: Algoritma Pengurutan Insertion Sort pada Array",
+    description: `
+      Tantangan Pemrograman Insertion Sort:<br>
+      Diberikan sebuah array bilangan bulat <code>A</code>.
+      Buatlah fungsi <code>insertion_sort(A)</code> yang mengurutkan array tersebut secara menaik (<em>ascending</em>) menggunakan algoritma <strong>Insertion Sort</strong> dengan ketentuan:
+      <ol style="margin: 0.5rem 0 0 1.25rem; font-size: 0.88rem; line-height: 1.5;">
+        <li>Perulangan utama dimulai dari indeks ke-1 sampai indeks terakhir <code>n - 1</code>.</li>
+        <li>Simpan nilai elemen saat ini ke dalam variabel <code>key = A[i]</code>.</li>
+        <li>Bandingkan <code>key</code> dengan elemen-elemen sebelumnya (ke arah kiri). Geser semua elemen yang lebih besar dari <code>key</code> ke kanan satu posisi.</li>
+        <li>Sisipkan <code>key</code> ke posisi yang tepat (<code>A[j + 1] = key</code>).</li>
+        <li>Kembalikan (<code>return</code>) array <code>A</code> yang telah terurut.</li>
+      </ol>
+    `,
+    starterCode: `function insertion_sort(A) {
+  let n = A.length;
+  
+  // Tuliskan algoritma Insertion Sort di sini:
+  for (let i = 1; i < n; i++) {
+    let key = A[i];
+    let j = i - 1;
+    
+    // TODO: Geser elemen yang lebih besar dari key ke kanan
+    
+    // TODO: Sisipkan key pada indeks yang tepat
+    
+  }
+  
+  return A;
+}`,
+    starterCodePy: `def insertion_sort(A):
+    n = len(A)
+    
+    # Tuliskan algoritma Insertion Sort di sini:
+    for i in range(1, n):
+        key = A[i]
+        j = i - 1
+        
+        # TODO: Geser elemen yang lebih besar dari key ke kanan
+        
+        # TODO: Sisipkan key pada indeks yang tepat
+        
+    return A
+`,
+    solution: `function insertion_sort(A) {
+  let n = A.length;
+  for (let i = 1; i < n; i++) {
+    let key = A[i];
+    let j = i - 1;
+    while (j >= 0 && A[j] > key) {
+      A[j + 1] = A[j];
+      j = j - 1;
+    }
+    A[j + 1] = key;
+  }
+  return A;
+}`,
+    solutionPy: `def insertion_sort(A):
+    n = len(A)
+    for i in range(1, n):
+        key = A[i]
+        j = i - 1
+        while j >= 0 and A[j] > key:
+            A[j + 1] = A[j]
+            j -= 1
+        A[j + 1] = key
+    return A
+`,
+    hint: "Gunakan outer loop `for i` dari 1 sampai n-1, simpan `key = A[i]`. Buat inner loop `while (j >= 0 && A[j] > key)` untuk menggeser `A[j + 1] = A[j]` dan mundurkan `j = j - 1`. Terakhir, tempatkan `A[j + 1] = key`.",
+    testCases: [
+      {
+        input: [[5, 2, 4, 6, 1]],
+        expected: [1, 2, 4, 5, 6],
+        description: "Mengurutkan array buku SMA Bab 2 Hal 55 [5, 2, 4, 6, 1] -> [1, 2, 4, 5, 6]"
+      },
+      {
+        input: [[12, 11, 13, 5, 6]],
+        expected: [5, 6, 11, 12, 13],
+        description: "Mengurutkan array acak [12, 11, 13, 5, 6] -> [5, 6, 11, 12, 13]"
+      },
+      {
+        input: [[8, 7, 6, 5, 4]],
+        expected: [4, 5, 6, 7, 8],
+        description: "Mengurutkan array terbalik total [8, 7, 6, 5, 4] -> [4, 5, 6, 7, 8]"
+      },
+      {
+        input: [[1, 2, 3, 4]],
+        expected: [1, 2, 3, 4],
+        description: "Array yang sudah terurut tetap terurut [1, 2, 3, 4]"
+      }
+    ]
   }
 ];
+

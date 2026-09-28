@@ -1827,6 +1827,517 @@ const Visualizer = (function () {
     }
   }
 
+  /* ==========================================================================
+   * 7. Simulator Interaktif Insertion Sort (Pengurutan Penyisipan)
+   * Menggunakan analogi menyusun kartu di tangan saat bermain kartu:
+   * Elemen aktif (key) diambil, dibandingkan ke belakang, elemen lebih besar digeser ke kanan,
+   * dan key disisipkan pada celah posisi yang tepat.
+   * Dilengkapi penelusuran langkah 1-4 sesuai Buku Teks SMA Hal. 55 pada array [5, 2, 4, 6, 1],
+   * visual bar ketinggian proporsional, step-by-step & undo, putar otomatis, dan trace table lengkap.
+   * ========================================================================== */
+  const isDatasets = {
+    sma: [5, 2, 4, 6, 1],
+    reversed: [8, 7, 6, 5, 4],
+    random: [12, 5, 23, 8, 1, 19]
+  };
+
+  let currentIsDatasetKey = "sma";
+  let isData = [...isDatasets.sma];
+
+  let isState = {
+    i: 1,
+    currentArray: [...isDatasets.sma],
+    stepNumber: 0,
+    isFinished: false,
+    isRunning: false,
+    intervalId: null,
+    speed: 900,
+    history: [],
+    containerId: "visInsertionSortContainer",
+    currentExplanation: "Inisialisasi Insertion Sort pada array <code>[5, 2, 4, 6, 1]</code> (Buku Teks SMA Hal. 55). Elemen pertama <code>5</code> diasumsikan sudah terurut di tangan kiri. Tekan <strong>'⏩ Langkah Berikutnya (Step)'</strong> atau <strong>'▶️ Urutkan Otomatis'</strong> untuk mulai menyisipkan elemen ke-2.",
+    statusBadge: "Siap Mengurutkan",
+    statusType: "primary",
+    lastStepDetail: null,
+    stepLogs: []
+  };
+
+  function initInsertionSortSimulator(containerId) {
+    if (containerId) isState.containerId = containerId;
+    pauseAutoInsertionSort();
+    resetInsertionSort();
+  }
+
+  function renderInsertionSort() {
+    const container = document.getElementById(isState.containerId);
+    if (!container) return;
+
+    const {
+      i,
+      currentArray,
+      stepNumber,
+      isFinished,
+      isRunning,
+      speed,
+      history,
+      currentExplanation,
+      statusBadge,
+      statusType,
+      lastStepDetail,
+      stepLogs
+    } = isState;
+
+    const n = currentArray.length;
+    const maxVal = Math.max(...currentArray, 1);
+
+    container.innerHTML = `
+      <div class="visualizer-panel is-visualizer-panel">
+        <!-- Header Info -->
+        <div class="vis-header">
+          <div class="vis-title">
+            <span class="badge-tag" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); color: #fff;">
+              🃏 Simulasi Animasi Insertion Sort
+            </span>
+            <h4>Pengurutan Penyisipan: Menyusun Kartu di Tangan Satu per Satu</h4>
+          </div>
+          <div class="vis-stats">
+            <span class="stat-pill">Jumlah Data <code>n</code>: <strong>${n}</strong></span>
+            <span class="stat-pill">Putaran Kartu (<code>i</code>): <strong style="color: var(--accent-cyan);">${isFinished ? 'Selesai' : i}</strong></span>
+            <span class="stat-pill">Kartu Aktif (<code>key</code>): <strong style="color: #ec4899;">${lastStepDetail ? lastStepDetail.key : (i < n ? currentArray[i] : '-')}</strong></span>
+            <span class="stat-pill">Elemen Terurut: <strong style="color: #10b981;">${isFinished ? n : i} / ${n}</strong></span>
+            <span class="stat-pill">Status: <strong>${statusBadge}</strong></span>
+          </div>
+        </div>
+
+        <!-- Pilihan Dataset / Preset -->
+        <div class="bs-dataset-bar">
+          <span class="bs-dataset-label">Pilih Data Contoh:</span>
+          <button class="btn btn-xs ${currentIsDatasetKey === 'sma' ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.selectInsertionDataset('sma')">
+            📘 Contoh Buku SMA: [5, 2, 4, 6, 1]
+          </button>
+          <button class="btn btn-xs ${currentIsDatasetKey === 'reversed' ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.selectInsertionDataset('reversed')">
+            🔄 Terbalik: [8, 7, 6, 5, 4]
+          </button>
+          <button class="btn btn-xs ${currentIsDatasetKey === 'random' ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.selectInsertionDataset('random')">
+            🎲 Acak: [12, 5, 23, 8, 1, 19]
+          </button>
+
+          <div style="margin-left: auto; display: flex; gap: 0.4rem; align-items: center;">
+            <input type="text" id="inputCustomIs" placeholder="Contoh: 9, 3, 7, 1, 5" class="vis-input-small" style="width: 140px; font-size: 0.8rem;" title="Ketik angka dipisah koma">
+            <button class="btn btn-xs btn-outline" onclick="Visualizer.setCustomInsertionData()">Terapkan Data</button>
+          </div>
+        </div>
+
+        <!-- Box Visualisasi Array dengan Kartu & Bar Tinggi -->
+        <div class="memory-grid-wrapper is-memory-wrapper">
+          <div class="memory-boxes" id="memInsertionBoxes">
+            ${currentArray.map((val, idx) => {
+              const isSorted = isFinished ? true : (idx < i);
+              const isNewlyInserted = (lastStepDetail && lastStepDetail.insertIdx === idx);
+              const isShifted = (lastStepDetail && lastStepDetail.shiftedElements.some(s => s.toIdx === idx));
+              const isNextCard = (!isFinished && idx === i);
+
+              let slotClass = "mem-slot is-slot";
+              if (isNewlyInserted) {
+                slotClass += " is-slot-inserted pulse";
+              } else if (isShifted) {
+                slotClass += " is-slot-shifted";
+              } else if (isSorted) {
+                slotClass += " is-slot-sorted";
+              } else if (isNextCard) {
+                slotClass += " is-slot-next";
+              }
+
+              // Pointer badges di atas kartu
+              let badgeHtml = "";
+              if (isFinished) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-awal" style="background:#10b981;">✓ Terurut</div>`;
+              } else if (isNewlyInserted) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-all" style="background: linear-gradient(135deg, #ec4899, #a855f7);">📥 Sisip (key=${val})</div>`;
+              } else if (isShifted) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-tengah" style="background: #f59e0b;">&rarr; Digeser</div>`;
+              } else if (isNextCard) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-awal" style="background: var(--accent-cyan); color: #0b0f19;">🃏 Kartu i=${idx}</div>`;
+              } else if (isSorted) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-awal" style="background:#10b981; font-size:0.65rem;">✓ Terurut</div>`;
+              }
+
+              // Bar tinggi proporsional
+              const heightPercent = Math.max(15, Math.round((val / maxVal) * 100));
+
+              // Label bawah
+              let subLabel = "";
+              if (isNewlyInserted) {
+                subLabel = `<div class="slot-pointer" style="color:#ec4899; font-weight:700;">Disisipkan</div>`;
+              } else if (isShifted) {
+                subLabel = `<div class="slot-pointer" style="color:#f59e0b; font-weight:700;">Digeser ke Kanan</div>`;
+              } else if (isSorted) {
+                subLabel = `<div class="slot-pointer" style="color:#10b981; font-weight:700;">✓ Terurut di Tangan</div>`;
+              } else if (isNextCard) {
+                subLabel = `<div class="slot-pointer" style="color:var(--accent-cyan);">Kartu Berikutnya</div>`;
+              } else {
+                subLabel = `<div class="slot-pointer">Belum Disisipkan</div>`;
+              }
+
+              return `
+                <div class="${slotClass}" data-idx="${idx}">
+                  ${badgeHtml}
+                  <!-- Mini Bar Tinggi -->
+                  <div class="is-bar-track">
+                    <div class="is-bar-fill" style="height: ${heightPercent}%;"></div>
+                  </div>
+                  <div class="slot-idx">Indeks: ${idx}</div>
+                  <div class="slot-val">${val}</div>
+                  ${subLabel}
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <!-- Narasi Langkah Berjalan -->
+        <div class="search-step-tracker is-step-tracker">
+          <div class="search-step-row">
+            <span class="search-status-badge badge-${statusType}">
+              ${statusBadge}
+            </span>
+            <span style="font-size: 0.95rem; line-height: 1.5;">${currentExplanation}</span>
+          </div>
+        </div>
+
+        <!-- Kartu Evaluasi Putaran -->
+        <div class="bs-math-grid">
+          <div class="bs-math-card">
+            <div class="bs-math-card-header">
+              <span class="icon">🃏</span>
+              <strong>Kartu yang Diambil (<code>key</code>) & Posisi Sisip</strong>
+            </div>
+            <div class="bs-math-body">
+              ${lastStepDetail ? `
+                <div style="font-size: 0.9rem; margin-bottom: 0.35rem;">
+                  Langkah Buku: <strong>${lastStepDetail.label}</strong> (Putaran <code>i = ${lastStepDetail.i}</code>)
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-muted);">
+                  Kartu disisipkan: <strong style="color: #ec4899; font-size: 1rem;">${lastStepDetail.key}</strong> (dari indeks <code>${lastStepDetail.i}</code>)
+                </div>
+                <div style="font-size: 0.88rem; margin-top: 0.35rem;">
+                  Posisi penyisipan akhir: Indeks <strong style="color: #10b981;">${lastStepDetail.insertIdx}</strong>
+                </div>
+              ` : `
+                <div class="text-muted" style="font-size: 0.88rem; padding: 0.35rem 0;">
+                  Elemen pertama <code>A[0] = ${currentArray[0]}</code> sudah dianggap terurut.<br>
+                  Tekan <strong>"Langkah Berikutnya"</strong> untuk mengambil elemen ke-2 (<code>i = 1</code>).
+                </div>
+              `}
+            </div>
+          </div>
+
+          <div class="bs-math-card">
+            <div class="bs-math-card-header">
+              <span class="icon">➡️</span>
+              <strong>Aksi Pergeseran Elemen & Perbandingan</strong>
+            </div>
+            <div class="bs-math-body">
+              ${lastStepDetail ? `
+                <div class="bs-decision-tag ${lastStepDetail.shiftCount > 0 ? 'decision-warning' : 'decision-success'}">
+                  ${lastStepDetail.shiftCount > 0 ? `Geser ${lastStepDetail.shiftCount} Elemen ke Kanan` : `Biarkan (key sudah lebih besar)`}
+                </div>
+                <div class="bs-decision-desc">
+                  ${lastStepDetail.shiftText}<br>
+                  <span style="font-size: 0.82rem; color: var(--text-dim);">Evaluasi perbandingan: ${lastStepDetail.comparisons.join(" &bull; ")}</span>
+                </div>
+              ` : `
+                <div class="text-muted" style="font-size: 0.88rem; padding: 0.35rem 0;">
+                  Algoritma akan membandingkan <code>key</code> ke elemen-elemen sebelumnya ke arah kiri. Elemen yang lebih besar dari <code>key</code> akan digeser ke kanan.
+                </div>
+              `}
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabel Penelusuran Langkah (Trace Table) -->
+        ${stepLogs.length > 0 ? `
+          <div class="bs-tracer-wrapper">
+            <div class="bs-tracer-title">📋 Tabel Penelusuran Langkah (Trace Table Sesuai Buku Teks Hal. 55):</div>
+            <div class="table-responsive">
+              <table class="modern-table bs-tracer-table">
+                <thead>
+                  <tr>
+                    <th>Langkah</th>
+                    <th>Indeks i</th>
+                    <th>Kartu (key)</th>
+                    <th>Perbandingan ke Belakang</th>
+                    <th>Elemen yang Digeser</th>
+                    <th>Posisi Sisip</th>
+                    <th>Hasil Array Setelah Langkah</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${stepLogs.map(log => `
+                    <tr>
+                      <td><strong>${log.label}</strong></td>
+                      <td><code>i = ${log.i}</code></td>
+                      <td><strong style="color: #ec4899;">${log.key}</strong></td>
+                      <td style="font-size: 0.82rem;">${log.comparisons}</td>
+                      <td><span style="color: #f59e0b; font-weight: 600;">${log.shiftedText}</span></td>
+                      <td><code>Indeks ${log.insertIdx}</code></td>
+                      <td><code style="color: #38bdf8; font-weight: 700;">[${log.arrayResult.join(", ")}]</code></td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Kontrol Interaktif -->
+        <div class="vis-controls">
+          <div class="control-row">
+            <button class="btn btn-sm btn-outline" onclick="Visualizer.stepBackInsertionSort()" ${history.length === 0 ? 'disabled' : ''} title="Mundur ke langkah sebelumnya">
+              <span>⏪ Mundur (Step Back)</span>
+            </button>
+
+            <button class="btn btn-sm btn-primary" onclick="Visualizer.stepInsertionSort()" ${isFinished ? 'disabled' : ''} title="Jalankan satu putaran insertion sort">
+              <span>⏩ Langkah Berikutnya (Step)</span>
+            </button>
+
+            <button class="btn btn-sm btn-secondary" onclick="Visualizer.toggleAutoInsertionSort()">
+              <span id="insertionAutoText">${isRunning ? '⏸️ Jeda (Pause)' : '▶️ Urutkan Otomatis'}</span>
+            </button>
+
+            <button class="btn btn-sm btn-outline" onclick="Visualizer.resetInsertionSort()" title="Reset array ke kondisi awal">
+              <span>🔄 Reset</span>
+            </button>
+          </div>
+
+          <div class="control-row secondary">
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Kecepatan Animasi:</span>
+            <input type="range" min="300" max="1500" step="100" value="${1800 - speed}" class="vis-range-small" onchange="Visualizer.setInsertionSpeed(this.value)">
+            <span style="margin-left: auto; font-size: 0.82rem; color: var(--text-muted);">
+              ${isFinished ? '🎉 Selesai Terurut!' : `Langkah ${stepNumber} dari ${Math.max(1, n - 1)}`}
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function stepInsertionSort() {
+    if (isState.isFinished) return;
+
+    const n = isState.currentArray.length;
+
+    // Simpan snapshot untuk tombol undo
+    isState.history.push({
+      i: isState.i,
+      currentArray: [...isState.currentArray],
+      stepNumber: isState.stepNumber,
+      isFinished: isState.isFinished,
+      currentExplanation: isState.currentExplanation,
+      statusBadge: isState.statusBadge,
+      statusType: isState.statusType,
+      lastStepDetail: isState.lastStepDetail ? JSON.parse(JSON.stringify(isState.lastStepDetail)) : null,
+      stepLogs: JSON.parse(JSON.stringify(isState.stepLogs))
+    });
+
+    if (isState.i >= n) {
+      isState.isFinished = true;
+      isState.statusBadge = "Selesai Terurut!";
+      isState.statusType = "success";
+      isState.currentExplanation = `<span style="color: #10b981; font-weight: bold;">🎉 SELESAI TERURUT!</span> Seluruh elemen kini telah berada pada posisi yang tepat: <code>[${isState.currentArray.join(", ")}]</code>.`;
+      pauseAutoInsertionSort();
+      renderInsertionSort();
+      return;
+    }
+
+    const curI = isState.i;
+    const key = isState.currentArray[curI];
+    const prevArray = [...isState.currentArray];
+
+    let j = curI - 1;
+    const shiftedElements = [];
+    const comparisons = [];
+
+    while (j >= 0 && isState.currentArray[j] > key) {
+      shiftedElements.push({
+        val: isState.currentArray[j],
+        fromIdx: j,
+        toIdx: j + 1
+      });
+      comparisons.push(`${isState.currentArray[j]} > ${key} (geser ${isState.currentArray[j]})`);
+      isState.currentArray[j + 1] = isState.currentArray[j];
+      j--;
+    }
+
+    if (j >= 0) {
+      comparisons.push(`${isState.currentArray[j]} &le; ${key} (stop geser)`);
+    }
+
+    const insertIdx = j + 1;
+    isState.currentArray[insertIdx] = key;
+    isState.stepNumber++;
+
+    const labels = ["", "Langkah 1", "Langkah 2", "Langkah 3", "Langkah 4", "Langkah 5", "Langkah 6", "Langkah 7"];
+    const stepLabel = labels[curI] || `Langkah ${curI}`;
+
+    let stepExplanation = "";
+    if (currentIsDatasetKey === "sma" && curI === 1) {
+      stepExplanation = `<strong>• Mulai dari elemen ke-2 (yaitu 2):</strong> Bandingkan dengan 5, karena <code>2 &lt; 5</code>, geser 5 ke kanan, masukkan 2 ke indeks 0. Hasil: <code>[${isState.currentArray.join(", ")}]</code>`;
+    } else if (currentIsDatasetKey === "sma" && curI === 2) {
+      stepExplanation = `<strong>• Elemen berikutnya 4:</strong> Bandingkan ke belakang, <code>5 &gt; 4</code>, maka geser 5, masukkan 4 ke indeks 1. Hasil: <code>[${isState.currentArray.join(", ")}]</code>`;
+    } else if (currentIsDatasetKey === "sma" && curI === 3) {
+      stepExplanation = `<strong>• Elemen berikutnya 6:</strong> Ini nilainya sudah lebih besar dari sebelumnya (<code>6 &gt; 5</code>), maka biarkan. Hasil: <code>[${isState.currentArray.join(", ")}]</code>`;
+    } else if (currentIsDatasetKey === "sma" && curI === 4) {
+      stepExplanation = `<strong>• Elemen berikutnya 1:</strong> Bandingkan dengan sebelumnya, jika elemen sebelumnya lebih besar maka digeser. Jadi geser 6, 5, 4, 2 ke kanan, dan masukkan 1 ke indeks 0. Hasil: <code>[${isState.currentArray.join(", ")}]</code>`;
+    } else {
+      if (shiftedElements.length > 0) {
+        stepExplanation = `<strong>${stepLabel}:</strong> Elemen <code>key = ${key}</code> (indeks ${curI}). Geser ${shiftedElements.map(s => s.val).join(", ")} ke kanan, lalu sisipkan ${key} ke indeks ${insertIdx}. Hasil: <code>[${isState.currentArray.join(", ")}]</code>`;
+      } else {
+        stepExplanation = `<strong>${stepLabel}:</strong> Elemen <code>key = ${key}</code> (indeks ${curI}) sudah lebih besar dari elemen sebelumnya, sehingga dibiarkan pada posisinya. Hasil: <code>[${isState.currentArray.join(", ")}]</code>`;
+      }
+    }
+
+    let shiftText = "";
+    if (shiftedElements.length > 0) {
+      shiftText = `Geser ${shiftedElements.map(s => s.val).join(", ")} ke kanan, sisipkan ${key} ke indeks ${insertIdx}`;
+    } else {
+      shiftText = `Nilai ${key} sudah lebih besar dari elemen sebelumnya (biarkan)`;
+    }
+
+    isState.lastStepDetail = {
+      label: stepLabel,
+      i: curI,
+      key: key,
+      insertIdx: insertIdx,
+      shiftedElements: shiftedElements,
+      shiftCount: shiftedElements.length,
+      prevArray: prevArray,
+      comparisons: comparisons,
+      shiftText: shiftText
+    };
+
+    isState.currentExplanation = stepExplanation;
+    isState.statusBadge = `${stepLabel} (${curI}/${n - 1})`;
+    isState.statusType = "warning";
+
+    isState.stepLogs.push({
+      label: stepLabel,
+      i: curI,
+      key: key,
+      comparisons: comparisons.length > 0 ? comparisons.join("; ") : "Nilai sudah &gt; elemen sebelumnya",
+      shiftedText: shiftedElements.length > 0 ? shiftedElements.map(s => s.val).join(", ") : "Tidak ada (biarkan)",
+      insertIdx: insertIdx,
+      arrayResult: [...isState.currentArray]
+    });
+
+    isState.i++;
+
+    if (isState.i >= n) {
+      isState.isFinished = true;
+      isState.statusBadge = "Selesai Terurut!";
+      isState.statusType = "success";
+      isState.currentExplanation += `<br><span style="color: #10b981; font-weight: bold;">🎉 Selesai!</span> Seluruh elemen array kini telah terurut sempurna: <code>[${isState.currentArray.join(", ")}]</code>.`;
+      pauseAutoInsertionSort();
+    }
+
+    renderInsertionSort();
+  }
+
+  function stepBackInsertionSort() {
+    if (isState.history.length === 0) return;
+    pauseAutoInsertionSort();
+    const prev = isState.history.pop();
+    isState.i = prev.i;
+    isState.currentArray = prev.currentArray;
+    isState.stepNumber = prev.stepNumber;
+    isState.isFinished = prev.isFinished;
+    isState.currentExplanation = prev.currentExplanation;
+    isState.statusBadge = prev.statusBadge;
+    isState.statusType = prev.statusType;
+    isState.lastStepDetail = prev.lastStepDetail;
+    isState.stepLogs = prev.stepLogs;
+    renderInsertionSort();
+  }
+
+  function toggleAutoInsertionSort() {
+    if (isState.isRunning) {
+      pauseAutoInsertionSort();
+    } else {
+      startAutoInsertionSort();
+    }
+  }
+
+  function startAutoInsertionSort() {
+    if (isState.isFinished) {
+      resetInsertionSort();
+    }
+    isState.isRunning = true;
+    renderInsertionSort();
+    isState.intervalId = setInterval(() => {
+      if (isState.isFinished) {
+        pauseAutoInsertionSort();
+      } else {
+        stepInsertionSort();
+      }
+    }, isState.speed);
+  }
+
+  function pauseAutoInsertionSort() {
+    isState.isRunning = false;
+    if (isState.intervalId) {
+      clearInterval(isState.intervalId);
+      isState.intervalId = null;
+    }
+    const btn = document.getElementById("insertionAutoText");
+    if (btn) btn.textContent = "▶️ Urutkan Otomatis";
+  }
+
+  function resetInsertionSort() {
+    pauseAutoInsertionSort();
+    isState.i = 1;
+    isState.currentArray = [...isData];
+    isState.stepNumber = 0;
+    isState.isFinished = false;
+    isState.history = [];
+    isState.stepLogs = [];
+    isState.lastStepDetail = null;
+    isState.statusBadge = "Siap Mengurutkan";
+    isState.statusType = "primary";
+    isState.currentExplanation = `Inisialisasi Insertion Sort pada array <code>[${isData.join(", ")}]</code>. Elemen pertama <code>${isData[0]}</code> diasumsikan sudah terurut di tangan. Tekan tombol <strong>'⏩ Langkah Berikutnya (Step)'</strong> atau <strong>'▶️ Urutkan Otomatis'</strong> untuk mulai menyisipkan elemen berikutnya.`;
+    renderInsertionSort();
+  }
+
+  function selectInsertionDataset(key) {
+    if (!isDatasets[key]) return;
+    pauseAutoInsertionSort();
+    currentIsDatasetKey = key;
+    isData = [...isDatasets[key]];
+    resetInsertionSort();
+  }
+
+  function setCustomInsertionData() {
+    const input = document.getElementById("inputCustomIs");
+    if (!input || !input.value.trim()) return;
+
+    const parts = input.value.split(",").map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+    if (parts.length < 2) {
+      alert("Masukkan minimal 2 angka yang dipisahkan dengan tanda koma (misal: 5, 2, 4, 6, 1)");
+      return;
+    }
+
+    pauseAutoInsertionSort();
+    currentIsDatasetKey = "custom";
+    isData = parts.slice(0, 10);
+    resetInsertionSort();
+  }
+
+  function setInsertionSpeed(val) {
+    isState.speed = 1800 - parseInt(val, 10);
+    if (isState.isRunning) {
+      pauseAutoInsertionSort();
+      startAutoInsertionSort();
+    }
+  }
+
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, "&amp;")
@@ -1880,7 +2391,16 @@ const Visualizer = (function () {
     resetSelectionSort,
     selectSelectionDataset,
     setCustomSelectionData,
-    setSelectionSpeed
+    setSelectionSpeed,
+
+    initInsertionSortSimulator,
+    stepInsertionSort,
+    stepBackInsertionSort,
+    toggleAutoInsertionSort,
+    resetInsertionSort,
+    selectInsertionDataset,
+    setCustomInsertionData,
+    setInsertionSpeed
   };
 })();
 

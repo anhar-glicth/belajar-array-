@@ -32,7 +32,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
    - Simulator visualisasi traversal sel matriks.
 
 4. **4. Latihan Praktik Koding**
-   - 8 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
+   - 9 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
      - **Latihan 1:** Operasi Penjumlahan dalam Array
      - **Latihan 2:** Evaluasi Kelulusan Siswa (Nested If)
      - **Latihan 3:** Algoritma Predikat Nilai Akhir
@@ -41,6 +41,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
      - **Latihan 6:** Algoritma Rule-Based Diagnosa Kesehatan AI
      - **Latihan 7:** Algoritma Pencarian Binary Search pada Array Terurut
      - **Latihan 8:** Algoritma Pengurutan Selection Sort pada Array
+     - **Latihan 9:** Algoritma Pengurutan Insertion Sort pada Array
 
 5. **5. Sequential Search (Linear Search)**
    - Pengertian Sequential Search dan cara kerja membandingkan elemen satu per satu.
@@ -65,6 +66,14 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
    - Implementasi kode nyata dalam JavaScript dan Python (termasuk teknik tuple swap Python).
    - Analisis kompleksitas $O(n^2)$ dan keunggulan jumlah penukaran (swap) minimal maksimal hanya $n - 1$ kali.
    - **Simulator Animasi Interaktif:** Mini bar tinggi visual proporsional, penanda bagian terurut (hijau) vs belum terurut, pointer target swap `i` dan nilai minimum `min_idx`, animasi pertukaran nilai (swap), tombol langkah maju/mundur (*step-by-step & undo*), putar otomatis, multi-dataset (Buku SMA, Terbalik, Acak, dan Kustom), kartu status putaran, trace table lengkap, serta box *"Coba sendiri"*.
+
+8. **8. Insertion Sort (Pengurutan Penyisipan)**
+   - Pengertian Insertion Sort: bekerja seperti seseorang menyusun kartu di tangan saat bermain kartu, menyisipkan elemen satu per satu ke posisi yang tepat.
+   - Langkah penelusuran (Langkah 1 s.d. 4) pada array buku teks SMA Kelas X Hal. 55 `[5, 2, 4, 6, 1]`.
+   - Notasi algoritma pseudocode standar SMA dengan variabel kunci `key`, perbandingan mundur, dan pergeseran elemen ke kanan.
+   - Implementasi kode nyata dalam JavaScript dan Python.
+   - **Tabel 2.2 Perbandingan Lengkap:** Komparasi Selection Sort vs. Insertion Sort (Metode pengurutan, cara kerja, jumlah pertukaran/pergeseran, Best Case $O(n)$, kestabilan, dan analogi dunia nyata).
+   - **Simulator Animasi Interaktif:** Visualisasi metafora kartu remi, kartu aktif `key` terangkat (*card lift*), animasi pergeseran elemen ke kanan, penanda posisi sisip, tombol langkah maju/mundur (*step-by-step & undo*), putar otomatis, multi-dataset (Buku SMA, Terbalik, Acak, dan Kustom), kartu evaluasi perbandingan, trace table lengkap, serta box *"Coba sendiri"*.
 
 ---
 
