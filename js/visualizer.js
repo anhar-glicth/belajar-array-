@@ -1340,6 +1340,493 @@ const Visualizer = (function () {
     resetBinarySearch();
   }
 
+  /**
+   * 6. Simulator Interaktif Selection Sort (Pengurutan Pilihan)
+   * Menampilkan pembagian array: bagian terurut (kiri) vs belum terurut (kanan),
+   * visualisasi pencarian nilai terkecil (min_idx) dan penukaran (swap),
+   * bar ketinggian visual proporsional, step-by-step & undo, putar otomatis,
+   * narasi langkah a-d sesuai buku teks SMA Hal. 54, dan trace table lengkap.
+   */
+  const ssDatasets = {
+    sma: [6, 3, 8, 5, 2],
+    reversed: [9, 7, 5, 3, 1],
+    random: [14, 5, 28, 9, 3, 17]
+  };
+
+  let currentSsDatasetKey = "sma";
+  let ssData = [...ssDatasets.sma];
+
+  let ssState = {
+    i: 0,
+    currentArray: [...ssDatasets.sma],
+    stepNumber: 0,
+    isFinished: false,
+    isRunning: false,
+    intervalId: null,
+    speed: 900,
+    history: [],
+    containerId: "visSelectionSortContainer",
+    currentExplanation: "Inisialisasi Selection Sort pada array <code>[6, 3, 8, 5, 2]</code>. Tekan tombol <strong>'⏩ Langkah Berikutnya (Step)'</strong> atau <strong>'▶️ Urutkan Otomatis'</strong> untuk mulai mengurutkan data.",
+    statusBadge: "Siap Mengurutkan",
+    statusType: "primary",
+    lastStepDetail: null,
+    stepLogs: []
+  };
+
+  function initSelectionSortSimulator(containerId) {
+    if (containerId) ssState.containerId = containerId;
+    pauseAutoSelectionSort();
+    resetSelectionSort();
+  }
+
+  function renderSelectionSort() {
+    const container = document.getElementById(ssState.containerId);
+    if (!container) return;
+
+    const {
+      i,
+      currentArray,
+      stepNumber,
+      isFinished,
+      isRunning,
+      speed,
+      history,
+      currentExplanation,
+      statusBadge,
+      statusType,
+      lastStepDetail,
+      stepLogs
+    } = ssState;
+
+    const n = currentArray.length;
+    const maxVal = Math.max(...currentArray, 1);
+
+    container.innerHTML = `
+      <div class="visualizer-panel ss-visualizer-panel">
+        <!-- Header Info -->
+        <div class="vis-header">
+          <div class="vis-title">
+            <span class="badge-tag" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo)); color: #fff;">
+              📶 Simulasi Animasi Selection Sort
+            </span>
+            <h4>Pengurutan Pilihan: Memilih Nilai Terkecil & Menukar ke Posisi Awal</h4>
+          </div>
+          <div class="vis-stats">
+            <span class="stat-pill">Jumlah Data <code>n</code>: <strong>${n}</strong></span>
+            <span class="stat-pill">Putaran Berjalan (<code>i</code>): <strong style="color: var(--accent-cyan);">${isFinished ? 'Selesai' : i}</strong></span>
+            <span class="stat-pill">Elemen Terurut: <strong style="color: #10b981;">${isFinished ? n : i} / ${n}</strong></span>
+            <span class="stat-pill">Status: <strong>${statusBadge}</strong></span>
+          </div>
+        </div>
+
+        <!-- Pilihan Dataset / Preset -->
+        <div class="bs-dataset-bar">
+          <span class="bs-dataset-label">Pilih Data Contoh:</span>
+          <button class="btn btn-xs ${currentSsDatasetKey === 'sma' ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.selectSelectionDataset('sma')">
+            📘 Contoh Buku SMA: [6, 3, 8, 5, 2]
+          </button>
+          <button class="btn btn-xs ${currentSsDatasetKey === 'reversed' ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.selectSelectionDataset('reversed')">
+            🔄 Terbalik: [9, 7, 5, 3, 1]
+          </button>
+          <button class="btn btn-xs ${currentSsDatasetKey === 'random' ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.selectSelectionDataset('random')">
+            🎲 Acak: [14, 5, 28, 9, 3, 17]
+          </button>
+
+          <div style="margin-left: auto; display: flex; gap: 0.4rem; align-items: center;">
+            <input type="text" id="inputCustomSs" placeholder="Contoh: 12, 4, 8, 1, 9" class="vis-input-small" style="width: 140px; font-size: 0.8rem;" title="Ketik angka dipisah koma">
+            <button class="btn btn-xs btn-outline" onclick="Visualizer.setCustomSelectionData()">Terapkan Data</button>
+          </div>
+        </div>
+
+        <!-- Box Visualisasi Array dengan Bar Tinggi -->
+        <div class="memory-grid-wrapper ss-memory-wrapper">
+          <div class="memory-boxes" id="memSelectionBoxes">
+            ${currentArray.map((val, idx) => {
+              const isSorted = isFinished ? true : (idx < i);
+              const isTargetI = (!isFinished && idx === i);
+              const isMinFound = (!isFinished && lastStepDetail && lastStepDetail.minIdx === idx);
+              const isSwapped = (lastStepDetail && lastStepDetail.swapped && (lastStepDetail.i === idx || lastStepDetail.minIdx === idx));
+
+              let slotClass = "mem-slot ss-slot";
+              if (isSwapped) {
+                slotClass += " ss-slot-swapped pulse";
+              } else if (isSorted) {
+                slotClass += " ss-slot-sorted";
+              } else if (isMinFound) {
+                slotClass += " ss-slot-min pulse";
+              } else if (isTargetI) {
+                slotClass += " ss-slot-target";
+              }
+
+              // Pointer badges di atas kotak
+              let badgeHtml = "";
+              if (isFinished) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-awal" style="background:#10b981;">✓ Terurut</div>`;
+              } else if (isSwapped) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-all" style="background: linear-gradient(135deg, #a855f7, #38bdf8);">🔄 Tukar!</div>`;
+              } else if (isTargetI && isMinFound) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-awal-tengah">🎯⭐ i & min = ${idx}</div>`;
+              } else if (isMinFound) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-tengah">⭐ Min = ${val}</div>`;
+              } else if (isTargetI) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-awal">👇 Posisi i = ${idx}</div>`;
+              } else if (isSorted) {
+                badgeHtml = `<div class="bs-pointer-badge bs-badge-awal" style="background:#10b981; font-size:0.65rem;">✓ Terurut</div>`;
+              }
+
+              // Bar tinggi proporsional
+              const heightPercent = Math.max(15, Math.round((val / maxVal) * 100));
+
+              // Label bawah
+              let subLabel = "";
+              if (isSorted) {
+                subLabel = `<div class="slot-pointer" style="color:#10b981; font-weight:700;">✓ Selesai</div>`;
+              } else if (isMinFound) {
+                subLabel = `<div class="slot-pointer" style="color:#f59e0b; font-weight:700;">Nilai Terkecil</div>`;
+              } else if (isTargetI) {
+                subLabel = `<div class="slot-pointer" style="color:var(--accent-cyan);">Target Posisi</div>`;
+              } else {
+                subLabel = `<div class="slot-pointer">Belum terurut</div>`;
+              }
+
+              return `
+                <div class="${slotClass}" data-idx="${idx}">
+                  ${badgeHtml}
+                  <!-- Mini Bar Tinggi -->
+                  <div class="ss-bar-track">
+                    <div class="ss-bar-fill" style="height: ${heightPercent}%;"></div>
+                  </div>
+                  <div class="slot-idx">Indeks: ${idx}</div>
+                  <div class="slot-val">${val}</div>
+                  ${subLabel}
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <!-- Narasi Langkah Berjalan -->
+        <div class="search-step-tracker ss-step-tracker">
+          <div class="search-step-row">
+            <span class="search-status-badge badge-${statusType}">
+              ${statusBadge}
+            </span>
+            <span style="font-size: 0.95rem; line-height: 1.5;">${currentExplanation}</span>
+          </div>
+        </div>
+
+        <!-- Kartu Evaluasi Putaran -->
+        <div class="bs-math-grid">
+          <div class="bs-math-card">
+            <div class="bs-math-card-header">
+              <span class="icon">🔍</span>
+              <strong>Status Penelusuran Putaran</strong>
+            </div>
+            <div class="bs-math-body">
+              ${lastStepDetail ? `
+                <div style="font-size: 0.9rem; margin-bottom: 0.35rem;">
+                  Langkah Buku: <strong>${lastStepDetail.label}</strong> (Putaran <code>i = ${lastStepDetail.i}</code>)
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">
+                  Rentang Pencarian: Indeks <code>${lastStepDetail.i}</code> s.d. <code>${n - 1}</code>
+                </div>
+                <div style="font-size: 0.88rem; margin-top: 0.35rem;">
+                  Nilai minimum ditemukan: <strong style="color: #f59e0b;">${lastStepDetail.minVal}</strong> (pada indeks <code>${lastStepDetail.minIdx}</code>)
+                </div>
+              ` : `
+                <div class="text-muted" style="font-size: 0.88rem; padding: 0.35rem 0;">
+                  Array saat ini: <code>[${currentArray.join(", ")}]</code>.<br>
+                  Tekan <strong>"Langkah Berikutnya"</strong> untuk memulai putaran pertama ($i=0$).
+                </div>
+              `}
+            </div>
+          </div>
+
+          <div class="bs-math-card">
+            <div class="bs-math-card-header">
+              <span class="icon">🔄</span>
+              <strong>Aksi Pertukaran (Swap)</strong>
+            </div>
+            <div class="bs-math-body">
+              ${lastStepDetail ? `
+                <div class="bs-decision-tag ${lastStepDetail.swapped ? 'decision-success' : 'decision-warning'}">
+                  ${lastStepDetail.swapped ? `Tukar A[${lastStepDetail.i}] (${lastStepDetail.oldValI}) &harr; A[${lastStepDetail.minIdx}] (${lastStepDetail.minVal})` : `Tidak Perlu Ditukar (min_idx == i)`}
+                </div>
+                <div class="bs-decision-desc">
+                  ${lastStepDetail.swapDesc}
+                </div>
+              ` : `
+                <div class="text-muted" style="font-size: 0.88rem; padding: 0.35rem 0;">
+                  Jika nilai terkecil berada di luar indeks <code>i</code> (<code>min_idx !== i</code>), algoritma akan menukar nilainya dengan elemen posisi awal <code>A[i]</code>.
+                </div>
+              `}
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabel Penelusuran Langkah (Trace Table) -->
+        ${stepLogs.length > 0 ? `
+          <div class="bs-tracer-wrapper">
+            <div class="bs-tracer-title">📋 Tabel Penelusuran Langkah (Trace Table Sesuai Buku Hal. 54):</div>
+            <div class="table-responsive">
+              <table class="modern-table bs-tracer-table">
+                <thead>
+                  <tr>
+                    <th>Langkah</th>
+                    <th>Indeks i</th>
+                    <th>Bagian Belum Terurut</th>
+                    <th>Nilai Terkecil</th>
+                    <th>Status Pertukaran</th>
+                    <th>Hasil Array Setelah Putaran</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${stepLogs.map(log => `
+                    <tr class="${log.isComplete ? 'tr-success' : ''}">
+                      <td><strong>${log.label}</strong></td>
+                      <td><code>i = ${log.i}</code></td>
+                      <td><code>${log.unsortedSlice}</code></td>
+                      <td><strong style="color: #f59e0b;">${log.minVal}</strong> (indeks ${log.minIdx})</td>
+                      <td>${log.swapText}</td>
+                      <td><code style="color: #38bdf8; font-weight: 700;">[${log.arrayResult.join(", ")}]</code></td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Kontrol Interaktif -->
+        <div class="vis-controls">
+          <div class="control-row">
+            <button class="btn btn-sm btn-outline" onclick="Visualizer.stepBackSelectionSort()" ${history.length === 0 ? 'disabled' : ''} title="Mundur ke langkah sebelumnya">
+              <span>⏪ Mundur (Step Back)</span>
+            </button>
+
+            <button class="btn btn-sm btn-primary" onclick="Visualizer.stepSelectionSort()" ${isFinished ? 'disabled' : ''} title="Jalankan satu putaran selection sort">
+              <span>⏩ Langkah Berikutnya (Step)</span>
+            </button>
+
+            <button class="btn btn-sm btn-secondary" onclick="Visualizer.toggleAutoSelectionSort()">
+              <span id="selectionAutoText">${isRunning ? '⏸️ Jeda (Pause)' : '▶️ Urutkan Otomatis'}</span>
+            </button>
+
+            <button class="btn btn-sm btn-outline" onclick="Visualizer.resetSelectionSort()" title="Reset array ke kondisi awal">
+              <span>🔄 Reset</span>
+            </button>
+          </div>
+
+          <div class="control-row secondary">
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Kecepatan Animasi:</span>
+            <input type="range" min="300" max="1500" step="100" value="${1800 - speed}" class="vis-range-small" onchange="Visualizer.setSelectionSpeed(this.value)">
+            <span style="margin-left: auto; font-size: 0.82rem; color: var(--text-muted);">
+              ${isFinished ? '🎉 Selesai Terurut!' : `Langkah ${stepNumber} dari ${Math.max(1, n - 1)}`}
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function stepSelectionSort() {
+    if (ssState.isFinished) return;
+
+    const n = ssState.currentArray.length;
+
+    // Simpan snapshot untuk tombol undo
+    ssState.history.push({
+      i: ssState.i,
+      currentArray: [...ssState.currentArray],
+      stepNumber: ssState.stepNumber,
+      isFinished: ssState.isFinished,
+      currentExplanation: ssState.currentExplanation,
+      statusBadge: ssState.statusBadge,
+      statusType: ssState.statusType,
+      lastStepDetail: ssState.lastStepDetail ? { ...ssState.lastStepDetail } : null,
+      stepLogs: JSON.parse(JSON.stringify(ssState.stepLogs))
+    });
+
+    if (ssState.i >= n - 1) {
+      ssState.isFinished = true;
+      ssState.statusBadge = "Selesai Terurut!";
+      ssState.statusType = "success";
+      ssState.currentExplanation = `<span style="color: #10b981; font-weight: bold;">🎉 SELESAI TERURUT!</span> Seluruh elemen kini telah berada pada posisi yang tepat: <code>[${ssState.currentArray.join(", ")}]</code>.`;
+      pauseAutoSelectionSort();
+      renderSelectionSort();
+      return;
+    }
+
+    const curI = ssState.i;
+    const labels = ["Langkah a", "Langkah b", "Langkah c", "Langkah d", "Langkah e", "Langkah f", "Langkah g"];
+    const stepLabel = labels[curI] || `Putaran ${curI + 1}`;
+
+    // Cari elemen terkecil dari indeks curI sampai n - 1
+    let minIdx = curI;
+    const unsortedSlice = "[" + ssState.currentArray.slice(curI).join(", ") + "]";
+
+    for (let j = curI + 1; j < n; j++) {
+      if (ssState.currentArray[j] < ssState.currentArray[minIdx]) {
+        minIdx = j;
+      }
+    }
+
+    const minVal = ssState.currentArray[minIdx];
+    const oldValI = ssState.currentArray[curI];
+    const didSwap = (minIdx !== curI);
+
+    let swapDesc = "";
+    let swapText = "";
+
+    if (didSwap) {
+      // Tukar A[curI] dengan A[minIdx]
+      ssState.currentArray[curI] = minVal;
+      ssState.currentArray[minIdx] = oldValI;
+      swapDesc = `Nilai terkecil <strong>${minVal}</strong> (di indeks ${minIdx}) ditukar dengan nilai awal <strong>${oldValI}</strong> (di indeks ${curI}).`;
+      swapText = `<span style="color: #38bdf8; font-weight: 700;">Tukar (${oldValI} &harr; ${minVal})</span>`;
+    } else {
+      swapDesc = `Nilai terkecil <strong>${minVal}</strong> sudah berada di indeks ${curI}, sehingga tidak perlu ditukar.`;
+      swapText = `<span style="color: var(--text-muted);">Tidak perlu tukar</span>`;
+    }
+
+    ssState.stepNumber++;
+    ssState.lastStepDetail = {
+      i: curI,
+      minIdx: minIdx,
+      minVal: minVal,
+      oldValI: oldValI,
+      swapped: didSwap,
+      label: stepLabel,
+      swapDesc: swapDesc
+    };
+
+    ssState.currentExplanation = `<strong>${stepLabel}:</strong> Cari nilai terkecil dari indeks <code>${curI}</code> hingga akhir. Didapat hasil angka <strong>${minVal}</strong> yang paling kecil (indeks ${minIdx}), ${didSwap ? `maka tukar dengan indeks ke-${curI} (angka ${oldValI})` : `sudah di posisi ${curI} sehingga tidak perlu ditukar`}. Hasil: <code>[${ssState.currentArray.join(", ")}]</code>.`;
+    ssState.statusBadge = `${stepLabel} (${curI + 1}/${n - 1})`;
+    ssState.statusType = "warning";
+
+    // Rekam ke stepLogs
+    ssState.stepLogs.push({
+      label: stepLabel,
+      i: curI,
+      unsortedSlice: unsortedSlice,
+      minVal: minVal,
+      minIdx: minIdx,
+      swapText: swapText,
+      arrayResult: [...ssState.currentArray],
+      isComplete: false
+    });
+
+    // Pindah ke putaran i berikutnya
+    ssState.i++;
+
+    // Jika sudah mencapai n - 1, berarti sudah selesai
+    if (ssState.i >= n - 1) {
+      ssState.isFinished = true;
+      ssState.statusBadge = "Selesai Terurut!";
+      ssState.statusType = "success";
+      ssState.currentExplanation += `<br><span style="color: #10b981; font-weight: bold;">🎉 Selesai!</span> Karena ${n - 1} elemen pertama sudah berada pada posisi yang tepat, elemen terakhir secara otomatis sudah benar. Seluruh array kini terurut: <code>[${ssState.currentArray.join(", ")}]</code>.`;
+      pauseAutoSelectionSort();
+    }
+
+    renderSelectionSort();
+  }
+
+  function stepBackSelectionSort() {
+    if (ssState.history.length === 0) return;
+    pauseAutoSelectionSort();
+    const prev = ssState.history.pop();
+    ssState.i = prev.i;
+    ssState.currentArray = prev.currentArray;
+    ssState.stepNumber = prev.stepNumber;
+    ssState.isFinished = prev.isFinished;
+    ssState.currentExplanation = prev.currentExplanation;
+    ssState.statusBadge = prev.statusBadge;
+    ssState.statusType = prev.statusType;
+    ssState.lastStepDetail = prev.lastStepDetail;
+    ssState.stepLogs = prev.stepLogs;
+    renderSelectionSort();
+  }
+
+  function toggleAutoSelectionSort() {
+    if (ssState.isRunning) {
+      pauseAutoSelectionSort();
+    } else {
+      startAutoSelectionSort();
+    }
+  }
+
+  function startAutoSelectionSort() {
+    if (ssState.isFinished) {
+      resetSelectionSort();
+    }
+    ssState.isRunning = true;
+    renderSelectionSort();
+    ssState.intervalId = setInterval(() => {
+      if (ssState.isFinished) {
+        pauseAutoSelectionSort();
+      } else {
+        stepSelectionSort();
+      }
+    }, ssState.speed);
+  }
+
+  function pauseAutoSelectionSort() {
+    ssState.isRunning = false;
+    if (ssState.intervalId) {
+      clearInterval(ssState.intervalId);
+      ssState.intervalId = null;
+    }
+    const btn = document.getElementById("selectionAutoText");
+    if (btn) btn.textContent = "▶️ Urutkan Otomatis";
+  }
+
+  function resetSelectionSort() {
+    pauseAutoSelectionSort();
+    ssState.i = 0;
+    ssState.currentArray = [...ssData];
+    ssState.stepNumber = 0;
+    ssState.isFinished = false;
+    ssState.history = [];
+    ssState.stepLogs = [];
+    ssState.lastStepDetail = null;
+    ssState.statusBadge = "Siap Mengurutkan";
+    ssState.statusType = "primary";
+    ssState.currentExplanation = `Inisialisasi Selection Sort pada array <code>[${ssData.join(", ")}]</code>. Tekan tombol <strong>'⏩ Langkah Berikutnya (Step)'</strong> atau <strong>'▶️ Urutkan Otomatis'</strong> untuk mulai mengurutkan data.`;
+    renderSelectionSort();
+  }
+
+  function selectSelectionDataset(key) {
+    if (!ssDatasets[key]) return;
+    pauseAutoSelectionSort();
+    currentSsDatasetKey = key;
+    ssData = [...ssDatasets[key]];
+    resetSelectionSort();
+  }
+
+  function setCustomSelectionData() {
+    const input = document.getElementById("inputCustomSs");
+    if (!input || !input.value.trim()) return;
+
+    const parts = input.value.split(",").map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+    if (parts.length < 2) {
+      alert("Masukkan minimal 2 angka yang dipisahkan dengan tanda koma (misal: 7, 2, 9, 4, 1)");
+      return;
+    }
+
+    pauseAutoSelectionSort();
+    currentSsDatasetKey = "custom";
+    ssData = parts.slice(0, 10); // maksimal 10 angka agar muat rapi di layar
+    resetSelectionSort();
+  }
+
+  function setSelectionSpeed(val) {
+    ssState.speed = 1800 - parseInt(val, 10);
+    if (ssState.isRunning) {
+      pauseAutoSelectionSort();
+      startAutoSelectionSort();
+    }
+  }
+
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, "&amp;")
@@ -1384,8 +1871,18 @@ const Visualizer = (function () {
     setBinaryTarget,
     quickSetBinaryTarget,
     setBinarySpeed,
-    selectBinaryDataset
+    selectBinaryDataset,
+
+    initSelectionSortSimulator,
+    stepSelectionSort,
+    stepBackSelectionSort,
+    toggleAutoSelectionSort,
+    resetSelectionSort,
+    selectSelectionDataset,
+    setCustomSelectionData,
+    setSelectionSpeed
   };
 })();
+
 
 

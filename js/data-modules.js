@@ -389,6 +389,7 @@ for i in range(len(matriks)):
             <li><strong>Latihan 5:</strong> Algoritma Pencarian Sequential Search pada Array</li>
             <li><strong>Latihan 6:</strong> Algoritma Rule-Based Diagnosa Kesehatan AI</li>
             <li><strong>Latihan 7:</strong> Algoritma Pencarian Binary Search pada Array Terurut</li>
+            <li><strong>Latihan 8:</strong> Algoritma Pengurutan Selection Sort pada Array</li>
           </ul>
         `
       }
@@ -834,10 +835,234 @@ if posisi == -1:
     print("Tidak ketemu")`,
       hint: "Gunakan `while (awal <= akhir)` dan hitung `tengah = Math.floor((awal + akhir) / 2)`. Jika `x < A[tengah]`, ubah `akhir = tengah - 1`. Jika `x > A[tengah]`, ubah `awal = tengah + 1`."
     }
+  },
+
+  {
+    id: "modul-selection-sort",
+    badge: "7. Selection Sort",
+    title: "Selection Sort (Pengurutan Pilihan)",
+    subtitle: "Algoritma pengurutan sederhana yang memilih nilai minimum dari sisa data belum terurut lalu menukarnya ke posisi awal",
+    readTime: "15 menit baca & animasi interaktif",
+    summary: "Selection sort adalah salah satu algoritma pengurutan (sorting) sederhana yang bekerja dengan cara memilih elemen terkecil atau terbesar dari data yang belum terurut, lalu menukarnya dengan elemen di posisi awal. Proses ini diulangi untuk bagian data yang tersisa hingga seluruh data terurut.",
+    sections: [
+      {
+        heading: "1. Pengertian & Prinsip Kerja Selection Sort",
+        content: `
+          <p><strong>Selection sort</strong> adalah salah satu algoritma pengurutan (<em>sorting</em>) sederhana yang bekerja dengan cara <strong>memilih elemen terkecil atau terbesar</strong> (tergantung urutan yang diinginkan, ascending atau descending) dari data yang belum terurut, lalu <strong>menukarnya dengan elemen di posisi awal</strong>.</p>
+          <p>Proses ini diulangi untuk bagian data yang tersisa hingga seluruh data terurut.</p>
+
+          <div class="alert-box tip">
+            <span class="icon">🔄</span>
+            <div>
+              <strong>Konsep Dua Bagian Array:</strong><br>
+              Pada setiap langkah, array terbagi menjadi 2 bagian:
+              <ol style="margin-left: 1.25rem; margin-top: 0.35rem;">
+                <li><strong>Bagian Terurut (Sorted Sub-array):</strong> Berada di sebelah kiri, bertambah 1 elemen di setiap putaran.</li>
+                <li><strong>Bagian Belum Terurut (Unsorted Sub-array):</strong> Berada di sebelah kanan, tempat kita mencari nilai minimum untuk ditukar ke posisi depan.</li>
+              </ol>
+            </div>
+          </div>
+        `
+      },
+      {
+        heading: "2. Contoh Penelusuran Langkah demi Langkah (Buku SMA Hal. 54)",
+        content: `
+          <p>Jika kamu memiliki array: <code>A = [6, 3, 8, 5, 2]</code> dengan panjang $n = 5$ data:</p>
+          <p>Berikut langkah-langkah Selection Sort untuk mengurutkan secara membesar (<em>ascending</em>):</p>
+          
+          <div class="card-step-walkthrough" style="display: flex; flex-direction: column; gap: 0.75rem; margin: 1rem 0;">
+            <div class="alert-box tip" style="background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.3);">
+              <div>
+                <strong>a. Putaran ke-1 (i = 0):</strong><br>
+                Cari nilai terkecil dari indeks <code>0</code> hingga akhir. Didapat hasil angka <strong>2</strong> yang paling kecil (di indeks 4), maka <strong>tukar dengan posisi pertama (indeks 0 yang bernilai 6)</strong>.<br>
+                <span class="badge-pill badge-success" style="margin-top: 0.35rem; display: inline-block;">Hasil: [2, 3, 8, 5, 6]</span> (Angka 2 kini sudah berada di tempat yang benar).
+              </div>
+            </div>
+
+            <div class="alert-box tip" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
+              <div>
+                <strong>b. Putaran ke-2 (i = 1):</strong><br>
+                Cari nilai terkecil dari indeks <code>1</code> hingga akhir. Didapat hasil angka <strong>3</strong> (sudah berada di indeks 1), sehingga <strong>tidak perlu ditukar</strong>.<br>
+                <span class="badge-pill badge-success" style="margin-top: 0.35rem; display: inline-block;">Hasil: [2, 3, 8, 5, 6]</span> (Angka 2 dan 3 sudah terurut).
+              </div>
+            </div>
+
+            <div class="alert-box tip" style="background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.3);">
+              <div>
+                <strong>c. Putaran ke-3 (i = 2):</strong><br>
+                Cari nilai terkecil dari indeks <code>2</code> hingga akhir. Didapat hasil angka <strong>5</strong> (di indeks 3), maka <strong>tukar dengan indeks ke-2 (yang bernilai 8)</strong>.<br>
+                <span class="badge-pill badge-success" style="margin-top: 0.35rem; display: inline-block;">Hasil: [2, 3, 5, 8, 6]</span> (Angka 2, 3, 5 sudah terurut).
+              </div>
+            </div>
+
+            <div class="alert-box tip" style="background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.3);">
+              <div>
+                <strong>d. Putaran ke-4 (i = 3):</strong><br>
+                Cari nilai terkecil dari indeks <code>3</code> hingga akhir. Didapat hasil angka <strong>6</strong> (di indeks 4), maka <strong>tukar dengan indeks ke-3 (yang bernilai 8)</strong>.<br>
+                <span class="badge-pill badge-success" style="margin-top: 0.35rem; display: inline-block;">Hasil: [2, 3, 5, 6, 8]</span> (Array kini 100% terurut sempurna!).
+              </div>
+            </div>
+          </div>
+
+          <p>Karena 4 elemen pertama sudah berada pada posisi yang tepat, maka elemen terakhir (angka 8 di indeks 4) secara otomatis pasti merupakan nilai terbesar dan tidak perlu diperiksa lagi.</p>
+        `
+      },
+      {
+        heading: "3. Notasi Algoritma Pseudocode (Kamus & Deskripsi)",
+        content: `
+          <p>Notasi pseudocode algoritma Selection Sort menggunakan struktur <em>Nested Loop</em> (Pengulangan Bersarang):</p>
+          <div class="code-preview">
+            <pre><code>Algoritma SelectionSort
+Kamus
+  A : array of integer
+  n : integer
+  i : integer // pengulangan luar (indeks posisi awal penukaran)
+  j : integer // pengulangan dalam (pemindaian nilai minimum)
+  min_idx : integer // indeks elemen dengan nilai terkecil
+  temp : integer // variabel sementara untuk pertukaran (swap)
+Deskripsi
+  // Inisialisasi Data A
+  A[0] = 6
+  A[1] = 3
+  A[2] = 8
+  A[3] = 5
+  A[4] = 2
+  n = 5
+
+  for i = 0 to n - 2 do
+      min_idx = i
+      // Cari nilai terkecil di sisa array belum terurut
+      for j = i + 1 to n - 1 do
+          if A[j] < A[min_idx] then
+              min_idx = j
+          endIf
+      endFor
+
+      // Tukar elemen terkecil dengan elemen pada indeks i
+      if min_idx != i then
+          temp = A[i]
+          A[i] = A[min_idx]
+          A[min_idx] = temp
+      endIf
+  endFor
+
+  Output("Array Terurut:", A)
+EndAlgoritma</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "4. Implementasi Program dalam JavaScript dan Python",
+        content: `
+          <p>Berikut implementasi algoritma Selection Sort lengkap dalam <span class="lang-text" data-lang-js="JavaScript" data-lang-py="Python">JavaScript</span>:</p>
+          <div class="code-preview">
+            <pre><code class="lang-code-block" data-lang="js">let A = [6, 3, 8, 5, 2];
+let n = A.length;
+
+console.log("Array awal:", A);
+
+for (let i = 0; i < n - 1; i++) {
+  let min_idx = i;
+
+  // Loop dalam: cari nilai terkecil dari i + 1 sampai n - 1
+  for (let j = i + 1; j < n; j++) {
+    if (A[j] < A[min_idx]) {
+      min_idx = j;
+    }
+  }
+
+  // Jika nilai terkecil bukan di posisi i, tukar!
+  if (min_idx !== i) {
+    let temp = A[i];
+    A[i] = A[min_idx];
+    A[min_idx] = temp;
+    console.log("Putaran ke-" + (i + 1) + " (tukar " + temp + " dengan " + A[i] + "):", A);
+  } else {
+    console.log("Putaran ke-" + (i + 1) + " (tidak perlu tukar):", A);
+  }
+}
+
+console.log("Hasil akhir terurut:", A);</code>
+<code class="lang-code-block" data-lang="py" style="display:none;">A = [6, 3, 8, 5, 2]
+n = len(A)
+
+print("Array awal:", A)
+
+for i in range(n - 1):
+    min_idx = i
+
+    # Loop dalam: cari nilai terkecil dari i + 1 sampai n - 1
+    for j in range(i + 1, n):
+        if A[j] < A[min_idx]:
+            min_idx = j
+
+    # Jika nilai terkecil bukan di posisi i, tukar menggunakan tuple swap Python!
+    if min_idx != i:
+        temp = A[i]
+        A[i], A[min_idx] = A[min_idx], A[i]
+        print(f"Putaran ke-{i + 1} (tukar {temp} dengan {A[i]}):", A)
+    else:
+        print(f"Putaran ke-{i + 1} (tidak perlu tukar):", A)
+
+print("Hasil akhir terurut:", A)</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "5. Analisis Kompleksitas & Karakteristik Algoritma",
+        content: `
+          <p>Karakteristik penting dari algoritma Selection Sort:</p>
+          <ul>
+            <li><strong>Kompleksitas Waktu $O(n^2)$:</strong> Karena menggunakan pengulangan bersarang (outer loop dan inner loop), jumlah perbandingan yang dilakukan adalah $\\frac{n(n-1)}{2}$. Untuk $n=5$, perbandingannya adalah $4 + 3 + 2 + 1 = 10$ kali perbandingan.</li>
+            <li><strong>Jumlah Pertukaran Minimal:</strong> Salah satu keunggulan terbesar Selection Sort dibanding algoritma lain (seperti Bubble Sort) adalah jumlah operasi penukaran (<em>swap</em>) maksimal hanya <strong>$n - 1$ kali</strong>, sehingga sangat hemat operasi tulis memori.</li>
+            <li><strong>In-Place Algorithm:</strong> Tidak membutuhkan array tambahan (memori tambahan $O(1)$) karena pertukaran dilakukan langsung di dalam array yang sama.</li>
+          </ul>
+        `
+      }
+    ],
+    interactiveTool: "selection-sort-simulator",
+    cobaSendiri: {
+      id: "coba_selection_sort",
+      title: "Coba sendiri: Algoritma Selection Sort pada Array A = [6, 3, 8, 5, 2]",
+      description: "Jalankan kode Selection Sort untuk melihat log pertukaran data tiap putaran hingga array terurut menjadi <code>[2, 3, 5, 6, 8]</code>. Coba juga ubah angka dalam array dengan angka acak buatanmu sendiri.",
+      starterCodeJs: `let A = [6, 3, 8, 5, 2];
+let n = A.length;
+
+for (let i = 0; i < n - 1; i++) {
+  let min_idx = i;
+  for (let j = i + 1; j < n; j++) {
+    if (A[j] < A[min_idx]) {
+      min_idx = j;
+    }
+  }
+  if (min_idx !== i) {
+    let temp = A[i];
+    A[i] = A[min_idx];
+    A[min_idx] = temp;
+  }
+  console.log("Langkah ke-" + (i + 1) + ": " + JSON.stringify(A));
+}
+
+console.log("Selesai! Array terurut: " + JSON.stringify(A));`,
+      starterCodePy: `A = [6, 3, 8, 5, 2]
+n = len(A)
+
+for i in range(n - 1):
+    min_idx = i
+    for j in range(i + 1, n):
+        if A[j] < A[min_idx]:
+            min_idx = j
+    if min_idx != i:
+        A[i], A[min_idx] = A[min_idx], A[i]
+    print("Langkah ke-" + str(i + 1) + ": " + str(A))
+
+print("Selesai! Array terurut: " + str(A))`,
+      hint: "Perhatikan inner loop `for (let j = i + 1; j < n; j++)` untuk mencari nilai minimum. Setelah loop dalam selesai, lakukan pertukaran nilai `A[i]` dengan `A[min_idx]` jika `min_idx !== i`."
+    }
   }
 ];
 
-// 7 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
+// 8 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
 const PRACTICE_EXERCISES = [
   {
     id: "latihan-1",
@@ -1498,6 +1723,112 @@ const PRACTICE_EXERCISES = [
         input: [[1, 5, 7, 10, 15], 99],
         expected: -1,
         description: "Elemen x=99 tidak ada di dalam array -> mengembalikan -1"
+      }
+    ]
+  },
+
+  {
+    id: "latihan-8",
+    level: "Algoritma Pengurutan",
+    category: "Selection Sort",
+    title: "Latihan 8: Algoritma Pengurutan Selection Sort pada Array",
+    description: `
+      Tantangan Pemrograman Selection Sort:<br>
+      Diketahui array bilangan bulat acak <code>A</code>.<br>
+      Buatlah fungsi <code>selection_sort(A)</code> yang mengurutkan array tersebut secara menaik (<em>ascending</em>) menggunakan algoritma Selection Sort dengan ketentuan:
+      <ul>
+        <li>Gunakan pengulangan luar <code>for i = 0</code> hingga <code>A.length - 2</code>.</li>
+        <li>Inisialisasi <code>min_idx = i</code> pada setiap awal putaran luar.</li>
+        <li>Gunakan pengulangan dalam <code>for j = i + 1</code> hingga <code>A.length - 1</code> untuk mencari indeks elemen dengan nilai terkecil. Jika <code>A[j] &lt; A[min_idx]</code>, perbarui <code>min_idx = j</code>.</li>
+        <li>Setelah loop dalam selesai, jika <code>min_idx !== i</code>, tukar elemen pada <code>A[i]</code> dengan elemen pada <code>A[min_idx]</code>.</li>
+        <li>Kembalikan (return) array <code>A</code> yang telah terurut.</li>
+      </ul>
+    `,
+    starterCode: `function selection_sort(A) {
+  let n = A.length;
+
+  for (let i = 0; i < n - 1; i++) {
+    let min_idx = i;
+
+    for (let j = i + 1; j < n; j++) {
+      if (A[j] < A[min_idx]) {
+        min_idx = j;
+      }
+    }
+
+    if (min_idx !== i) {
+      let temp = A[i];
+      A[i] = A[min_idx];
+      A[min_idx] = temp;
+    }
+  }
+
+  return A;
+}`,
+    starterCodePy: `def selection_sort(A):
+    n = len(A)
+
+    for i in range(n - 1):
+        min_idx = i
+
+        for j in range(i + 1, n):
+            if A[j] < A[min_idx]:
+                min_idx = j
+
+        if min_idx != i:
+            A[i], A[min_idx] = A[min_idx], A[i]
+
+    return A
+`,
+    solution: `function selection_sort(A) {
+  let n = A.length;
+  for (let i = 0; i < n - 1; i++) {
+    let min_idx = i;
+    for (let j = i + 1; j < n; j++) {
+      if (A[j] < A[min_idx]) {
+        min_idx = j;
+      }
+    }
+    if (min_idx !== i) {
+      let temp = A[i];
+      A[i] = A[min_idx];
+      A[min_idx] = temp;
+    }
+  }
+  return A;
+}`,
+    solutionPy: `def selection_sort(A):
+    n = len(A)
+    for i in range(n - 1):
+        min_idx = i
+        for j in range(i + 1, n):
+            if A[j] < A[min_idx]:
+                min_idx = j
+        if min_idx != i:
+            A[i], A[min_idx] = A[min_idx], A[i]
+    return A
+`,
+    hint: "Gunakan loop luar `for i` dari 0 sampai n-2, tentukan `min_idx = i`. Cari nilai terkecil di loop dalam `for j = i + 1` sampai n-1. Jika `min_idx !== i`, tukar `A[i]` dengan `A[min_idx]`. Kembalikan array `A`.",
+    testCases: [
+      {
+        input: [[6, 3, 8, 5, 2]],
+        expected: [2, 3, 5, 6, 8],
+        description: "Mengurutkan array buku SMA [6, 3, 8, 5, 2] -> [2, 3, 5, 6, 8]"
+      },
+      {
+        input: [[9, 4, 1, 7]],
+        expected: [1, 4, 7, 9],
+        description: "Mengurutkan array 4 elemen [9, 4, 1, 7] -> [1, 4, 7, 9]"
+      },
+      {
+        input: [[5, 4, 3, 2, 1]],
+        expected: [1, 2, 3, 4, 5],
+        description: "Mengurutkan array terbalik total [5, 4, 3, 2, 1] -> [1, 2, 3, 4, 5]"
+      },
+      {
+        input: [[10, 20, 30]],
+        expected: [10, 20, 30],
+        description: "Array yang sudah terurut tetap terurut [10, 20, 30]"
       }
     ]
   }

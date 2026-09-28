@@ -32,7 +32,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
    - Simulator visualisasi traversal sel matriks.
 
 4. **4. Latihan Praktik Koding**
-   - 7 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
+   - 8 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
      - **Latihan 1:** Operasi Penjumlahan dalam Array
      - **Latihan 2:** Evaluasi Kelulusan Siswa (Nested If)
      - **Latihan 3:** Algoritma Predikat Nilai Akhir
@@ -40,6 +40,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
      - **Latihan 5:** Algoritma Pencarian Sequential Search pada Array
      - **Latihan 6:** Algoritma Rule-Based Diagnosa Kesehatan AI
      - **Latihan 7:** Algoritma Pencarian Binary Search pada Array Terurut
+     - **Latihan 8:** Algoritma Pengurutan Selection Sort pada Array
 
 5. **5. Sequential Search (Linear Search)**
    - Pengertian Sequential Search dan cara kerja membandingkan elemen satu per satu.
@@ -56,6 +57,14 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
    - Implementasi kode nyata dalam JavaScript dan Python.
    - **Tabel 2.1 Perbandingan Lengkap:** Komparasi Sequential Search vs. Binary Search (Prasyarat data, metode, variabel pointer, Best Case, Worst Case $O(\log n)$, langkah pada 100 s.d. 1.000.000 data).
    - **Simulator Animasi Interaktif:** Visualisasi 3 pointer dinamis (`awal`, `tengah`, `akhir`), penanda eliminasi separuh data (*eliminated overlay*), kartu kalkulasi rumus titik tengah, kartu percabangan keputusan if-else, tombol langkah maju/mundur (*step-by-step & undo*), putar otomatis, preset dataset (Standar SMA, 10 Elemen, dan Uji Data Acak), serta box *"Coba sendiri"*.
+
+7. **7. Selection Sort (Pengurutan Pilihan)**
+   - Pengertian Selection Sort: memilih elemen terkecil dari data yang belum terurut lalu menukarnya ke posisi awal.
+   - Langkah penelusuran (a s.d. d) pada array buku teks SMA Kelas X Hal. 54 `[6, 3, 8, 5, 2]`.
+   - Notasi algoritma pseudocode dengan pengulangan bersarang (*nested loop*): outer loop `for i = 0 to n - 2` dan inner loop `for j = i + 1 to n - 1`.
+   - Implementasi kode nyata dalam JavaScript dan Python (termasuk teknik tuple swap Python).
+   - Analisis kompleksitas $O(n^2)$ dan keunggulan jumlah penukaran (swap) minimal maksimal hanya $n - 1$ kali.
+   - **Simulator Animasi Interaktif:** Mini bar tinggi visual proporsional, penanda bagian terurut (hijau) vs belum terurut, pointer target swap `i` dan nilai minimum `min_idx`, animasi pertukaran nilai (swap), tombol langkah maju/mundur (*step-by-step & undo*), putar otomatis, multi-dataset (Buku SMA, Terbalik, Acak, dan Kustom), kartu status putaran, trace table lengkap, serta box *"Coba sendiri"*.
 
 ---
 

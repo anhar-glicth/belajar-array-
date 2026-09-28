@@ -3142,5 +3142,137 @@ body.light-theme .bs-tracer-title {
   color: #0284c7;
 }
 
+/* ==========================================================================
+   SELECTION SORT VISUALIZER & ANIMATION STYLES
+   ========================================================================== */
+
+.ss-visualizer-panel {
+  position: relative;
+}
+
+.ss-memory-wrapper {
+  padding-top: 2.5rem;
+  padding-bottom: 1.75rem;
+}
+
+.ss-slot {
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+/* Mini Bar Track & Fill */
+.ss-bar-track {
+  width: 100%;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: flex-end;
+  padding: 3px;
+  margin-bottom: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ss-bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, var(--accent-cyan), var(--accent-indigo));
+  border-radius: 4px;
+  transition: height 0.4s ease, background 0.4s ease;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+/* Sorted Slot */
+.ss-slot-sorted {
+  border-color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+}
+
+.ss-slot-sorted .ss-bar-fill {
+  background: linear-gradient(180deg, #34d399, #10b981) !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5) !important;
+}
+
+.ss-slot-sorted .slot-idx {
+  color: #10b981 !important;
+}
+
+.ss-slot-sorted .slot-val {
+  color: #a7f3d0 !important;
+}
+
+/* Target I Slot */
+.ss-slot-target {
+  border-color: var(--accent-cyan) !important;
+  background: rgba(56, 189, 248, 0.15) !important;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.35) !important;
+  transform: translateY(-4px);
+}
+
+/* Min Found Slot */
+.ss-slot-min {
+  border-color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.18) !important;
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.5) !important;
+  transform: translateY(-6px) scale(1.04);
+}
+
+.ss-slot-min .ss-bar-fill {
+  background: linear-gradient(180deg, #fbbf24, #f59e0b) !important;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.6) !important;
+}
+
+.ss-slot-min .slot-val {
+  color: #fef3c7 !important;
+  text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+/* Swapped Slots */
+.ss-slot-swapped {
+  border-color: #a855f7 !important;
+  background: rgba(168, 85, 247, 0.22) !important;
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.6) !important;
+  transform: translateY(-8px) scale(1.06);
+}
+
+.ss-slot-swapped .ss-bar-fill {
+  background: linear-gradient(180deg, #c084fc, #a855f7) !important;
+}
+
+/* Light Theme Overrides for Selection Sort */
+body.light-theme .ss-bar-track {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+body.light-theme .ss-slot-sorted {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border-color: #10b981 !important;
+}
+
+body.light-theme .ss-slot-sorted .slot-val {
+  color: #065f46 !important;
+}
+
+body.light-theme .ss-slot-target {
+  background: rgba(2, 132, 199, 0.08) !important;
+  border-color: #0284c7 !important;
+}
+
+body.light-theme .ss-slot-min {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: #f59e0b !important;
+}
+
+body.light-theme .ss-slot-min .slot-val {
+  color: #b45309 !important;
+}
+
+body.light-theme .ss-slot-swapped {
+  background: rgba(168, 85, 247, 0.12) !important;
+  border-color: #9333ea !important;
+}
+
+
 
 

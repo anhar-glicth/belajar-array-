@@ -184,12 +184,12 @@ const App = (function () {
   }
 
   function getModuleIcon(idx) {
-    const icons = ["📦", "🔀", "🔄", "🎯", "🔍", "⚡"];
+    const icons = ["📦", "🔀", "🔄", "🎯", "🔍", "⚡", "📶"];
     return icons[idx] || "📄";
   }
 
   /**
-   * Membuka Modul tertentu (1. Dasar Array, 2. Nested If, 3. Nested Loop, 4. Latihan Praktik, 5. Sequential Search, 6. Binary Search)
+   * Membuka Modul tertentu (1. Dasar Array, 2. Nested If, 3. Nested Loop, 4. Latihan Praktik, 5. Sequential Search, 6. Binary Search, 7. Selection Sort)
    */
   function loadModule(idx) {
     if (idx < 0 || idx >= CURRICULUM_DATA.length) return;
@@ -212,6 +212,8 @@ const App = (function () {
       visualizerHtml = `<div id="visSearchingContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "binary-search-simulator") {
       visualizerHtml = `<div id="visBinarySearchContainer" class="vis-mount-point"></div>`;
+    } else if (mod.interactiveTool === "selection-sort-simulator") {
+      visualizerHtml = `<div id="visSelectionSortContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "nested-if-simulator") {
       visualizerHtml = `<div id="visNestedIfContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "nested-loop-visualizer" || mod.interactiveTool === "matrix-analyzer") {
@@ -318,6 +320,8 @@ const App = (function () {
       Visualizer.initSequentialSearchSimulator("visSearchingContainer");
     } else if (mod.interactiveTool === "binary-search-simulator") {
       Visualizer.initBinarySearchSimulator("visBinarySearchContainer");
+    } else if (mod.interactiveTool === "selection-sort-simulator") {
+      Visualizer.initSelectionSortSimulator("visSelectionSortContainer");
     } else if (mod.interactiveTool === "nested-if-simulator") {
       Visualizer.initNestedIfSimulator("visNestedIfContainer");
     } else if (mod.interactiveTool === "nested-loop-visualizer" || mod.interactiveTool === "matrix-analyzer") {
