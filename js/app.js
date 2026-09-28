@@ -155,7 +155,7 @@ const App = (function () {
         certBtn.title = "Klaim Sertifikat Kompetensi Anda sekarang!";
       } else {
         certBtn.classList.add("disabled");
-        certBtn.title = `Selesaikan minimal 4 dari 6 latihan untuk membuka sertifikat (Saat ini: ${completedExCount}/4).`;
+        certBtn.title = `Selesaikan minimal 4 dari ${PRACTICE_EXERCISES.length} latihan untuk membuka sertifikat (Saat ini: ${completedExCount}/4).`;
       }
     }
   }
@@ -184,12 +184,12 @@ const App = (function () {
   }
 
   function getModuleIcon(idx) {
-    const icons = ["📦", "🔍", "🔀", "🔄", "🎯"];
+    const icons = ["📦", "🔀", "🔄", "🎯", "🔍", "⚡"];
     return icons[idx] || "📄";
   }
 
   /**
-   * Membuka Modul tertentu (1. Dasar Array, 2. Nested If, 3. Nested Loop, 4. Latihan Praktik)
+   * Membuka Modul tertentu (1. Dasar Array, 2. Nested If, 3. Nested Loop, 4. Latihan Praktik, 5. Sequential Search, 6. Binary Search)
    */
   function loadModule(idx) {
     if (idx < 0 || idx >= CURRICULUM_DATA.length) return;
@@ -210,6 +210,8 @@ const App = (function () {
       visualizerHtml = `<div id="vis1DContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "sequential-search-simulator") {
       visualizerHtml = `<div id="visSearchingContainer" class="vis-mount-point"></div>`;
+    } else if (mod.interactiveTool === "binary-search-simulator") {
+      visualizerHtml = `<div id="visBinarySearchContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "nested-if-simulator") {
       visualizerHtml = `<div id="visNestedIfContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "nested-loop-visualizer" || mod.interactiveTool === "matrix-analyzer") {
@@ -314,6 +316,8 @@ const App = (function () {
       Visualizer.init1DVisualizer("vis1DContainer");
     } else if (mod.interactiveTool === "sequential-search-simulator") {
       Visualizer.initSequentialSearchSimulator("visSearchingContainer");
+    } else if (mod.interactiveTool === "binary-search-simulator") {
+      Visualizer.initBinarySearchSimulator("visBinarySearchContainer");
     } else if (mod.interactiveTool === "nested-if-simulator") {
       Visualizer.initNestedIfSimulator("visNestedIfContainer");
     } else if (mod.interactiveTool === "nested-loop-visualizer" || mod.interactiveTool === "matrix-analyzer") {

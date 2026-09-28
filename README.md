@@ -32,21 +32,30 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
    - Simulator visualisasi traversal sel matriks.
 
 4. **4. Latihan Praktik Koding**
-   - 6 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
+   - 7 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
      - **Latihan 1:** Operasi Penjumlahan dalam Array
      - **Latihan 2:** Evaluasi Kelulusan Siswa (Nested If)
      - **Latihan 3:** Algoritma Predikat Nilai Akhir
      - **Latihan 4:** Nested Loop Cetak Tabel Perkalian Matriks
      - **Latihan 5:** Algoritma Pencarian Sequential Search pada Array
      - **Latihan 6:** Algoritma Rule-Based Diagnosa Kesehatan AI
+     - **Latihan 7:** Algoritma Pencarian Binary Search pada Array Terurut
 
-5. **5. Algoritma Pencarian (Sequential Search / Linear Search)**
+5. **5. Sequential Search (Linear Search)**
    - Pengertian Sequential Search dan cara kerja membandingkan elemen satu per satu.
    - Contoh kasus pencarian data pada array `A = [1, 5, 10, 7, 15]` dengan target `x`.
    - Notasi algoritma pseudocode (Kamus & Deskripsi).
    - Implementasi kode nyata dalam JavaScript dan Python.
    - Analisis performa: *Best Case* $O(1)$ dan *Worst Case* $O(n)$.
    - Simulator visualisasi pencarian sequential interaktif langkah demi langkah & box *"Coba sendiri"*.
+
+6. **6. Binary Search (Pencarian Biner)**
+   - Pengertian Binary Search dengan metode *Divide and Conquer* (membagi array menjadi dua bagian berulang).
+   - Prasyarat mutlak: array wajib terurut (*sorted*), beserta telaah edukatif terhadap contoh data buku teks SMA Kelas X (`[1, 5, 10, 7, 15]` vs `[1, 5, 7, 10, 15]`).
+   - Notasi algoritma pseudocode standar SMA (Kamus, Deskripsi, perulangan `while (awal <= akhir)`, dan pembagian `div 2`).
+   - Implementasi kode nyata dalam JavaScript dan Python.
+   - **Tabel 2.1 Perbandingan Lengkap:** Komparasi Sequential Search vs. Binary Search (Prasyarat data, metode, variabel pointer, Best Case, Worst Case $O(\log n)$, langkah pada 100 s.d. 1.000.000 data).
+   - **Simulator Animasi Interaktif:** Visualisasi 3 pointer dinamis (`awal`, `tengah`, `akhir`), penanda eliminasi separuh data (*eliminated overlay*), kartu kalkulasi rumus titik tengah, kartu percabangan keputusan if-else, tombol langkah maju/mundur (*step-by-step & undo*), putar otomatis, preset dataset (Standar SMA, 10 Elemen, dan Uji Data Acak), serta box *"Coba sendiri"*.
 
 ---
 

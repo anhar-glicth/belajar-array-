@@ -44,24 +44,21 @@ const Visualizer = (function () {
             <h4>Eksplorasi Array A = [10, 2, 30, 4]</h4>
           </div>
           <div class="vis-stats">
-            <span class="stat-pill">Panjang <code>len(A)</code>: <strong>${list1DData.length}</strong></span>
+            <span class="stat-pill">Panjang Array <code>len(A)</code>: <strong>${list1DData.length}</strong></span>
+            <span class="stat-pill">Indeks Pertama: <strong>0</strong></span>
             <span class="stat-pill">Indeks Terakhir: <strong>${list1DData.length > 0 ? list1DData.length - 1 : "-"}</strong></span>
-            <span class="stat-pill">Indeks Negatif Terakhir: <strong>${list1DData.length > 0 ? "-1" : "-"}</strong></span>
           </div>
         </div>
 
         <div class="memory-grid-wrapper">
           <div class="memory-boxes" id="mem1DBoxes">
-            ${list1DData.map((item, idx) => {
-              const negIdx = idx - list1DData.length;
-              return `
-                <div class="mem-slot" data-index="${idx}" onclick="Visualizer.inspect1DSlot(${idx})">
-                  <div class="slot-idx">Indeks: ${idx} (${negIdx})</div>
-                  <div class="slot-val">${escapeHtml(item)}</div>
-                  <div class="slot-pointer">A[${idx}]</div>
-                </div>
-              `;
-            }).join("")}
+            ${list1DData.map((item, idx) => `
+              <div class="mem-slot" data-index="${idx}" onclick="Visualizer.inspect1DSlot(${idx})">
+                <div class="slot-idx">Indeks: ${idx}</div>
+                <div class="slot-val">${escapeHtml(item)}</div>
+                <div class="slot-pointer">A[${idx}]</div>
+              </div>
+            `).join("")}
           </div>
         </div>
 
@@ -69,16 +66,16 @@ const Visualizer = (function () {
           <div class="control-row">
             <input type="text" id="input1DVal" placeholder="Nilai..." value="50" class="vis-input">
             <button class="btn btn-sm btn-primary" onclick="Visualizer.append1D()">
-              <span>+ .append()</span> <small>(Akhir)</small>
+              <span>+ Tambah di Akhir</span>
             </button>
             <button class="btn btn-sm btn-primary" onclick="Visualizer.insert01D()">
-              <span>+ .insert(0, ...)</span> <small>(Awal)</small>
+              <span>+ Sisipkan di Awal</span>
             </button>
             <button class="btn btn-sm btn-danger" onclick="Visualizer.pop1D()">
-              <span>- .pop()</span> <small>(Akhir)</small>
+              <span>- Hapus Akhir</span>
             </button>
             <button class="btn btn-sm btn-danger" onclick="Visualizer.pop01D()">
-              <span>- .pop(0)</span> <small>(Awal)</small>
+              <span>- Hapus Awal</span>
             </button>
           </div>
 
@@ -95,7 +92,7 @@ const Visualizer = (function () {
         </div>
 
         <div class="vis-info-bar" id="mem1DFeedback">
-          💡 Klik pada salah satu kotak indeks di atas untuk melihat detail pemanggilan indeks positif dan negatif di Python.
+          💡 Klik pada salah satu kotak indeks di atas untuk melihat detail elemen dan posisi indeks dalam array A.
         </div>
       </div>
     `;
@@ -105,32 +102,32 @@ const Visualizer = (function () {
 
   function append1D() {
     const valInput = document.getElementById("input1DVal");
-    const val = valInput.value.trim() || "Item Baru";
+    const val = valInput.value.trim() || "50";
     list1DData.push(val);
     render1DArray(document.getElementById("vis1DContainer"));
-    highlightSlot(list1DData.length - 1, `Elemen baru ditambahkan di akhir dengan kode Python: <code>buah.append("${val}")</code>!`);
+    highlightSlot(list1DData.length - 1, `Elemen baru ditambahkan di akhir array: <code>A[${list1DData.length - 1}] = "${val}"</code>!`);
   }
 
   function insert01D() {
     const valInput = document.getElementById("input1DVal");
-    const val = valInput.value.trim() || "Item Baru";
+    const val = valInput.value.trim() || "50";
     list1DData.unshift(val);
     render1DArray(document.getElementById("vis1DContainer"));
-    highlightSlot(0, `Elemen baru disisipkan di awal dengan kode Python: <code>buah.insert(0, "${val}")</code>! Semua indeks bergeser ke kanan.`);
+    highlightSlot(0, `Elemen baru disisipkan di indeks [0]: <code>A[0] = "${val}"</code>! Semua elemen lama bergeser 1 indeks ke kanan.`);
   }
 
   function pop1D() {
     if (list1DData.length === 0) return;
     const removed = list1DData.pop();
     render1DArray(document.getElementById("vis1DContainer"));
-    set1DFeedback(`Elemen terakhir "${removed}" telah dihapus dengan kode Python: <code>buah.pop()</code>!`);
+    set1DFeedback(`Elemen terakhir "${removed}" telah dihapus dari array A!`);
   }
 
   function pop01D() {
     if (list1DData.length === 0) return;
     const removed = list1DData.shift();
     render1DArray(document.getElementById("vis1DContainer"));
-    set1DFeedback(`Elemen pertama "${removed}" di indeks [0] dihapus dengan kode Python: <code>buah.pop(0)</code>!`);
+    set1DFeedback(`Elemen pertama "${removed}" di indeks [0] telah dihapus! Seluruh indeks elemen bergeser ke kiri.`);
   }
 
   function modify1D() {
@@ -140,19 +137,18 @@ const Visualizer = (function () {
     const val = valInput.value.trim();
 
     if (isNaN(idx) || idx < 0 || idx >= list1DData.length) {
-      set1DFeedback("⚠️ IndexError: list index out of range! Panjang list saat ini adalah " + list1DData.length, true);
+      set1DFeedback("⚠️ IndexError: Indeks di luar jangkauan array! Indeks yang valid adalah 0 s.d. " + (list1DData.length - 1), true);
       return;
     }
 
     const old = list1DData[idx];
     list1DData[idx] = val;
     render1DArray(document.getElementById("vis1DContainer"));
-    highlightSlot(idx, `Elemen pada <code>buah[${idx}]</code> diubah dari "${old}" menjadi "${val}"!`);
+    highlightSlot(idx, `Elemen pada indeks ke-${idx} (<code>A[${idx}]</code>) berhasil diubah dari "${old}" menjadi "${val}"!`);
   }
 
   function inspect1DSlot(idx) {
-    const negIdx = idx - list1DData.length;
-    highlightSlot(idx, `📍 Anda memilih elemen indeks positif <code>buah[${idx}]</code> atau indeks negatif <code>buah[${negIdx}]</code> yang bernilai: "${list1DData[idx]}".`);
+    highlightSlot(idx, `📍 Anda memilih elemen indeks ke-<code>${idx}</code> (<code>A[${idx}]</code>) yang bernilai: "<strong>${list1DData[idx]}</strong>".`);
   }
 
   function highlightSlot(idx, message) {
@@ -788,6 +784,562 @@ const Visualizer = (function () {
     }
   }
 
+  /**
+   * 5. Simulator Interaktif Binary Search (Pencarian Biner)
+   * Dilengkapi animasi pembagian array (Divide and Conquer),
+   * visualisasi 3 pointer (awal, tengah, akhir), eliminasi separuh data,
+   * langkah maju/mundur (step-by-step & undo), putar otomatis,
+   * perhitungan rumus tengah interaktif, dan tabel penelusuran.
+   */
+  const bsDatasets = {
+    sma: [1, 5, 7, 10, 15],
+    wide: [2, 4, 7, 11, 16, 23, 38, 56, 72, 91],
+    unsorted: [1, 5, 10, 7, 15]
+  };
+
+  let currentBsDatasetKey = "sma";
+  let bsData = [...bsDatasets.sma];
+
+  let bsState = {
+    targetX: 7,
+    awal: 0,
+    akhir: 4,
+    displayAwal: 0,
+    displayAkhir: 4,
+    tengah: -1,
+    posisi: -1,
+    iteration: 0,
+    isFinished: false,
+    isRunning: false,
+    intervalId: null,
+    speed: 850,
+    history: [],
+    containerId: "visBinarySearchContainer",
+    currentExplanation: "Pencarian siap dimulai dengan <code>awal = 0</code> dan <code>akhir = 4</code>. Tekan tombol <strong>'⏩ Langkah Berikutnya'</strong> untuk mulai menghitung indeks tengah.",
+    statusBadge: "Siap Mencari",
+    statusType: "primary",
+    lastDecision: null,
+    stepLogs: []
+  };
+
+  function initBinarySearchSimulator(containerId) {
+    if (containerId) bsState.containerId = containerId;
+    pauseAutoBinarySearch();
+    resetBinarySearch();
+  }
+
+  function renderBinarySearch() {
+    const container = document.getElementById(bsState.containerId);
+    if (!container) return;
+
+    const {
+      targetX,
+      awal,
+      akhir,
+      displayAwal,
+      displayAkhir,
+      tengah,
+      posisi,
+      iteration,
+      isFinished,
+      isRunning,
+      speed,
+      history,
+      currentExplanation,
+      statusBadge,
+      statusType,
+      lastDecision,
+      stepLogs
+    } = bsState;
+
+    const n = bsData.length;
+
+    // Tombol quick target berdasarkan dataset
+    let quickTargets = [1, 5, 7, 10, 15, 99];
+    if (currentBsDatasetKey === "wide") {
+      quickTargets = [2, 7, 23, 38, 72, 91, 99];
+    } else if (currentBsDatasetKey === "unsorted") {
+      quickTargets = [1, 5, 10, 7, 15, 99];
+    }
+
+    container.innerHTML = `
+      <div class="visualizer-panel bs-visualizer-panel">
+        <!-- Header Info -->
+        <div class="vis-header">
+          <div class="vis-title">
+            <span class="badge-tag" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan)); color: #fff;">
+              ⚡ Simulasi Interaktif Binary Search
+            </span>
+            <h4>Pencarian Biner: Divide & Conquer pada Array Terurut</h4>
+          </div>
+          <div class="vis-stats">
+            <span class="stat-pill">Panjang Data <code>n</code>: <strong>${n}</strong></span>
+            <span class="stat-pill">Target Dicari <code>x</code>: <strong>${targetX}</strong></span>
+            <span class="stat-pill">Batas <code>awal</code>: <strong style="color: #10b981;">${awal <= akhir ? awal : awal + ' (lewat)'}</strong></span>
+            <span class="stat-pill">Batas <code>akhir</code>: <strong style="color: #f43f5e;">${akhir >= 0 ? akhir : '-1'}</strong></span>
+            <span class="stat-pill">Indeks <code>tengah</code>: <strong style="color: #f59e0b;">${tengah >= 0 ? tengah : '-'}</strong></span>
+            <span class="stat-pill">Posisi: <strong>${posisi !== -1 ? posisi : (isFinished ? 'Tidak Ketemu' : '-')}</strong></span>
+          </div>
+        </div>
+
+        <!-- Pemilih Dataset / Skenario -->
+        <div class="bs-dataset-bar">
+          <span class="bs-dataset-label">Pilih Contoh Data:</span>
+          <button class="btn btn-xs ${currentBsDatasetKey === 'sma' ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.selectBinaryDataset('sma')">
+            📘 Standar Buku SMA: [1, 5, 7, 10, 15]
+          </button>
+          <button class="btn btn-xs ${currentBsDatasetKey === 'wide' ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.selectBinaryDataset('wide')">
+            🚀 10 Elemen Terurut: [2, 4, 7, 11, 16, 23, 38, 56, 72, 91]
+          </button>
+          <button class="btn btn-xs ${currentBsDatasetKey === 'unsorted' ? 'btn-danger' : 'btn-outline'}" onclick="Visualizer.selectBinaryDataset('unsorted')" title="Melihat efek kegagalan jika data belum terurut">
+            ⚠️ Teks Asli Buku (Belum Terurut): [1, 5, 10, 7, 15]
+          </button>
+        </div>
+
+        ${currentBsDatasetKey === 'unsorted' ? `
+          <div class="alert-box warning" style="margin: 0.75rem 0; padding: 0.75rem 1rem; font-size: 0.85rem;">
+            <span class="icon">⚠️</span>
+            <div><strong>Uji Eksperimen:</strong> Data ini belum terurut sempurna (angka 10 mendahului 7). Coba cari target <code>x = 7</code> dan amati bagaimana Binary Search terkecoh memotong bagian yang salah sehingga angka 7 dilaporkan <em>'Tidak Ketemu'</em>!</div>
+          </div>
+        ` : ''}
+
+        <!-- Kotak Memori Array dan Pointer Animasi -->
+        <div class="memory-grid-wrapper bs-memory-wrapper">
+          <div class="memory-boxes" id="memBinaryBoxes">
+            ${bsData.map((val, idx) => {
+              // Status slot berdasarkan batas aktif saat langkah dievaluasi
+              const isInRange = (idx >= displayAwal && idx <= displayAkhir);
+              const isMatch = (posisi === idx);
+              const isMid = (tengah === idx);
+              const isEliminated = !isInRange;
+
+              let slotClass = "mem-slot bs-slot";
+              if (isMatch) {
+                slotClass += " bs-slot-match pulse";
+              } else if (isMid) {
+                slotClass += " bs-slot-mid pulse";
+              } else if (isInRange) {
+                slotClass += " bs-slot-in-range";
+              } else {
+                slotClass += " bs-slot-eliminated";
+              }
+
+              // Pointers di atas kotak
+              const isAwal = (displayAwal === idx && displayAwal <= displayAkhir);
+              const isAkhir = (displayAkhir === idx && displayAwal <= displayAkhir);
+
+              let pointerBadge = "";
+              if (isAwal && isMid && isAkhir) {
+                pointerBadge = `<div class="bs-pointer-badge bs-badge-all">🎯 awal, tengah, akhir = ${idx}</div>`;
+              } else if (isAwal && isMid) {
+                pointerBadge = `<div class="bs-pointer-badge bs-badge-awal-tengah">🟢🟡 awal & tengah = ${idx}</div>`;
+              } else if (isMid && isAkhir) {
+                pointerBadge = `<div class="bs-pointer-badge bs-badge-tengah-akhir">🟡🔴 tengah & akhir = ${idx}</div>`;
+              } else if (isAwal && isAkhir) {
+                pointerBadge = `<div class="bs-pointer-badge bs-badge-awal-akhir">🟢🔴 awal & akhir = ${idx}</div>`;
+              } else if (isAwal) {
+                pointerBadge = `<div class="bs-pointer-badge bs-badge-awal">🟢 awal = ${idx}</div>`;
+              } else if (isMid) {
+                pointerBadge = `<div class="bs-pointer-badge bs-badge-tengah">🟡 tengah = ${idx}</div>`;
+              } else if (isAkhir) {
+                pointerBadge = `<div class="bs-pointer-badge bs-badge-akhir">🔴 akhir = ${idx}</div>`;
+              }
+
+              // Label indikator di bawah nilai
+              let subLabel = "";
+              if (isMatch) {
+                subLabel = `<div class="slot-pointer" style="color: #10b981; font-weight: 700;">✓ KETEMU!</div>`;
+              } else if (isMid) {
+                subLabel = `<div class="slot-pointer" style="color: #f59e0b; font-weight: 700;">A[${idx}] = ${val}</div>`;
+              } else if (isEliminated) {
+                subLabel = `<div class="slot-pointer" style="color: #64748b;">✕ Tereliminasi</div>`;
+              } else {
+                subLabel = `<div class="slot-pointer" style="color: var(--accent-cyan);">Rentang Aktif</div>`;
+              }
+
+              return `
+                <div class="${slotClass}" data-idx="${idx}">
+                  ${pointerBadge}
+                  <div class="slot-idx">Indeks: ${idx}</div>
+                  <div class="slot-val">${val}</div>
+                  ${subLabel}
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <!-- Status Langkah & Penjelasan Naratif -->
+        <div class="search-step-tracker bs-step-tracker">
+          <div class="search-step-row">
+            <span class="search-status-badge badge-${statusType}">
+              ${statusBadge}
+            </span>
+            <span style="font-size: 0.95rem; line-height: 1.5;">${currentExplanation}</span>
+          </div>
+        </div>
+
+        <!-- Kartu Formula Kalkulasi & Percabangan If-Else -->
+        <div class="bs-math-grid">
+          <div class="bs-math-card">
+            <div class="bs-math-card-header">
+              <span class="icon">📐</span>
+              <strong>Perhitungan Titik Tengah</strong>
+            </div>
+            <div class="bs-math-body">
+              <div class="bs-formula-code">
+                tengah = Math.floor((awal + akhir) / 2)
+              </div>
+              <div class="bs-formula-calc">
+                ${tengah >= 0 ? `
+                  tengah = Math.floor((${displayAwal} + ${displayAkhir}) / 2) &rarr; <strong style="color: #f59e0b; font-size: 1.15rem;">${tengah}</strong>
+                  <div style="margin-top: 0.35rem; color: var(--text-muted); font-size: 0.85rem;">
+                    Elemen tengah: <code>A[${tengah}] = <strong>${bsData[tengah]}</strong></code>
+                  </div>
+                ` : `
+                  <span class="text-muted">Tekan "Langkah Berikutnya" untuk menghitung indeks tengah iterasi.</span>
+                `}
+              </div>
+            </div>
+          </div>
+
+          <div class="bs-math-card">
+            <div class="bs-math-card-header">
+              <span class="icon">⚖️</span>
+              <strong>Evaluasi Logika Kondisi (If - Else)</strong>
+            </div>
+            <div class="bs-math-body">
+              ${lastDecision ? `
+                <div class="bs-decision-tag ${lastDecision.type}">
+                  ${lastDecision.title}
+                </div>
+                <div class="bs-decision-desc">
+                  ${lastDecision.desc}
+                </div>
+              ` : `
+                <div class="text-muted" style="font-size: 0.88rem; padding: 0.35rem 0;">
+                  Membandingkan apakah <code>A[tengah] == x</code>, <code>x &lt; A[tengah]</code> (geser kiri), atau <code>x &gt; A[tengah]</code> (geser kanan).
+                </div>
+              `}
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabel Riwayat Iterasi (Tracer) -->
+        ${stepLogs.length > 0 ? `
+          <div class="bs-tracer-wrapper">
+            <div class="bs-tracer-title">📋 Tabel Penelusuran Langkah (Trace Table):</div>
+            <div class="table-responsive">
+              <table class="modern-table bs-tracer-table">
+                <thead>
+                  <tr>
+                    <th>Iterasi</th>
+                    <th>awal</th>
+                    <th>akhir</th>
+                    <th>tengah = (awal + akhir) div 2</th>
+                    <th>A[tengah]</th>
+                    <th>Target x</th>
+                    <th>Aksi & Hasil Percabangan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${stepLogs.map(log => `
+                    <tr class="${log.isMatch ? 'tr-success' : ''}">
+                      <td><strong>#${log.iter}</strong></td>
+                      <td><code>${log.awal}</code></td>
+                      <td><code>${log.akhir}</code></td>
+                      <td><code>${log.tengah}</code></td>
+                      <td><strong style="color: #f59e0b;">${log.midVal}</strong></td>
+                      <td><strong>${log.target}</strong></td>
+                      <td>${log.action}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Kontrol Interaktif -->
+        <div class="vis-controls">
+          <div class="control-row">
+            <label style="font-size: 0.88rem; color: var(--text-muted);">Nilai x yang dicari:</label>
+            <input type="number" id="inputBinaryX" value="${targetX}" class="vis-input-small" onchange="Visualizer.setBinaryTarget(this.value)">
+
+            <button class="btn btn-sm btn-outline" onclick="Visualizer.stepBackBinarySearch()" ${history.length === 0 ? 'disabled' : ''} title="Kembali ke langkah sebelumnya">
+              <span>⏪ Mundur (Step Back)</span>
+            </button>
+
+            <button class="btn btn-sm btn-primary" onclick="Visualizer.stepBinarySearch()" ${isFinished ? 'disabled' : ''} title="Eksekusi satu iterasi binary search">
+              <span>⏩ Langkah Berikutnya (Step)</span>
+            </button>
+
+            <button class="btn btn-sm btn-secondary" onclick="Visualizer.toggleAutoBinarySearch()">
+              <span id="binaryAutoText">${isRunning ? '⏸️ Jeda (Pause)' : '▶️ Cari Otomatis'}</span>
+            </button>
+
+            <button class="btn btn-sm btn-outline" onclick="Visualizer.resetBinarySearch()" title="Kembali ke kondisi awal">
+              <span>🔄 Reset</span>
+            </button>
+          </div>
+
+          <div class="control-row secondary">
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Uji Cepat Target:</span>
+            ${quickTargets.map(tgt => `
+              <button class="btn btn-xs ${targetX === tgt ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.quickSetBinaryTarget(${tgt})">
+                x = ${tgt}
+              </button>
+            `).join("")}
+
+            <span style="margin-left: auto; font-size: 0.82rem; color: var(--text-muted);">Kecepatan:</span>
+            <input type="range" min="300" max="1500" step="100" value="${1800 - speed}" class="vis-range-small" onchange="Visualizer.setBinarySpeed(this.value)">
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function stepBinarySearch() {
+    if (bsState.isFinished) return;
+
+    // Simpan snapshot untuk tombol Step Back (Undo)
+    bsState.history.push({
+      awal: bsState.awal,
+      akhir: bsState.akhir,
+      displayAwal: bsState.displayAwal,
+      displayAkhir: bsState.displayAkhir,
+      tengah: bsState.tengah,
+      posisi: bsState.posisi,
+      iteration: bsState.iteration,
+      isFinished: bsState.isFinished,
+      currentExplanation: bsState.currentExplanation,
+      statusBadge: bsState.statusBadge,
+      statusType: bsState.statusType,
+      lastDecision: bsState.lastDecision ? { ...bsState.lastDecision } : null,
+      stepLogs: JSON.parse(JSON.stringify(bsState.stepLogs))
+    });
+
+    // Cek apakah rentang pencarian sudah habis (awal > akhir)
+    if (bsState.awal > bsState.akhir) {
+      bsState.isFinished = true;
+      bsState.posisi = -1;
+      bsState.statusBadge = "Tidak Ketemu (-1)";
+      bsState.statusType = "danger";
+      bsState.lastDecision = {
+        type: "decision-danger",
+        title: "❌ Kondisi Berhenti: awal > akhir",
+        desc: `Nilai <code>awal (${bsState.awal})</code> telah melewati <code>akhir (${bsState.akhir})</code>. Target <code>x = ${bsState.targetX}</code> tidak ditemukan di dalam array.`
+      };
+      bsState.currentExplanation = `<span style="color: #ef4444; font-weight: bold;">❌ TIDAK KETEMU:</span> Batas awal (<code>${bsState.awal}</code>) sudah lebih besar dari batas akhir (<code>${bsState.akhir}</code>). Seluruh bagian array telah diperiksa dan tidak ditemukan angka <code>${bsState.targetX}</code>. Posisi akhir: <strong>-1</strong>.`;
+      bsState.stepLogs.push({
+        iter: bsState.iteration + 1,
+        awal: bsState.awal,
+        akhir: bsState.akhir,
+        tengah: "-",
+        midVal: "-",
+        target: bsState.targetX,
+        action: `<span style="color: #ef4444; font-weight: bold;">awal > akhir &rarr; Selesai: Tidak Ketemu (-1)</span>`,
+        isMatch: false
+      });
+      pauseAutoBinarySearch();
+      renderBinarySearch();
+      return;
+    }
+
+    bsState.iteration++;
+    const curAwal = bsState.awal;
+    const curAkhir = bsState.akhir;
+
+    bsState.displayAwal = curAwal;
+    bsState.displayAkhir = curAkhir;
+
+    // Hitung titik tengah bulat: (awal + akhir) div 2
+    const mid = Math.floor((curAwal + curAkhir) / 2);
+    bsState.tengah = mid;
+
+    const midVal = bsData[mid];
+    const x = bsState.targetX;
+
+    if (midVal === x) {
+      // DITEMUKAN!
+      bsState.posisi = mid;
+      bsState.isFinished = true;
+      bsState.statusBadge = `Ketemu pada Indeks ${mid}`;
+      bsState.statusType = "success";
+      bsState.lastDecision = {
+        type: "decision-success",
+        title: `🎉 KETEMU: A[${mid}] == ${x}`,
+        desc: `Nilai tengah <code>A[${mid}] = ${midVal}</code> <strong>sama persis</strong> dengan target <code>x = ${x}</code>! Simpan <code>posisi = ${mid}</code> dan hentikan perulangan (<code>break</code>).`
+      };
+      bsState.currentExplanation = `<span style="color: #10b981; font-weight: bold;">🎉 KETEMU!</span> Pada iterasi ke-${bsState.iteration}, <code>A[${mid}] == ${x}</code> bernilai <strong>BENAR (True)</strong>. Nilai yang dicari berada pada <strong>indeks ke-${mid}</strong>.`;
+      bsState.stepLogs.push({
+        iter: bsState.iteration,
+        awal: curAwal,
+        akhir: curAkhir,
+        tengah: mid,
+        midVal: midVal,
+        target: x,
+        action: `<span style="color: #10b981; font-weight: bold;">🎉 Cocok! (posisi = ${mid}) &rarr; break</span>`,
+        isMatch: true
+      });
+      pauseAutoBinarySearch();
+    } else if (x < midVal) {
+      // Nilai dicari lebih kecil -> Cari di sebelah KIRI
+      const nextAkhir = mid - 1;
+      bsState.statusBadge = `Iterasi ${bsState.iteration}: Geser ke KIRI`;
+      bsState.statusType = "warning";
+      bsState.lastDecision = {
+        type: "decision-warning",
+        title: `⬅️ x (${x}) < A[${mid}] (${midVal}) &rarr; Cari di KIRI`,
+        desc: `Karena array terurut menaik, jika target <code>${x}</code> lebih kecil dari <code>A[${mid}] (${midVal})</code>, target pasti ada di sebelah KIRI. Eliminasi indeks ${mid} s.d. ${curAkhir}. Geser <code>akhir = ${mid} - 1 = ${nextAkhir}</code>.`
+      };
+      bsState.currentExplanation = `Iterasi ke-${bsState.iteration}: <code>tengah = (${curAwal} + ${curAkhir}) div 2 = ${mid}</code> (Nilai: <code>${midVal}</code>). Karena target <code>x = ${x}</code> <strong>lebih kecil</strong> dari <code>${midVal}</code>, geser batas akhir: <code>akhir = tengah - 1 = ${nextAkhir}</code>.`;
+      bsState.stepLogs.push({
+        iter: bsState.iteration,
+        awal: curAwal,
+        akhir: curAkhir,
+        tengah: mid,
+        midVal: midVal,
+        target: x,
+        action: `<code>${x} &lt; ${midVal}</code> &rarr; geser <code>akhir = ${nextAkhir}</code>`,
+        isMatch: false
+      });
+      bsState.akhir = nextAkhir;
+    } else {
+      // Nilai dicari lebih besar -> Cari di sebelah KANAN
+      const nextAwal = mid + 1;
+      bsState.statusBadge = `Iterasi ${bsState.iteration}: Geser ke KANAN`;
+      bsState.statusType = "warning";
+      bsState.lastDecision = {
+        type: "decision-warning",
+        title: `➡️ x (${x}) > A[${mid}] (${midVal}) &rarr; Cari di KANAN`,
+        desc: `Karena array terurut menaik, jika target <code>${x}</code> lebih besar dari <code>A[${mid}] (${midVal})</code>, target pasti ada di sebelah KANAN. Eliminasi indeks ${curAwal} s.d. ${mid}. Geser <code>awal = ${mid} + 1 = ${nextAwal}</code>.`
+      };
+      bsState.currentExplanation = `Iterasi ke-${bsState.iteration}: <code>tengah = (${curAwal} + ${curAkhir}) div 2 = ${mid}</code> (Nilai: <code>${midVal}</code>). Karena target <code>x = ${x}</code> <strong>lebih besar</strong> dari <code>${midVal}</code>, geser batas awal: <code>awal = tengah + 1 = ${nextAwal}</code>.`;
+      bsState.stepLogs.push({
+        iter: bsState.iteration,
+        awal: curAwal,
+        akhir: curAkhir,
+        tengah: mid,
+        midVal: midVal,
+        target: x,
+        action: `<code>${x} &gt; ${midVal}</code> &rarr; geser <code>awal = ${nextAwal}</code>`,
+        isMatch: false
+      });
+      bsState.awal = nextAwal;
+    }
+
+    renderBinarySearch();
+  }
+
+  function stepBackBinarySearch() {
+    if (bsState.history.length === 0) return;
+    pauseAutoBinarySearch();
+    const prev = bsState.history.pop();
+    bsState.awal = prev.awal;
+    bsState.akhir = prev.akhir;
+    bsState.displayAwal = prev.displayAwal;
+    bsState.displayAkhir = prev.displayAkhir;
+    bsState.tengah = prev.tengah;
+    bsState.posisi = prev.posisi;
+    bsState.iteration = prev.iteration;
+    bsState.isFinished = prev.isFinished;
+    bsState.currentExplanation = prev.currentExplanation;
+    bsState.statusBadge = prev.statusBadge;
+    bsState.statusType = prev.statusType;
+    bsState.lastDecision = prev.lastDecision;
+    bsState.stepLogs = prev.stepLogs;
+    renderBinarySearch();
+  }
+
+  function toggleAutoBinarySearch() {
+    if (bsState.isRunning) {
+      pauseAutoBinarySearch();
+    } else {
+      startAutoBinarySearch();
+    }
+  }
+
+  function startAutoBinarySearch() {
+    if (bsState.isFinished) {
+      resetBinarySearch();
+    }
+    bsState.isRunning = true;
+    renderBinarySearch();
+    bsState.intervalId = setInterval(() => {
+      if (bsState.isFinished) {
+        pauseAutoBinarySearch();
+      } else {
+        stepBinarySearch();
+      }
+    }, bsState.speed);
+  }
+
+  function pauseAutoBinarySearch() {
+    bsState.isRunning = false;
+    if (bsState.intervalId) {
+      clearInterval(bsState.intervalId);
+      bsState.intervalId = null;
+    }
+    const btn = document.getElementById("binaryAutoText");
+    if (btn) btn.textContent = "▶️ Cari Otomatis";
+  }
+
+  function resetBinarySearch() {
+    pauseAutoBinarySearch();
+    bsState.awal = 0;
+    bsState.akhir = bsData.length - 1;
+    bsState.displayAwal = 0;
+    bsState.displayAkhir = bsData.length - 1;
+    bsState.tengah = -1;
+    bsState.posisi = -1;
+    bsState.iteration = 0;
+    bsState.isFinished = false;
+    bsState.history = [];
+    bsState.stepLogs = [];
+    bsState.statusBadge = "Siap Mencari";
+    bsState.statusType = "primary";
+    bsState.lastDecision = null;
+    bsState.currentExplanation = `Pencarian siap dimulai dengan <code>awal = 0</code> dan <code>akhir = ${bsData.length - 1}</code>. Tekan tombol <strong>'⏩ Langkah Berikutnya (Step)'</strong> atau <strong>'▶️ Cari Otomatis'</strong> untuk mulai menghitung indeks tengah.`;
+    renderBinarySearch();
+  }
+
+  function quickSetBinaryTarget(val) {
+    pauseAutoBinarySearch();
+    bsState.targetX = parseInt(val, 10);
+    resetBinarySearch();
+  }
+
+  function setBinaryTarget(val) {
+    const num = parseInt(val, 10);
+    if (!isNaN(num)) {
+      quickSetBinaryTarget(num);
+    }
+  }
+
+  function setBinarySpeed(val) {
+    bsState.speed = 1800 - parseInt(val, 10);
+    if (bsState.isRunning) {
+      pauseAutoBinarySearch();
+      startAutoBinarySearch();
+    }
+  }
+
+  function selectBinaryDataset(key) {
+    if (!bsDatasets[key]) return;
+    pauseAutoBinarySearch();
+    currentBsDatasetKey = key;
+    bsData = [...bsDatasets[key]];
+
+    if (key === "wide") {
+      bsState.targetX = 38;
+    } else {
+      bsState.targetX = 7;
+    }
+
+    resetBinarySearch();
+  }
+
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, "&amp;")
@@ -822,7 +1374,18 @@ const Visualizer = (function () {
     resetSearch,
     setSearchTarget,
     setSearchSpeed,
-    quickSetTarget
+    quickSetTarget,
+
+    initBinarySearchSimulator,
+    stepBinarySearch,
+    stepBackBinarySearch,
+    toggleAutoBinarySearch,
+    resetBinarySearch,
+    setBinaryTarget,
+    quickSetBinaryTarget,
+    setBinarySpeed,
+    selectBinaryDataset
   };
 })();
+
 

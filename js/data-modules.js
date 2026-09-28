@@ -388,6 +388,7 @@ for i in range(len(matriks)):
             <li><strong>Latihan 4:</strong> Nested Loop Cetak Tabel Perkalian Matriks</li>
             <li><strong>Latihan 5:</strong> Algoritma Pencarian Sequential Search pada Array</li>
             <li><strong>Latihan 6:</strong> Algoritma Rule-Based Diagnosa Kesehatan AI</li>
+            <li><strong>Latihan 7:</strong> Algoritma Pencarian Binary Search pada Array Terurut</li>
           </ul>
         `
       }
@@ -397,8 +398,8 @@ for i in range(len(matriks)):
 
   {
     id: "modul-searching",
-    badge: "5. Algoritma Pencarian",
-    title: "Algoritma Pencarian (Searching) - Sequential Search",
+    badge: "5. Sequential Search",
+    title: "Algoritma Pencarian - Sequential Search (Linear Search)",
     subtitle: "Sequential Search (Linear Search) memeriksa elemen array satu per satu dari indeks pertama sampai dengan elemen terakhir",
     readTime: "12 menit baca & praktik",
     summary: "Sequential Search atau Linear Search adalah algoritma pencarian dengan memeriksa elemen array satu per satu dari indeks ke-0 hingga indeks terakhir. Pencarian berhasil saat elemen sama dengan nilai x yang dicari.",
@@ -547,10 +548,296 @@ if posisi == -1:
     print("Tidak ketemu")`,
       hint: "Periksa kondisi `A[i] === x` di dalam loop for. Jika cocok, simpan `posisi = i` lalu panggil `break`. Setelah loop berakhir, jika `posisi === -1` cetak 'Tidak ketemu'."
     }
+  },
+
+  {
+    id: "modul-binary-search",
+    badge: "6. Binary Search",
+    title: "Binary Search (Pencarian Biner)",
+    subtitle: "Algoritma pencarian efisien berkecepatan tinggi O(log n) dengan membagi array menjadi dua bagian berulang pada data terurut",
+    readTime: "15 menit baca & animasi interaktif",
+    summary: "Binary search adalah algoritma pencarian yang efisien untuk menemukan posisi suatu nilai dalam array yang telah diurutkan. Algoritma ini bekerja dengan membagi array menjadi dua bagian secara berulang, lalu membandingkan nilai yang dicari dengan elemen tengah array.",
+    sections: [
+      {
+        heading: "1. Pengertian & Prinsip Kerja Binary Search",
+        content: `
+          <p><strong>Binary search</strong> adalah algoritma pencarian yang efisien untuk menemukan posisi suatu nilai dalam array yang <strong>telah diurutkan</strong>.</p>
+          <p>Algoritma ini bekerja dengan teknik <em>Divide and Conquer</em> (membagi array menjadi dua bagian secara berulang), lalu membandingkan nilai yang dicari (<code>x</code>) dengan elemen tengah array (<code>A[tengah]</code>):</p>
+          <ul>
+            <li>Jika nilai yang dicari sama dengan elemen tengah (<code>A[tengah] == x</code>), pencarian berhasil dan indeks tengah disimpan sebagai posisi hasil pencarian.</li>
+            <li>Jika nilai yang dicari <strong>lebih kecil</strong> dari elemen tengah (<code>x &lt; A[tengah]</code>), pencarian dilanjutkan ke bagian <strong>kiri</strong> dengan memperbarui batas kanan: <code>akhir = tengah - 1</code>.</li>
+            <li>Jika nilai yang dicari <strong>lebih besar</strong> dari elemen tengah (<code>x &gt; A[tengah]</code>), pencarian dilanjutkan ke bagian <strong>kanan</strong> dengan memperbarui batas kiri: <code>awal = tengah + 1</code>.</li>
+          </ul>
+          <p>Proses ini terus berulang selama <code>awal &lt;= akhir</code> hingga nilai ditemukan atau seluruh bagian sudah diperiksa.</p>
+
+          <div class="alert-box tip">
+            <span class="icon">💡</span>
+            <div><strong>Prasyarat Mutlak: Data Harus Terurut!</strong> Binary search hanya dapat berjalan dengan benar jika data array telah diurutkan (ascending / membesar). Jika array masih acak, pemotongan separuh bagian array akan membuang data yang mungkin berisi angka yang dicari.</div>
+          </div>
+
+          <div class="alert-box warning" style="margin-top: 1rem;">
+            <span class="icon">⚠️</span>
+            <div>
+              <strong>Catatan Telaah Buku Teks SMA Kelas X (Hal. 52):</strong><br>
+              Pada teks materi buku SMA tertulis judul notasi <em>"Algoritma SequentialSearch"</em> dan data contoh <code>A = [1, 5, 10, 7, 15]</code>.
+              Perhatikan bahwa angka <strong>10 mendahului 7</strong> (belum terurut).
+              Agar Binary Search menemukan angka 7 dengan benar, data harus diurutkan terlebih dahulu menjadi <code>A = [1, 5, 7, 10, 15]</code>.
+              Pada simulator interaktif di atas, Anda dapat mencoba urutan yang sudah diperbaiki maupun bereksperimen dengan data acak buku asli untuk melihat efek kegagalannya secara nyata!
+            </div>
+          </div>
+        `
+      },
+      {
+        heading: "2. Notasi Algoritma Pseudocode (Kamus & Deskripsi)",
+        content: `
+          <p>Notasi algoritma pencarian Binary Search standar buku teks SMA Kelas X:</p>
+          <div class="code-preview">
+            <pre><code>Algoritma BinarySearch
+Kamus
+  A : array of integer
+  n : integer
+  x : integer // nilai yang dicari
+  awal : integer
+  akhir : integer
+  tengah : integer
+  posisi : integer
+Deskripsi
+  // Data A (Array terurut)
+  A[0] = 1
+  A[1] = 5
+  A[2] = 7
+  A[3] = 10
+  A[4] = 15
+  // Jumlah Elemen A
+  n = 5
+  awal = 0
+  akhir = n - 1
+  posisi = -1
+  Output("Nilai yang dicari?")
+  Input(x)
+  while (awal <= akhir) do
+      tengah = (awal + akhir) div 2
+      if A[tengah] = x then
+          posisi = tengah
+          Output("Ketemu, nilai yang dicari berada pada indeks ke-", posisi)
+          break
+      else if x < A[tengah] then
+          akhir = tengah - 1
+      else
+          awal = tengah + 1
+      endIf
+  endWhile
+  if posisi = -1 then
+      Output("Tidak ketemu")
+  endIf
+EndAlgoritma</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "3. Implementasi Program dalam JavaScript dan Python",
+        content: `
+          <p>Berikut implementasi kode algoritma Binary Search lengkap dalam <span class="lang-text" data-lang-js="JavaScript" data-lang-py="Python">JavaScript</span>:</p>
+          <div class="code-preview">
+            <pre><code class="lang-code-block" data-lang="js">// Data A (Array terurut) dan Jumlah Elemen n
+let A = [1, 5, 7, 10, 15];
+let n = 5;
+let x = 7; // nilai yang dicari
+let awal = 0;
+let akhir = n - 1;
+let posisi = -1;
+
+while (awal <= akhir) {
+  // Hitung indeks tengah dengan pembagian bulat (div)
+  let tengah = Math.floor((awal + akhir) / 2);
+
+  if (A[tengah] === x) {
+    posisi = tengah;
+    console.log("Ketemu, nilai yang dicari berada pada indeks ke-" + posisi);
+    break;
+  } else if (x < A[tengah]) {
+    // Nilai ada di sebelah kiri: geser batas akhir
+    akhir = tengah - 1;
+  } else {
+    // Nilai ada di sebelah kanan: geser batas awal
+    awal = tengah + 1;
+  }
+}
+
+if (posisi === -1) {
+  console.log("Tidak ketemu");
+}</code>
+<code class="lang-code-block" data-lang="py" style="display:none;"># Data A (Array terurut) dan Jumlah Elemen n
+A = [1, 5, 7, 10, 15]
+n = 5
+x = 7  # nilai yang dicari
+awal = 0
+akhir = n - 1
+posisi = -1
+
+while awal <= akhir:
+    # Hitung indeks tengah dengan integer division (//)
+    tengah = (awal + akhir) // 2
+
+    if A[tengah] == x:
+        posisi = tengah
+        print("Ketemu, nilai yang dicari berada pada indeks ke-" + str(posisi))
+        break
+    elif x < A[tengah]:
+        # Nilai ada di sebelah kiri: geser batas akhir
+        akhir = tengah - 1
+    else:
+        # Nilai ada di sebelah kanan: geser batas awal
+        awal = tengah + 1
+
+if posisi == -1:
+    print("Tidak ketemu")</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "4. Tabel 2.1 Perbandingan Sequential Search dan Binary Search",
+        content: `
+          <p>Tabel komparasi mendalam antara Sequential Search (Linear Search) dan Binary Search:</p>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Kriteria Perbandingan</th>
+                  <th style="width: 37.5%; color: var(--accent-amber);">Sequential Search (Linear)</th>
+                  <th style="width: 37.5%; color: var(--accent-cyan);">Binary Search (Pencarian Biner)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Prasyarat Kondisi Data</strong></td>
+                  <td>Bisa pada data <strong>acak / belum terurut</strong> maupun sudah terurut</td>
+                  <td><span class="badge-pill badge-primary" style="font-size: 0.75rem;">WAJIB Terurut (Sorted)</span> (misal urutan menaik/ascending)</td>
+                </tr>
+                <tr>
+                  <td><strong>Strategi Penelusuran</strong></td>
+                  <td>Memeriksa elemen satu per satu dari indeks 0 hingga indeks terakhir</td>
+                  <td>Membagi dua array secara berulang (<em>Divide and Conquer</em>) dari titik tengah</td>
+                </tr>
+                <tr>
+                  <td><strong>Variabel Pointer Indeks</strong></td>
+                  <td>1 variabel pointer indeks: <code>i</code></td>
+                  <td>3 variabel pointer: <code>awal</code>, <code>akhir</code>, dan <code>tengah</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Kasus Terbaik (Best Case)</strong></td>
+                  <td>$O(1)$ — jika target berada di indeks pertama <code>A[0]</code></td>
+                  <td>$O(1)$ — jika target tepat berada di elemen tengah pertama</td>
+                </tr>
+                <tr>
+                  <td><strong>Kasus Terburuk (Worst Case)</strong></td>
+                  <td><strong>$O(n)$</strong> — memeriksa seluruh $n$ elemen</td>
+                  <td><strong>$O(\\log_2 n)$</strong> — pembagian eksponensial separuh array</td>
+                </tr>
+                <tr>
+                  <td><strong>Maksimal Langkah pada 100 Data</strong></td>
+                  <td>100 perbandingan</td>
+                  <td>Maksimal <strong>7 langkah</strong> (karena $2^7 = 128$)</td>
+                </tr>
+                <tr>
+                  <td><strong>Maksimal Langkah pada 1.000 Data</strong></td>
+                  <td>1.000 perbandingan</td>
+                  <td>Maksimal <strong>10 langkah</strong> (karena $2^{10} = 1.024$)</td>
+                </tr>
+                <tr>
+                  <td><strong>Maksimal Langkah pada 1.000.000 Data</strong></td>
+                  <td>1.000.000 perbandingan</td>
+                  <td>Maksimal <strong>20 langkah</strong> (karena $2^{20} \\approx 1.048.576$)</td>
+                </tr>
+                <tr>
+                  <td><strong>Kelebihan Utama</strong></td>
+                  <td>Algoritma sederhana, tidak membutuhkan tahap pengurutan data terlebih dahulu</td>
+                  <td>Sangat cepat dan efisien pada data berukuran masif/jutaan data</td>
+                </tr>
+                <tr>
+                  <td><strong>Kekurangan Utama</strong></td>
+                  <td>Sangat lambat jika volume data sangat banyak</td>
+                  <td>Jika data belum terurut, wajib diurutkan (*sorting*) terlebih dahulu</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `
+      },
+      {
+        heading: "5. Analisis Efisiensi Waktu: Mengapa O(log n) Sangat Cepat?",
+        content: `
+          <p>Pada setiap putaran <code>while</code>, Binary Search selalu membuang <strong>50% (separuh)</strong> data yang tersisa:</p>
+          <div class="alert-box tip">
+            <span class="icon">⚡</span>
+            <div>
+              <strong>Ilustrasi Pemotongan Ukuran Data:</strong><br>
+              Jika terdapat <strong>1.000.000 data</strong>:<br>
+              Langkah 1: sisa 500.000 data &rarr; Langkah 2: sisa 250.000 data &rarr; Langkah 3: sisa 125.000 data &rarr; ... &rarr; <strong>Langkah ke-20: tersisa 1 data!</strong><br>
+              Itulah alasan mengapa Binary Search menjadi salah satu algoritma paling penting di dunia ilmu komputer dan kecerdasan artifisial.
+            </div>
+          </div>
+        `
+      }
+    ],
+    interactiveTool: "binary-search-simulator",
+    cobaSendiri: {
+      id: "coba_binary_search",
+      title: "Coba sendiri: Algoritma Binary Search pada Array Terurut",
+      description: "Jalankan kode Binary Search pada array <code>A = [1, 5, 7, 10, 15]</code> untuk mencari nilai <code>x = 7</code>. Coba juga ganti nilai <code>x</code> dengan <code>10</code>, <code>15</code>, <code>1</code>, atau <code>99</code>.",
+      starterCodeJs: `let A = [1, 5, 7, 10, 15];
+let n = 5;
+let x = 7; // coba ubah ke 10, 15, atau 99
+let awal = 0;
+let akhir = n - 1;
+let posisi = -1;
+
+while (awal <= akhir) {
+  let tengah = Math.floor((awal + akhir) / 2);
+  console.log("Cek tengah: indeks " + tengah + " (nilai: " + A[tengah] + ")");
+
+  if (A[tengah] === x) {
+    posisi = tengah;
+    console.log("Ketemu, nilai yang dicari berada pada indeks ke-" + posisi);
+    break;
+  } else if (x < A[tengah]) {
+    akhir = tengah - 1;
+  } else {
+    awal = tengah + 1;
+  }
+}
+
+if (posisi === -1) {
+  console.log("Tidak ketemu");
+}`,
+      starterCodePy: `A = [1, 5, 7, 10, 15]
+n = 5
+x = 7  # coba ubah ke 10, 15, atau 99
+awal = 0
+akhir = n - 1
+posisi = -1
+
+while awal <= akhir:
+    tengah = (awal + akhir) // 2
+    print("Cek tengah: indeks", tengah, "(nilai:", A[tengah], ")")
+
+    if A[tengah] == x:
+        posisi = tengah
+        print("Ketemu, nilai yang dicari berada pada indeks ke-" + str(posisi))
+        break
+    elif x < A[tengah]:
+        akhir = tengah - 1
+    else:
+        awal = tengah + 1
+
+if posisi == -1:
+    print("Tidak ketemu")`,
+      hint: "Gunakan `while (awal <= akhir)` dan hitung `tengah = Math.floor((awal + akhir) / 2)`. Jika `x < A[tengah]`, ubah `akhir = tengah - 1`. Jika `x > A[tengah]`, ubah `awal = tengah + 1`."
+    }
   }
 ];
 
-// 6 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
+// 7 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
 const PRACTICE_EXERCISES = [
   {
     id: "latihan-1",
@@ -1088,6 +1375,129 @@ const PRACTICE_EXERCISES = [
         input: [36.8, "ya", "ya"],
         expected: "Kelelahan",
         description: "Suhu normal, batuk ya, sakit kepala ya -> Kelelahan"
+      }
+    ]
+  },
+
+  {
+    id: "latihan-7",
+    level: "Algoritma Pencarian",
+    category: "Binary Search",
+    title: "Latihan 7: Algoritma Pencarian Binary Search pada Array Terurut",
+    description: `
+      Tantangan Pemrograman Binary Search:<br>
+      Diketahui array bilangan bulat yang telah terurut (sorted) <code>A</code> dan sebuah target nilai yang dicari <code>x</code>.<br>
+      Buatlah fungsi <code>binary_search(A, x)</code> yang mengimplementasikan algoritma Binary Search dengan ketentuan:
+      <ul>
+        <li>Inisialisasi batas: <code>awal = 0</code>, <code>akhir = A.length - 1</code>, dan <code>posisi = -1</code>.</li>
+        <li>Lakukan perulangan selama <code>awal &lt;= akhir</code>.</li>
+        <li>Di dalam loop, hitung indeks elemen tengah: <code>tengah = Math.floor((awal + akhir) / 2)</code> (atau <code>(awal + akhir) // 2</code> di Python).</li>
+        <li>Jika <code>A[tengah] === x</code>, simpan <code>posisi = tengah</code> lalu hentikan loop (<code>break</code>).</li>
+        <li>Jika <code>x &lt; A[tengah]</code>, geser batas akhir: <code>akhir = tengah - 1</code>.</li>
+        <li>Jika <code>x &gt; A[tengah]</code>, geser batas awal: <code>awal = tengah + 1</code>.</li>
+        <li>Kembalikan nilai <code>posisi</code> (menghasilkan indeks elemen jika ketemu, atau <code>-1</code> jika tidak ditemukan).</li>
+      </ul>
+    `,
+    starterCode: `function binary_search(A, x) {
+  let awal = 0;
+  let akhir = A.length - 1;
+  let posisi = -1;
+
+  while (awal <= akhir) {
+    let tengah = Math.floor((awal + akhir) / 2);
+
+    if (A[tengah] === x) {
+      posisi = tengah;
+      break;
+    } else if (x < A[tengah]) {
+      akhir = tengah - 1;
+    } else {
+      awal = tengah + 1;
+    }
+  }
+
+  return posisi;
+}`,
+    starterCodePy: `def binary_search(A, x):
+    awal = 0
+    akhir = len(A) - 1
+    posisi = -1
+
+    while awal <= akhir:
+        tengah = (awal + akhir) // 2
+
+        if A[tengah] == x:
+            posisi = tengah
+            break
+        elif x < A[tengah]:
+            akhir = tengah - 1
+        else:
+            awal = tengah + 1
+
+    return posisi
+`,
+    solution: `function binary_search(A, x) {
+  let awal = 0;
+  let akhir = A.length - 1;
+  let posisi = -1;
+
+  while (awal <= akhir) {
+    let tengah = Math.floor((awal + akhir) / 2);
+    if (A[tengah] === x) {
+      posisi = tengah;
+      break;
+    } else if (x < A[tengah]) {
+      akhir = tengah - 1;
+    } else {
+      awal = tengah + 1;
+    }
+  }
+
+  return posisi;
+}`,
+    solutionPy: `def binary_search(A, x):
+    awal = 0
+    akhir = len(A) - 1
+    posisi = -1
+
+    while awal <= akhir:
+        tengah = (awal + akhir) // 2
+        if A[tengah] == x:
+            posisi = tengah
+            break
+        elif x < A[tengah]:
+            akhir = tengah - 1
+        else:
+            awal = tengah + 1
+
+    return posisi
+`,
+    hint: "Gunakan loop `while (awal <= akhir)` dan perbarui `akhir = tengah - 1` jika `x < A[tengah]`, atau `awal = tengah + 1` jika `x > A[tengah]`. Kembalikan `posisi`.",
+    testCases: [
+      {
+        input: [[1, 5, 7, 10, 15], 7],
+        expected: 2,
+        description: "Elemen tengah x=7 ditemukan tepat di indeks ke-2"
+      },
+      {
+        input: [[1, 5, 7, 10, 15], 1],
+        expected: 0,
+        description: "Elemen x=1 ditemukan pada indeks ke-0 (ujung kiri)"
+      },
+      {
+        input: [[1, 5, 7, 10, 15], 15],
+        expected: 4,
+        description: "Elemen x=15 ditemukan pada indeks ke-4 (ujung kanan)"
+      },
+      {
+        input: [[1, 5, 7, 10, 15], 10],
+        expected: 3,
+        description: "Elemen x=10 ditemukan pada indeks ke-3"
+      },
+      {
+        input: [[1, 5, 7, 10, 15], 99],
+        expected: -1,
+        description: "Elemen x=99 tidak ada di dalam array -> mengembalikan -1"
       }
     ]
   }
