@@ -32,7 +32,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
    - Simulator visualisasi traversal sel matriks.
 
 4. **4. Latihan Praktik Koding**
-   - 9 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
+   - 10 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
      - **Latihan 1:** Operasi Penjumlahan dalam Array
      - **Latihan 2:** Evaluasi Kelulusan Siswa (Nested If)
      - **Latihan 3:** Algoritma Predikat Nilai Akhir
@@ -42,6 +42,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
      - **Latihan 7:** Algoritma Pencarian Binary Search pada Array Terurut
      - **Latihan 8:** Algoritma Pengurutan Selection Sort pada Array
      - **Latihan 9:** Algoritma Pengurutan Insertion Sort pada Array
+     - **Latihan 10:** Algoritma Decision Tree Klasifikasi Jenis Hewan
 
 5. **5. Sequential Search (Linear Search)**
    - Pengertian Sequential Search dan cara kerja membandingkan elemen satu per satu.
@@ -74,6 +75,16 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
    - Implementasi kode nyata dalam JavaScript dan Python.
    - **Tabel 2.2 Perbandingan Lengkap:** Komparasi Selection Sort vs. Insertion Sort (Metode pengurutan, cara kerja, jumlah pertukaran/pergeseran, Best Case $O(n)$, kestabilan, dan analogi dunia nyata).
    - **Simulator Animasi Interaktif:** Visualisasi metafora kartu remi, kartu aktif `key` terangkat (*card lift*), animasi pergeseran elemen ke kanan, penanda posisi sisip, tombol langkah maju/mundur (*step-by-step & undo*), putar otomatis, multi-dataset (Buku SMA, Terbalik, Acak, dan Kustom), kartu evaluasi perbandingan, trace table lengkap, serta box *"Coba sendiri"*.
+
+9. **9. Decision Tree (Pohon Keputusan)**
+   - Pengertian Decision Tree: metode atau algoritma yang menggunakan struktur berbentuk pohon untuk membantu pengambilan keputusan atau prediksi (Buku Teks SMA Kelas X Hal. 59).
+   - Tiga komponen utama pohon keputusan:
+     1. **Root Node:** Pertanyaan pertama pada pohon keputusan, tempat memulai proses memilih.
+     2. **Decision Node:** Pertanyaan lanjutan yang muncul setelah jawaban dari root node atau pertanyaan sebelumnya.
+     3. **Leaf Node:** Hasil akhir dari proses untuk menentukan keputusan.
+   - Studi kasus dunia nyata: **"Mengelompokkan Jenis Hewan"** (Burung/Unggas, Ikan, Reptil/Amfibi, Mamalia Air, dan Mamalia Darat).
+   - Pemetaan ke kode program nyata dengan *Nested If* (JavaScript & Python).
+   - **Simulator Animasi Interaktif:** Pohon hierarki visual bercabang dengan penanda glowing aktif untuk Root Node, Decision Node, dan Leaf Node, mode pemilihan hewan preset instan (Ayam, Ikan Mas, Ular, Paus, Kucing), mode kuis tanya-jawab langkah demi langkah ("Ya" / "Tidak"), breadcrumb jalur keputusan, penjelajah kode percabangan bertingkat live, serta box *"Coba sendiri"*.
 
 ---
 

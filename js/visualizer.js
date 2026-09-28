@@ -2347,6 +2347,521 @@ const Visualizer = (function () {
       .replace(/'/g, "&#039;");
   }
 
+  /* ==========================================================================
+   * 8. Simulator Interaktif Decision Tree (Pohon Keputusan AI)
+   * Studi Kasus: "Mengelompokkan Jenis Hewan" (Buku Teks SMA Bab 2 Hal. 59)
+   * Mendemonstrasikan 3 komponen utama:
+   * 1) Root Node: Pertanyaan pertama pada pohon keputusan, tempat memulai proses memilih.
+   * 2) Decision Node: Pertanyaan lanjutan yang muncul setelah jawaban sebelumnya.
+   * 3) Leaf Node: Hasil akhir dari proses untuk menentukan keputusan.
+   * ========================================================================== */
+
+  const dtNodes = {
+    ROOT: {
+      id: "ROOT",
+      type: "root",
+      title: "Apakah hewan ini bertelur?",
+      subtitle: "1) Root Node: Tempat memulai proses memilih",
+      yesNext: "DECISION_1",
+      noNext: "DECISION_2",
+      yesLabel: "Ya (Ovipar / Bertelur)",
+      noLabel: "Tidak (Vivipar / Melahirkan)"
+    },
+    DECISION_1: {
+      id: "DECISION_1",
+      type: "decision",
+      title: "Apakah memiliki bulu atau sayap?",
+      subtitle: "2) Decision Node: Cabang hewan bertelur",
+      yesNext: "LEAF_BURUNG",
+      noNext: "DECISION_3",
+      yesLabel: "Ya (Memiliki bulu/sayap)",
+      noLabel: "Tidak (Tanpa bulu)"
+    },
+    DECISION_2: {
+      id: "DECISION_2",
+      type: "decision",
+      title: "Apakah habitat utamanya hidup di air?",
+      subtitle: "2) Decision Node: Cabang hewan melahirkan",
+      yesNext: "LEAF_MAMALIA_AIR",
+      noNext: "LEAF_MAMALIA_DARAT",
+      yesLabel: "Ya (Hidup di perairan)",
+      noLabel: "Tidak (Hidup di darat)"
+    },
+    DECISION_3: {
+      id: "DECISION_3",
+      type: "decision",
+      title: "Apakah hidup di air & bernapas dengan insang?",
+      subtitle: "2) Decision Node: Pembeda ikan vs reptil/amfibi",
+      yesNext: "LEAF_IKAN",
+      noNext: "LEAF_REPTIL",
+      yesLabel: "Ya (Hidup di air & berinsang)",
+      noLabel: "Tidak (Reptil / Amfibi)"
+    },
+    LEAF_BURUNG: {
+      id: "LEAF_BURUNG",
+      type: "leaf",
+      title: "Burung / Unggas (Aves)",
+      icon: "🐔",
+      subtitle: "3) Leaf Node: Hasil akhir keputusan",
+      desc: "Hewan bertelur yang memiliki bulu dan sayap.",
+      examples: "Ayam, Bebek, Burung Elang, Merpati"
+    },
+    LEAF_IKAN: {
+      id: "LEAF_IKAN",
+      type: "leaf",
+      title: "Ikan (Pisces)",
+      icon: "🐟",
+      subtitle: "3) Leaf Node: Hasil akhir keputusan",
+      desc: "Hewan bertelur yang hidup di air dan bernapas dengan insang.",
+      examples: "Ikan Mas, Lele, Bandeng, Hiu"
+    },
+    LEAF_REPTIL: {
+      id: "LEAF_REPTIL",
+      type: "leaf",
+      title: "Reptil / Amfibi",
+      icon: "🐍",
+      subtitle: "3) Leaf Node: Hasil akhir keputusan",
+      desc: "Hewan bertelur tanpa bulu yang bernapas dengan paru-paru/kulit.",
+      examples: "Ular, Buaya, Katak, Komodo"
+    },
+    LEAF_MAMALIA_AIR: {
+      id: "LEAF_MAMALIA_AIR",
+      type: "leaf",
+      title: "Mamalia Air",
+      icon: "🐬",
+      subtitle: "3) Leaf Node: Hasil akhir keputusan",
+      desc: "Hewan melahirkan yang beradaptasi hidup di laut/perairan.",
+      examples: "Paus, Lumba-lumba, Anjing Laut"
+    },
+    LEAF_MAMALIA_DARAT: {
+      id: "LEAF_MAMALIA_DARAT",
+      type: "leaf",
+      title: "Mamalia Darat",
+      icon: "🐱",
+      subtitle: "3) Leaf Node: Hasil akhir keputusan",
+      desc: "Hewan melahirkan yang hidup dan berkembang biak di darat.",
+      examples: "Kucing, Kuda, Gajah, Harimau"
+    }
+  };
+
+  const dtAnimalPresets = {
+    ayam: {
+      id: "ayam",
+      name: "Ayam",
+      icon: "🐔",
+      path: ["ROOT", "DECISION_1", "LEAF_BURUNG"],
+      answers: { ROOT: true, DECISION_1: true },
+      explanation: "Ayam bertelur (Ya) &rarr; memiliki bulu/sayap (Ya) &rarr; Berhasil diklasifikasikan ke <strong>Leaf Node: Burung / Unggas (Aves)</strong>."
+    },
+    ikan_mas: {
+      id: "ikan_mas",
+      name: "Ikan Mas",
+      icon: "🐟",
+      path: ["ROOT", "DECISION_1", "DECISION_3", "LEAF_IKAN"],
+      answers: { ROOT: true, DECISION_1: false, DECISION_3: true },
+      explanation: "Ikan Mas bertelur (Ya) &rarr; tidak berbulu (Tidak) &rarr; hidup di air & berinsang (Ya) &rarr; Berhasil diklasifikasikan ke <strong>Leaf Node: Ikan (Pisces)</strong>."
+    },
+    ular: {
+      id: "ular",
+      name: "Ular",
+      icon: "🐍",
+      path: ["ROOT", "DECISION_1", "DECISION_3", "LEAF_REPTIL"],
+      answers: { ROOT: true, DECISION_1: false, DECISION_3: false },
+      explanation: "Ular bertelur (Ya) &rarr; tidak berbulu (Tidak) &rarr; tidak bernapas dengan insang (Tidak) &rarr; Berhasil diklasifikasikan ke <strong>Leaf Node: Reptil / Amfibi</strong>."
+    },
+    paus: {
+      id: "paus",
+      name: "Ikan Paus",
+      icon: "🐬",
+      path: ["ROOT", "DECISION_2", "LEAF_MAMALIA_AIR"],
+      answers: { ROOT: false, DECISION_2: true },
+      explanation: "Paus tidak bertelur/melahirkan (Tidak) &rarr; hidup di air (Ya) &rarr; Berhasil diklasifikasikan ke <strong>Leaf Node: Mamalia Air</strong>."
+    },
+    kucing: {
+      id: "kucing",
+      name: "Kucing",
+      icon: "🐱",
+      path: ["ROOT", "DECISION_2", "LEAF_MAMALIA_DARAT"],
+      answers: { ROOT: false, DECISION_2: false },
+      explanation: "Kucing tidak bertelur/melahirkan (Tidak) &rarr; hidup di darat (Tidak) &rarr; Berhasil diklasifikasikan ke <strong>Leaf Node: Mamalia Darat</strong>."
+    }
+  };
+
+  let dtState = {
+    currentNodeId: "ROOT",
+    pathHistory: ["ROOT"],
+    answersHistory: {},
+    activePresetKey: "ayam",
+    isFinished: true,
+    containerId: "visDecisionTreeContainer",
+    statusBadge: "Selesai: Burung / Unggas",
+    statusType: "success",
+    explanation: "Ayam bertelur (Ya) &rarr; memiliki bulu/sayap (Ya) &rarr; Berhasil diklasifikasikan ke <strong>Leaf Node: Burung / Unggas (Aves)</strong>."
+  };
+
+  function initDecisionTreeSimulator(containerId) {
+    if (containerId) dtState.containerId = containerId;
+    selectDtAnimal("ayam");
+  }
+
+  function renderDecisionTree() {
+    const container = document.getElementById(dtState.containerId);
+    if (!container) return;
+
+    const {
+      currentNodeId,
+      pathHistory,
+      answersHistory,
+      activePresetKey,
+      isFinished,
+      statusBadge,
+      statusType,
+      explanation
+    } = dtState;
+
+    const activeNode = dtNodes[currentNodeId] || dtNodes.ROOT;
+    const isLeaf = activeNode.type === "leaf";
+
+    // Helper: is node in active path?
+    const isPath = (id) => pathHistory.includes(id);
+
+    container.innerHTML = `
+      <div class="visualizer-panel dt-visualizer-panel">
+        <!-- Header Info -->
+        <div class="vis-header">
+          <div class="vis-title">
+            <span class="badge-tag" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: #0b0f19; font-weight: 700;">
+              🌳 Simulasi Interaktif Decision Tree
+            </span>
+            <h4>Mengelompokkan Jenis Hewan (Buku Teks SMA Bab 2 Hal. 59)</h4>
+          </div>
+          <div class="vis-stats">
+            <span class="stat-pill">Simpul Aktif: <strong style="color: var(--accent-cyan);">${activeNode.id}</strong></span>
+            <span class="stat-pill">Tipe Simpul: <strong style="color: ${isLeaf ? '#ec4899' : (activeNode.type === 'root' ? '#10b981' : '#38bdf8')};">${isLeaf ? '🟣 Leaf Node' : (activeNode.type === 'root' ? '🟢 Root Node' : '🔵 Decision Node')}</strong></span>
+            <span class="stat-pill">Langkah Keputusan: <strong>${pathHistory.length} Simpul</strong></span>
+            <span class="stat-pill">Status: <strong>${statusBadge}</strong></span>
+          </div>
+        </div>
+
+        <!-- Bar Presets Hewan -->
+        <div class="bs-dataset-bar dt-preset-bar">
+          <span class="bs-dataset-label">Pilih Contoh Hewan:</span>
+          ${Object.values(dtAnimalPresets).map(preset => `
+            <button class="btn btn-xs ${activePresetKey === preset.id ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.selectDtAnimal('${preset.id}')">
+              ${preset.icon} ${preset.name}
+            </button>
+          `).join("")}
+          <button class="btn btn-xs btn-outline" style="margin-left: auto;" onclick="Visualizer.resetDtTree()">
+            🔄 Kuis Mandiri (Mulai dari Awal)
+          </button>
+        </div>
+
+        <!-- Legenda Simpul -->
+        <div class="dt-legend-bar">
+          <div class="dt-legend-item">
+            <span class="dt-legend-dot" style="background: #10b981;"></span>
+            <span><strong>1) Root Node:</strong> Pertanyaan awal memulai memilih</span>
+          </div>
+          <div class="dt-legend-item">
+            <span class="dt-legend-dot" style="background: #0284c7;"></span>
+            <span><strong>2) Decision Node:</strong> Pertanyaan lanjutan</span>
+          </div>
+          <div class="dt-legend-item">
+            <span class="dt-legend-dot" style="background: #ec4899;"></span>
+            <span><strong>3) Leaf Node:</strong> Hasil akhir keputusan</span>
+          </div>
+        </div>
+
+        <!-- Diagram Visual Pohon Keputusan (Decision Tree) -->
+        <div class="dt-tree-wrapper">
+          <!-- Level 1: ROOT NODE -->
+          <div class="dt-level dt-level-1">
+            <div class="dt-node-card dt-node-root ${isPath('ROOT') ? 'dt-node-active dt-pulse' : ''}">
+              <div class="dt-node-badge dt-badge-root">🟢 1) Root Node</div>
+              <div class="dt-node-title">Apakah bertelur?</div>
+              <div class="dt-node-sub">Titik awal proses klasifikasi</div>
+            </div>
+          </div>
+
+          <!-- Level 1 Branches (Ya / Tidak) -->
+          <div class="dt-branch-row">
+            <div class="dt-branch-line-wrap left">
+              <span class="dt-branch-pill ${answersHistory['ROOT'] === true ? 'pill-active' : ''}">
+                Ya (Bertelur) &swarr;
+              </span>
+            </div>
+            <div class="dt-branch-line-wrap right">
+              <span class="dt-branch-pill ${answersHistory['ROOT'] === false ? 'pill-active' : ''}">
+                &searr; Tidak (Melahirkan)
+              </span>
+            </div>
+          </div>
+
+          <!-- Level 2: DECISION NODES -->
+          <div class="dt-level dt-level-2">
+            <!-- Decision Node 1 -->
+            <div class="dt-subbranch-col">
+              <div class="dt-node-card dt-node-decision ${isPath('DECISION_1') ? 'dt-node-active dt-pulse' : ''}">
+                <div class="dt-node-badge dt-badge-decision">🔵 2) Decision Node 1</div>
+                <div class="dt-node-title">Memiliki bulu / sayap?</div>
+                <div class="dt-node-sub">Cabang hewan bertelur</div>
+              </div>
+
+              <!-- Sub-branch from Decision 1 -->
+              <div class="dt-branch-row sub">
+                <span class="dt-branch-pill mini ${answersHistory['DECISION_1'] === true ? 'pill-active' : ''}">Ya &darr;</span>
+                <span class="dt-branch-pill mini ${answersHistory['DECISION_1'] === false ? 'pill-active' : ''}">Tidak &rarr;</span>
+              </div>
+            </div>
+
+            <!-- Decision Node 2 -->
+            <div class="dt-subbranch-col">
+              <div class="dt-node-card dt-node-decision ${isPath('DECISION_2') ? 'dt-node-active dt-pulse' : ''}">
+                <div class="dt-node-badge dt-badge-decision">🔵 2) Decision Node 2</div>
+                <div class="dt-node-title">Hidup di air (laut)?</div>
+                <div class="dt-node-sub">Cabang hewan melahirkan</div>
+              </div>
+
+              <!-- Sub-branch from Decision 2 -->
+              <div class="dt-branch-row sub">
+                <span class="dt-branch-pill mini ${answersHistory['DECISION_2'] === true ? 'pill-active' : ''}">Ya &darr;</span>
+                <span class="dt-branch-pill mini ${answersHistory['DECISION_2'] === false ? 'pill-active' : ''}">Tidak &darr;</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Level 3: DECISION NODE 3 & LEAF NODES -->
+          <div class="dt-level dt-level-3">
+            <!-- Leaf 1: Burung -->
+            <div class="dt-node-card dt-node-leaf ${isPath('LEAF_BURUNG') ? 'dt-node-active dt-node-winner dt-pulse' : ''}">
+              <div class="dt-node-badge dt-badge-leaf">🟣 3) Leaf Node</div>
+              <div class="dt-leaf-icon">🐔</div>
+              <div class="dt-node-title">Burung / Unggas</div>
+              <div class="dt-node-sub">Ayam, Bebek, Elang</div>
+            </div>
+
+            <!-- Decision Node 3 -->
+            <div class="dt-subbranch-col">
+              <div class="dt-node-card dt-node-decision ${isPath('DECISION_3') ? 'dt-node-active dt-pulse' : ''}">
+                <div class="dt-node-badge dt-badge-decision">🔵 2) Decision Node 3</div>
+                <div class="dt-node-title">Hidup di air & insang?</div>
+                <div class="dt-node-sub">Bertelur tanpa bulu</div>
+              </div>
+
+              <!-- Sub-branch from Decision 3 -->
+              <div class="dt-branch-row sub">
+                <span class="dt-branch-pill mini ${answersHistory['DECISION_3'] === true ? 'pill-active' : ''}">Ya &darr;</span>
+                <span class="dt-branch-pill mini ${answersHistory['DECISION_3'] === false ? 'pill-active' : ''}">Tidak &darr;</span>
+              </div>
+            </div>
+
+            <!-- Leaf 4: Mamalia Air -->
+            <div class="dt-node-card dt-node-leaf ${isPath('LEAF_MAMALIA_AIR') ? 'dt-node-active dt-node-winner dt-pulse' : ''}">
+              <div class="dt-node-badge dt-badge-leaf">🟣 3) Leaf Node</div>
+              <div class="dt-leaf-icon">🐬</div>
+              <div class="dt-node-title">Mamalia Air</div>
+              <div class="dt-node-sub">Paus, Lumba-lumba</div>
+            </div>
+
+            <!-- Leaf 5: Mamalia Darat -->
+            <div class="dt-node-card dt-node-leaf ${isPath('LEAF_MAMALIA_DARAT') ? 'dt-node-active dt-node-winner dt-pulse' : ''}">
+              <div class="dt-node-badge dt-badge-leaf">🟣 3) Leaf Node</div>
+              <div class="dt-leaf-icon">🐱</div>
+              <div class="dt-node-title">Mamalia Darat</div>
+              <div class="dt-node-sub">Kucing, Kuda, Sapi</div>
+            </div>
+          </div>
+
+          <!-- Level 4: Final Leaves for Decision 3 -->
+          <div class="dt-level dt-level-4">
+            <!-- Spacer to align under Decision 3 -->
+            <div style="flex: 1;"></div>
+
+            <div class="dt-leaves-subgroup">
+              <!-- Leaf 2: Ikan -->
+              <div class="dt-node-card dt-node-leaf ${isPath('LEAF_IKAN') ? 'dt-node-active dt-node-winner dt-pulse' : ''}">
+                <div class="dt-node-badge dt-badge-leaf">🟣 3) Leaf Node</div>
+                <div class="dt-leaf-icon">🐟</div>
+                <div class="dt-node-title">Ikan (Pisces)</div>
+                <div class="dt-node-sub">Ikan Mas, Lele, Hiu</div>
+              </div>
+
+              <!-- Leaf 3: Reptil / Amfibi -->
+              <div class="dt-node-card dt-node-leaf ${isPath('LEAF_REPTIL') ? 'dt-node-active dt-node-winner dt-pulse' : ''}">
+                <div class="dt-node-badge dt-badge-leaf">🟣 3) Leaf Node</div>
+                <div class="dt-leaf-icon">🐍</div>
+                <div class="dt-node-title">Reptil / Amfibi</div>
+                <div class="dt-node-sub">Ular, Katak, Buaya</div>
+              </div>
+            </div>
+
+            <!-- Spacer -->
+            <div style="flex: 2;"></div>
+          </div>
+        </div>
+
+        <!-- Narasi Penelusuran Langkah -->
+        <div class="search-step-tracker dt-step-tracker">
+          <div class="search-step-row">
+            <span class="search-status-badge badge-${statusType}">
+              ${statusBadge}
+            </span>
+            <span style="font-size: 0.95rem; line-height: 1.5;">${explanation}</span>
+          </div>
+        </div>
+
+        <!-- Kartu Interaktif Pengambilan Keputusan (Question Card) -->
+        <div class="bs-math-grid dt-action-grid">
+          <div class="bs-math-card">
+            <div class="bs-math-card-header">
+              <span class="icon">❓</span>
+              <strong>Pertanyaan Pohon Keputusan Saat Ini</strong>
+            </div>
+            <div class="bs-math-body">
+              ${!isLeaf ? `
+                <div style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem;">
+                  ${activeNode.title}
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                  ${activeNode.subtitle}
+                </div>
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                  <button class="btn btn-sm btn-primary" onclick="Visualizer.answerDtQuestion(true)">
+                    <span>✅ ${activeNode.yesLabel || 'Ya'}</span>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" onclick="Visualizer.answerDtQuestion(false)">
+                    <span>❌ ${activeNode.noLabel || 'Tidak'}</span>
+                  </button>
+                </div>
+              ` : `
+                <div style="font-size: 1.1rem; font-weight: 800; color: #ec4899; margin-bottom: 0.35rem;">
+                  🎉 Hasil Akhir (Leaf Node): ${activeNode.title}
+                </div>
+                <div style="font-size: 0.88rem; color: #e2e8f0; line-height: 1.6;">
+                  ${activeNode.desc}<br>
+                  <strong style="color: var(--accent-cyan);">Contoh:</strong> ${activeNode.examples}
+                </div>
+                <div style="margin-top: 1rem;">
+                  <button class="btn btn-sm btn-outline" onclick="Visualizer.resetDtTree()">
+                    <span>🔄 Uji Hewan Lainnya</span>
+                  </button>
+                </div>
+              `}
+            </div>
+          </div>
+
+          <!-- Kartu Pemetaan Kode Nested If -->
+          <div class="bs-math-card">
+            <div class="bs-math-card-header">
+              <span class="icon">⚡</span>
+              <strong>Pemetaan Logika ke Struktur Kode Nested If</strong>
+            </div>
+            <div class="bs-math-body">
+              <div class="bs-formula-code" style="font-size: 0.8rem; line-height: 1.5; white-space: pre-wrap;">${
+                pathHistory.map((nodeId, idx) => {
+                  const n = dtNodes[nodeId];
+                  if (n.type === 'root') return `// 1) Root Node:\nif (bertelur === ${answersHistory['ROOT'] !== undefined ? answersHistory['ROOT'] : '?'}) {`;
+                  if (nodeId === 'DECISION_1') return `  // 2) Decision Node 1:\n  if (berbulu === ${answersHistory['DECISION_1'] !== undefined ? answersHistory['DECISION_1'] : '?'}) {`;
+                  if (nodeId === 'DECISION_2') return `  // 2) Decision Node 2:\n  if (hidup_di_air === ${answersHistory['DECISION_2'] !== undefined ? answersHistory['DECISION_2'] : '?'}) {`;
+                  if (nodeId === 'DECISION_3') return `    // 2) Decision Node 3:\n    if (hidup_di_air && berinsang === ${answersHistory['DECISION_3'] !== undefined ? answersHistory['DECISION_3'] : '?'}) {`;
+                  if (n.type === 'leaf') return `      // 3) Leaf Node:\n      return "${n.title}";\n    }\n  }\n}`;
+                  return '';
+                }).join('\n')
+              }</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kontrol Interaktif -->
+        <div class="vis-controls">
+          <div class="control-row">
+            <button class="btn btn-sm btn-outline" onclick="Visualizer.stepDtBack()" ${pathHistory.length <= 1 ? 'disabled' : ''} title="Mundur satu pertanyaan ke simpul sebelumnya">
+              <span>⏪ Mundur Satu Simpul (Undo)</span>
+            </button>
+            <button class="btn btn-sm btn-outline" onclick="Visualizer.resetDtTree()" title="Reset pohon keputusan ke simpul akar">
+              <span>🔄 Reset ke Root Node</span>
+            </button>
+            <span style="margin-left: auto; font-size: 0.85rem; color: var(--text-muted);">
+              Jalur: ${pathHistory.map(id => dtNodes[id]?.title?.replace('Apakah ', '')?.replace('?', '') || id).join(' &rarr; ')}
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function selectDtAnimal(key) {
+    const preset = dtAnimalPresets[key];
+    if (!preset) return;
+
+    dtState.activePresetKey = key;
+    dtState.pathHistory = [...preset.path];
+    dtState.answersHistory = { ...preset.answers };
+    dtState.currentNodeId = preset.path[preset.path.length - 1];
+    dtState.isFinished = true;
+    dtState.statusBadge = `Selesai: ${preset.name}`;
+    dtState.statusType = "success";
+    dtState.explanation = preset.explanation;
+    renderDecisionTree();
+  }
+
+  function answerDtQuestion(answerBool) {
+    const cur = dtNodes[dtState.currentNodeId];
+    if (!cur || cur.type === "leaf") return;
+
+    dtState.answersHistory[cur.id] = answerBool;
+    const nextId = answerBool ? cur.yesNext : cur.noNext;
+    if (!nextId || !dtNodes[nextId]) return;
+
+    dtState.currentNodeId = nextId;
+    dtState.pathHistory.push(nextId);
+    dtState.activePresetKey = null;
+
+    const nextNode = dtNodes[nextId];
+    if (nextNode.type === "leaf") {
+      dtState.isFinished = true;
+      dtState.statusBadge = `Selesai: ${nextNode.title}`;
+      dtState.statusType = "success";
+      dtState.explanation = `🎉 <strong>Keputusan Akhir Ditemukan (Leaf Node):</strong> Berdasarkan rangkaian jawaban, hewan ini diklasifikasikan sebagai <strong>${nextNode.title}</strong> (${nextNode.examples}).`;
+    } else {
+      dtState.isFinished = false;
+      dtState.statusBadge = `Di ${nextNode.type === 'root' ? 'Root Node' : 'Decision Node'}`;
+      dtState.statusType = "warning";
+      dtState.explanation = `Melangkah ke <strong>Decision Node</strong> berikutnya: <em>"${nextNode.title}"</em>. Silakan pilih <strong>Ya</strong> atau <strong>Tidak</strong>.`;
+    }
+
+    renderDecisionTree();
+  }
+
+  function stepDtBack() {
+    if (dtState.pathHistory.length <= 1) return;
+
+    const removedId = dtState.pathHistory.pop();
+    const prevId = dtState.pathHistory[dtState.pathHistory.length - 1];
+    delete dtState.answersHistory[prevId];
+    dtState.currentNodeId = prevId;
+    dtState.isFinished = false;
+    dtState.activePresetKey = null;
+
+    const prevNode = dtNodes[prevId];
+    dtState.statusBadge = `Kembali ke ${prevNode.type === 'root' ? 'Root Node' : 'Decision Node'}`;
+    dtState.statusType = "primary";
+    dtState.explanation = `Kembali ke pertanyaan: <em>"${prevNode.title}"</em>. Silakan pilih jawaban Anda.`;
+    renderDecisionTree();
+  }
+
+  function resetDtTree() {
+    dtState.currentNodeId = "ROOT";
+    dtState.pathHistory = ["ROOT"];
+    dtState.answersHistory = {};
+    dtState.activePresetKey = null;
+    dtState.isFinished = false;
+    dtState.statusBadge = "Di Root Node";
+    dtState.statusType = "primary";
+    dtState.explanation = "Pohon keputusan dimulai dari <strong>Root Node</strong>: <em>'Apakah hewan ini bertelur?'</em>. Silakan klik tombol <strong>Ya</strong> atau <strong>Tidak</strong>.";
+    renderDecisionTree();
+  }
+
   return {
     init1DVisualizer,
     append1D,
@@ -2400,9 +2915,16 @@ const Visualizer = (function () {
     resetInsertionSort,
     selectInsertionDataset,
     setCustomInsertionData,
-    setInsertionSpeed
+    setInsertionSpeed,
+
+    initDecisionTreeSimulator,
+    selectDtAnimal,
+    answerDtQuestion,
+    stepDtBack,
+    resetDtTree
   };
 })();
+
 
 
 

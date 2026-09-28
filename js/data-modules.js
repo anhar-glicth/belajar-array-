@@ -391,6 +391,7 @@ for i in range(len(matriks)):
             <li><strong>Latihan 7:</strong> Algoritma Pencarian Binary Search pada Array Terurut</li>
             <li><strong>Latihan 8:</strong> Algoritma Pengurutan Selection Sort pada Array</li>
             <li><strong>Latihan 9:</strong> Algoritma Pengurutan Insertion Sort pada Array</li>
+            <li><strong>Latihan 10:</strong> Algoritma Decision Tree Klasifikasi Jenis Hewan</li>
           </ul>
         `
       }
@@ -1340,10 +1341,310 @@ for i in range(1, n):
 print("Selesai! Array terurut:", A)`,
       hint: "Perhatikan perulangan luar yang dimulai dari `i = 1`. Nilai `key = A[i]` disimpan, lalu perulangan `while (j >= 0 && A[j] > key)` menggeser elemen yang lebih besar ke kanan. Setelah perulangan selesai, letakkan `key` di `A[j + 1]`."
     }
+  },
+
+  {
+    id: "modul-decision-tree",
+    badge: "9. Decision Tree",
+    title: "Decision Tree (Pohon Keputusan AI)",
+    subtitle: "Metode struktur pohon untuk pengambilan keputusan & prediksi dengan Root Node, Decision Node, dan Leaf Node",
+    readTime: "12 menit baca & praktik",
+    summary: "Decision tree adalah metode atau algoritma yang menggunakan struktur berbentuk pohon untuk membantu dalam pengambilan keputusan atau prediksi. Pelajari konsep Root Node, Decision Node, dan Leaf Node melalui studi kasus Mengelompokkan Jenis Hewan dari buku teks Bab 2 Hal. 59.",
+    sections: [
+      {
+        heading: "1. Pengertian Decision Tree (Pohon Keputusan)",
+        content: `
+          <p>Sesuai buku teks <em>Bab 2 Algoritma dan Pemrograman Lanjut</em> (Halaman 59):</p>
+          <p><strong>Decision tree</strong> adalah metode atau algoritma yang menggunakan struktur berbentuk pohon untuk membantu dalam <strong>pengambilan keputusan atau prediksi</strong>.</p>
+          <p>Setiap titik percabangan pada pohon disebut <strong>node</strong> yang mewakili suatu pertanyaan atau kondisi. Sedangkan cabang-cabangnya menyatakan <strong>kemungkinan hasil atau langkah berikutnya</strong> untuk mencapai hasil akhir atau kesimpulan akhir.</p>
+          
+          <div class="note-box" style="border-left-color: #10b981; background: rgba(16, 185, 129, 0.08);">
+            <strong>🌳 Mengapa Menggunakan Struktur Pohon?</strong>
+            <p>Pohon keputusan meniru cara berpikir logis manusia dalam menyelesaikan masalah: memecah keputusan besar yang rumit menjadi rangkaian pertanyaan sederhana yang berurutan (<em>Top-Down Decision Making</em>). Dalam bidang <strong>Kecerdasan Artifisial (AI) & Machine Learning</strong>, decision tree merupakan salah satu algoritma paling populer karena sangat transparan dan mudah diinterpretasikan.</p>
+          </div>
+        `
+      },
+      {
+        heading: "2. Tiga Komponen Utama pada Decision Tree",
+        content: `
+          <p>Berdasarkan buku teks Bab 2 Halaman 59, terdapat <strong>3 jenis simpul (node)</strong> dalam setiap pohon keputusan:</p>
+          
+          <div class="steps-timeline">
+            <div class="step-item">
+              <div class="step-number" style="background: #10b981; color: #0b0f19;">1</div>
+              <div class="step-content">
+                <h4>1) Root Node (Simpul Akar)</h4>
+                <p><strong>Root Node</strong> adalah pertanyaan pertama pada pohon keputusan, tempat memulai proses memilih. Root node berada di posisi paling atas dan tidak memiliki cabang masuk, melainkan hanya cabang keluar.</p>
+                <p><em>Contoh pada klasifikasi hewan:</em> <code>"Apakah hewan ini bertelur?"</code></p>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-number" style="background: var(--accent-cyan); color: #0b0f19;">2</div>
+              <div class="step-content">
+                <h4>2) Decision Node (Simpul Keputusan)</h4>
+                <p><strong>Decision Node</strong> adalah pertanyaan lanjutan yang muncul setelah jawaban dari root node atau pertanyaan sebelumnya. Simpul ini memiliki cabang masuk dan menghasilkan cabang-cabang keluar baru berdasarkan kondisi jawaban.</p>
+                <p><em>Contoh pada klasifikasi hewan:</em> <code>"Apakah memiliki bulu/sayap?"</code> atau <code>"Apakah hidup di air?"</code></p>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-number" style="background: #ec4899; color: #fff;">3</div>
+              <div class="step-content">
+                <h4>3) Leaf Node (Simpul Daun)</h4>
+                <p><strong>Leaf Node</strong> adalah hasil akhir dari proses untuk menentukan keputusan. Simpul daun berada di ujung pohon keputusan dan tidak memiliki cabang keluar lagi.</p>
+                <p><em>Contoh pada klasifikasi hewan:</em> <code>"Burung / Unggas"</code>, <code>"Ikan"</code>, <code>"Reptil / Amfibi"</code>, <code>"Mamalia Air"</code>, atau <code>"Mamalia Darat"</code>.</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        heading: "3. Contoh Decision Tree: “Mengelompokkan Jenis Hewan”",
+        content: `
+          <p>Mari telaah alur klasifikasi jenis hewan dari Buku Teks Bab 2 Halaman 59 dengan struktur pohon berikut:</p>
+
+          <div class="table-responsive" style="margin: 1.25rem 0;">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Tingkatan Simpul</th>
+                  <th style="width: 35%;">Pertanyaan / Kondisi</th>
+                  <th style="width: 40%;">Cabang & Hasil Klasifikasi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge-tag" style="background:#10b981; color:#0b0f19;">1. Root Node</span></td>
+                  <td><strong>Apakah hewan ini bertelur?</strong></td>
+                  <td>
+                    &bull; <strong>Ya (Ovipar)</strong> &rarr; Lanjut ke Decision Node 1<br>
+                    &bull; <strong>Tidak (Vivipar/Melahirkan)</strong> &rarr; Lanjut ke Decision Node 2
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag" style="background:var(--accent-cyan); color:#0b0f19;">2. Decision Node 1</span></td>
+                  <td>(Jika Bertelur) <strong>Apakah memiliki bulu atau sayap?</strong></td>
+                  <td>
+                    &bull; <strong>Ya</strong> &rarr; <strong style="color:#ec4899;">Leaf: Burung / Unggas</strong> (Ayam, Bebek, Elang)<br>
+                    &bull; <strong>Tidak</strong> &rarr; Lanjut ke Decision Node 3
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag" style="background:var(--accent-cyan); color:#0b0f19;">3. Decision Node 2</span></td>
+                  <td>(Jika Melahirkan) <strong>Apakah habitat utamanya hidup di air?</strong></td>
+                  <td>
+                    &bull; <strong>Ya</strong> &rarr; <strong style="color:#ec4899;">Leaf: Mamalia Air</strong> (Paus, Lumba-lumba)<br>
+                    &bull; <strong>Tidak</strong> &rarr; <strong style="color:#ec4899;">Leaf: Mamalia Darat</strong> (Kucing, Harimau, Kuda)
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag" style="background:var(--accent-cyan); color:#0b0f19;">4. Decision Node 3</span></td>
+                  <td>(Jika Bertelur & Tanpa Bulu) <strong>Apakah hidup di air & bernapas dengan insang?</strong></td>
+                  <td>
+                    &bull; <strong>Ya</strong> &rarr; <strong style="color:#ec4899;">Leaf: Ikan (Pisces)</strong> (Ikan Mas, Bandeng)<br>
+                    &bull; <strong>Tidak</strong> &rarr; <strong style="color:#ec4899;">Leaf: Reptil / Amfibi</strong> (Ular, Buaya, Katak)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `
+      },
+      {
+        heading: "4. Hubungan Decision Tree dengan Nested If",
+        content: `
+          <p>Dalam dunia pemrograman, setiap <strong>Decision Tree dapat diterjemahkan langsung menjadi struktur percabangan bertingkat (Nested If)</strong>:</p>
+          <ul>
+            <li><strong>Root Node</strong> menjadi pernyataan <code>if-else</code> paling luar.</li>
+            <li><strong>Decision Node</strong> menjadi pernyataan <code>if-else</code> di tingkat dalam (bersarang).</li>
+            <li><strong>Leaf Node</strong> menjadi nilai kembali (<em>return value</em>) atau aksi keputusan di dalam blok kondisi terdalam.</li>
+          </ul>
+
+          <div class="code-preview-box">
+            <pre><code>// Pemetaan Struktur Pohon Keputusan ke Kode:
+if (bertelur) {                    // [Root Node]
+  if (berbulu) {                   // [Decision Node 1]
+    return "Burung / Unggas";      // [Leaf Node]
+  } else {
+    if (hidup_di_air) {            // [Decision Node 3]
+      return "Ikan";               // [Leaf Node]
+    } else {
+      return "Reptil / Amfibi";    // [Leaf Node]
+    }
+  }
+} else {                           // Cabang Melahirkan
+  if (hidup_di_air) {              // [Decision Node 2]
+    return "Mamalia Air";          // [Leaf Node]
+  } else {
+    return "Mamalia Darat";        // [Leaf Node]
+  }
+}</code></pre>
+          </div>
+        `
+      },
+      {
+        heading: "5. Implementasi Kode Program Klasifikasi Hewan (JavaScript & Python)",
+        content: `
+          <p>Berikut implementasi lengkap algoritma Decision Tree untuk mengelompokkan jenis hewan dalam <span class="lang-text" data-lang-js="JavaScript" data-lang-py="Python">JavaScript</span>:</p>
+
+          <div class="lang-block lang-block-js">
+            <div class="code-preview-box">
+              <div class="code-preview-header">
+                <span>⚡ JavaScript: Algoritma Decision Tree Klasifikasi Hewan</span>
+              </div>
+              <pre><code>function klasifikasiHewan(bertelur, hidupDiAir, berbulu) {
+  // [1. ROOT NODE]: Apakah bertelur?
+  if (bertelur) {
+    // [2. DECISION NODE 1]: Apakah berbulu/bersayap?
+    if (berbulu) {
+      return "Burung / Unggas"; // [LEAF NODE]
+    } else {
+      // [2. DECISION NODE 3]: Apakah hidup di air?
+      if (hidupDiAir) {
+        return "Ikan"; // [LEAF NODE]
+      } else {
+        return "Reptil / Amfibi"; // [LEAF NODE]
+      }
+    }
+  } else {
+    // [2. DECISION NODE 2]: Jika melahirkan, apakah hidup di air?
+    if (hidupDiAir) {
+      return "Mamalia Air"; // [LEAF NODE]
+    } else {
+      return "Mamalia Darat"; // [LEAF NODE]
+    }
+  }
+}
+
+// Uji coba beberapa hewan:
+console.log("Ayam   (bertelur=true, diAir=false, berbulu=true)  ->", klasifikasiHewan(true, false, true));   // Burung / Unggas
+console.log("Hiu    (bertelur=true, diAir=true,  berbulu=false) ->", klasifikasiHewan(true, true, false));   // Ikan
+console.log("Paus   (bertelur=false, diAir=true, berbulu=false) ->", klasifikasiHewan(false, true, false));  // Mamalia Air
+console.log("Kucing (bertelur=false, diAir=false,berbulu=false) ->", klasifikasiHewan(false, false, false)); // Mamalia Darat</code></pre>
+            </div>
+          </div>
+
+          <div class="lang-block lang-block-py">
+            <div class="code-preview-box">
+              <div class="code-preview-header">
+                <span>🐍 Python: Algoritma Decision Tree Klasifikasi Hewan</span>
+              </div>
+              <pre><code>def klasifikasi_hewan(bertelur, hidup_di_air, berbulu):
+    # [1. ROOT NODE]: Apakah bertelur?
+    if bertelur:
+        # [2. DECISION NODE 1]: Apakah berbulu/bersayap?
+        if berbulu:
+            return "Burung / Unggas" # [LEAF NODE]
+        else:
+            # [2. DECISION NODE 3]: Apakah hidup di air?
+            if hidup_di_air:
+                return "Ikan" # [LEAF NODE]
+            else:
+                return "Reptil / Amfibi" # [LEAF NODE]
+    else:
+        # [2. DECISION NODE 2]: Jika melahirkan, apakah hidup di air?
+        if hidup_di_air:
+            return "Mamalia Air" # [LEAF NODE]
+        else:
+            return "Mamalia Darat" # [LEAF NODE]
+
+# Uji coba beberapa hewan:
+print("Ayam   ->", klasifikasi_hewan(True, False, True))   # Burung / Unggas
+print("Hiu    ->", klasifikasi_hewan(True, True, False))   # Ikan
+print("Paus   ->", klasifikasi_hewan(False, True, False))  # Mamalia Air
+print("Kucing ->", klasifikasi_hewan(False, False, False)) # Mamalia Darat</code></pre>
+            </div>
+          </div>
+        `
+      },
+      {
+        heading: "6. Peran Decision Tree dalam Kecerdasan Artifisial (AI)",
+        content: `
+          <p>Dalam bidang <strong>Kecerdasan Artifisial (AI) dan Pembelajaran Mesin (Machine Learning)</strong>, pohon keputusan bukan hanya dibuat secara manual oleh pemrogram, melainkan dapat dipelajari secara otomatis oleh komputer dari ribuan data contoh (<em>dataset</em>).</p>
+          <ul>
+            <li><strong>Pelatihan Otomatis (Machine Learning):</strong> Komputer menghitung nilai <em>Entropy</em> dan <em>Information Gain</em> untuk memilih pertanyaan mana yang paling efektif dijadikan Root Node dan Decision Node.</li>
+            <li><strong>Mudah Diinterpretasikan (White-Box Model):</strong> Berbeda dengan Deep Learning atau Neural Network yang bersifat <em>Black-Box</em> (sulit dipahami alasannya), Decision Tree memberikan alasan langkah demi langkah yang sangat jelas mengapa suatu kesimpulan diambil.</li>
+            <li><strong>Penerapan Luas:</strong> Digunakan pada diagnosa medis, persetujuan pinjaman bank, pendeteksian email spam, hingga sistem klasifikasi spesies biologi.</li>
+          </ul>
+        `
+      }
+    ],
+    interactiveTool: "decision-tree-simulator",
+    cobaSendiri: {
+      id: "coba_decision_tree",
+      title: "Coba Sendiri: Decision Tree Klasifikasi Hewan Berdasarkan Ciri-Ciri",
+      description: "Ubah variabel ciri-ciri hewan (bertelur, hidup_di_air, berbulu) untuk menguji penelusuran cabang pohon keputusan hingga menghasilkan klasifikasi yang tepat.",
+      starterCodeJs: `let bertelur = true;
+let hidup_di_air = false;
+let berbulu = true;
+
+console.log("Ciri-ciri hewan:");
+console.log("- Bertelur    : " + bertelur);
+console.log("- Hidup di air: " + hidup_di_air);
+console.log("- Berbulu     : " + berbulu);
+
+let hasil = "";
+
+// 1. Root Node:
+if (bertelur) {
+  // 2. Decision Node 1:
+  if (berbulu) {
+    hasil = "Burung / Unggas (Ayam, Bebek, Burung Elang)";
+  } else {
+    // 2. Decision Node 3:
+    if (hidup_di_air) {
+      hasil = "Ikan / Pisces (Ikan Mas, Lele, Hiu)";
+    } else {
+      hasil = "Reptil / Amfibi (Ular, Buaya, Katak)";
+    }
+  }
+} else {
+  // 2. Decision Node 2:
+  if (hidup_di_air) {
+    hasil = "Mamalia Air (Paus, Lumba-lumba)";
+  } else {
+    hasil = "Mamalia Darat (Kucing, Kuda, Gajah)";
+  }
+}
+
+console.log("-----------------------------------------");
+console.log("Hasil Klasifikasi (Leaf Node): " + hasil);`,
+      starterCodePy: `bertelur = True
+hidup_di_air = False
+berbulu = True
+
+print("Ciri-ciri hewan:")
+print(f"- Bertelur    : {bertelur}")
+print(f"- Hidup di air: {hidup_di_air}")
+print(f"- Berbulu     : {berbulu}")
+
+# 1. Root Node:
+if bertelur:
+    # 2. Decision Node 1:
+    if berbulu:
+        hasil = "Burung / Unggas (Ayam, Bebek, Burung Elang)"
+    else:
+        # 2. Decision Node 3:
+        if hidup_di_air:
+            hasil = "Ikan / Pisces (Ikan Mas, Lele, Hiu)"
+        else:
+            hasil = "Reptil / Amfibi (Ular, Buaya, Katak)"
+else:
+    # 2. Decision Node 2:
+    if hidup_di_air:
+        hasil = "Mamalia Air (Paus, Lumba-lumba)"
+    else:
+        hasil = "Mamalia Darat (Kucing, Kuda, Gajah)"
+
+print("-----------------------------------------")
+print(f"Hasil Klasifikasi (Leaf Node): {hasil}")`,
+      hint: "Cobalah ganti nilai `bertelur = false` dan `hidup_di_air = true` untuk melihat paus/lumba-lumba terdeteksi sebagai Mamalia Air."
+    }
   }
 ];
 
-// 9 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
+// 10 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
 const PRACTICE_EXERCISES = [
   {
     id: "latihan-1",
@@ -2207,6 +2508,114 @@ const PRACTICE_EXERCISES = [
         description: "Array yang sudah terurut tetap terurut [1, 2, 3, 4]"
       }
     ]
+  },
+  {
+    id: "latihan-10",
+    level: "Kecerdasan Artifisial (AI)",
+    category: "Decision Tree",
+    title: "Latihan 10: Algoritma Decision Tree Klasifikasi Jenis Hewan",
+    description: `
+      Tantangan Pemrograman Decision Tree AI:<br>
+      Berdasarkan materi Buku Teks Bab 2 Hal. 59, buatlah fungsi <code>klasifikasi_hewan(bertelur, hidup_di_air, berbulu)</code> yang menentukan klasifikasi hewan berdasarkan tiga parameter boolean tersebut:
+      <ol style="margin: 0.5rem 0 0 1.25rem; font-size: 0.88rem; line-height: 1.5;">
+        <li><strong>Root Node:</strong> Periksa apakah hewan <code>bertelur</code>.</li>
+        <li>Jika <code>bertelur === true</code>:
+          <ul>
+            <li>Periksa apakah <code>berbulu === true</code> &rarr; kembalikan <code>"Burung / Unggas"</code>.</li>
+            <li>Jika tidak berbulu, periksa apakah <code>hidup_di_air === true</code> &rarr; kembalikan <code>"Ikan"</code>.</li>
+            <li>Jika tidak hidup di air &rarr; kembalikan <code>"Reptil / Amfibi"</code>.</li>
+          </ul>
+        </li>
+        <li>Jika <code>bertelur === false</code> (melahirkan):
+          <ul>
+            <li>Periksa apakah <code>hidup_di_air === true</code> &rarr; kembalikan <code>"Mamalia Air"</code>.</li>
+            <li>Jika tidak hidup di air &rarr; kembalikan <code>"Mamalia Darat"</code>.</li>
+          </ul>
+        </li>
+      </ol>
+    `,
+    starterCode: `function klasifikasi_hewan(bertelur, hidup_di_air, berbulu) {
+  // Tuliskan algoritma Decision Tree menggunakan Nested If di sini:
+  if (bertelur) {
+    // TODO: Cabang jika bertelur
+    
+  } else {
+    // TODO: Cabang jika melahirkan
+    
+  }
+}`,
+    starterCodePy: `def klasifikasi_hewan(bertelur, hidup_di_air, berbulu):
+    # Tuliskan algoritma Decision Tree menggunakan Nested If di sini:
+    if bertelur:
+        # TODO: Cabang jika bertelur
+        pass
+    else:
+        # TODO: Cabang jika melahirkan
+        pass
+`,
+    solution: `function klasifikasi_hewan(bertelur, hidup_di_air, berbulu) {
+  if (bertelur) {
+    if (berbulu) {
+      return "Burung / Unggas";
+    } else {
+      if (hidup_di_air) {
+        return "Ikan";
+      } else {
+        return "Reptil / Amfibi";
+      }
+    }
+  } else {
+    if (hidup_di_air) {
+      return "Mamalia Air";
+    } else {
+      return "Mamalia Darat";
+    }
+  }
+}`,
+    solutionPy: `def klasifikasi_hewan(bertelur, hidup_di_air, berbulu):
+    if bertelur:
+        if berbulu:
+            return "Burung / Unggas"
+        else:
+            if hidup_di_air:
+                return "Ikan"
+            else:
+                return "Reptil / Amfibi"
+    else:
+        if hidup_di_air:
+            return "Mamalia Air"
+        else:
+            return "Mamalia Darat"
+`,
+    hint: "Gunakan `if (bertelur)` di tingkat terluar (Root Node). Di dalamnya, periksa `if (berbulu)` untuk mengembalikan 'Burung / Unggas', dan `else if (hidup_di_air)` untuk 'Ikan' atau 'Reptil / Amfibi'. Di blok else luar, periksa `if (hidup_di_air)` untuk 'Mamalia Air' atau 'Mamalia Darat'.",
+    testCases: [
+      {
+        input: [true, false, true],
+        expected: "Burung / Unggas",
+        description: "Ayam/Bebek (bertelur=true, hidup_di_air=false, berbulu=true) -> 'Burung / Unggas'"
+      },
+      {
+        input: [true, true, false],
+        expected: "Ikan",
+        description: "Ikan Mas (bertelur=true, hidup_di_air=true, berbulu=false) -> 'Ikan'"
+      },
+      {
+        input: [true, false, false],
+        expected: "Reptil / Amfibi",
+        description: "Ular/Katak (bertelur=true, hidup_di_air=false, berbulu=false) -> 'Reptil / Amfibi'"
+      },
+      {
+        input: [false, true, false],
+        expected: "Mamalia Air",
+        description: "Paus/Lumba-lumba (bertelur=false, hidup_di_air=true, berbulu=false) -> 'Mamalia Air'"
+      },
+      {
+        input: [false, false, false],
+        expected: "Mamalia Darat",
+        description: "Kucing/Kuda (bertelur=false, hidup_di_air=false, berbulu=false) -> 'Mamalia Darat'"
+      }
+    ]
   }
 ];
+
 
