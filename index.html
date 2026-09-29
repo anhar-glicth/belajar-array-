@@ -16,11 +16,19 @@
 
   <!-- Top Navigation Bar -->
   <header class="top-navbar">
-    <div class="brand-wrap">
-      <div class="brand-logo-icon">🧩</div>
-      <div class="brand-text-block">
-        <div class="brand-name">Belajar Array</div>
-        <div class="brand-author">by Muhammad Anhar Solihin</div>
+    <div class="navbar-brand-row">
+      <!-- Mobile Hamburger Button -->
+      <button class="menu-toggle-btn" id="menuToggleBtn" onclick="App.toggleSidebar()" aria-label="Buka Menu Pembelajaran" title="Buka Menu Pembelajaran">
+        <span class="menu-icon">☰</span>
+        <span class="menu-text">Menu</span>
+      </button>
+
+      <div class="brand-wrap">
+        <div class="brand-logo-icon">🧩</div>
+        <div class="brand-text-block">
+          <div class="brand-name">Belajar Array</div>
+          <div class="brand-author">by Muhammad Anhar Solihin</div>
+        </div>
       </div>
     </div>
 
@@ -37,22 +45,27 @@
 
     <!-- Action Buttons -->
     <div class="nav-actions">
+      <!-- Panduan Buka di Handphone -->
+      <button class="btn btn-sm btn-outline mobile-guide-btn" onclick="App.openMobileGuide()" title="Panduan dan Link Buka di Handphone">
+        <span>📱</span> <span class="nav-btn-text">Buka di HP</span>
+      </button>
+
       <!-- Language Switcher: JS vs Python -->
       <div class="lang-switch-group">
-        <button class="lang-pill-btn active" id="btnLangJs" onclick="App.setLanguage('js')" title="Mode JavaScript">⚡ JavaScript</button>
-        <button class="lang-pill-btn" id="btnLangPy" onclick="App.setLanguage('py')" title="Mode Python">🐍 Python</button>
+        <button class="lang-pill-btn active" id="btnLangJs" onclick="App.setLanguage('js')" title="Mode JavaScript">⚡ JS</button>
+        <button class="lang-pill-btn" id="btnLangPy" onclick="App.setLanguage('py')" title="Mode Python">🐍 Py</button>
       </div>
 
       <!-- Theme Switcher Button -->
       <button class="btn btn-sm btn-outline theme-toggle-btn" id="themeToggleBtn" onclick="App.toggleTheme()" title="Ganti tema terang/gelap">
-        <span id="themeToggleIcon">🌓</span> <span id="themeToggleText">Ganti tema terang/gelap</span>
+        <span id="themeToggleIcon">🌓</span> <span id="themeToggleText" class="nav-btn-text">Tema</span>
       </button>
 
       <button class="btn btn-sm btn-secondary" onclick="App.openSandbox()" title="Buka editor kode bebas">
-        <span>💻 Sandbox</span>
+        <span>💻</span> <span class="nav-btn-text">Sandbox</span>
       </button>
       <button class="btn btn-sm btn-outline disabled" id="btnClaimCert" onclick="App.openCertificateModal()" title="Selesaikan latihan untuk mengklaim sertifikat">
-        <span>🎓 E-Sertifikat</span>
+        <span>🎓</span> <span class="nav-btn-text">E-Sertifikat</span>
       </button>
     </div>
   </header>
@@ -60,15 +73,19 @@
   <!-- Main Application Layout -->
   <main class="main-layout">
     <!-- Left Sidebar: Curriculum Modules -->
-    <aside class="curriculum-sidebar">
+    <aside class="curriculum-sidebar" id="curriculumSidebar">
       <div class="sidebar-title-row">
         <span class="sidebar-heading">Menu Pembelajaran</span>
+        <button class="sidebar-close-btn" onclick="App.closeSidebar()" aria-label="Tutup Menu" title="Tutup Menu">&times;</button>
       </div>
       <ul class="curriculum-nav" id="curriculumList">
         <!-- Rendered dynamically by app.js: 1. Dasar Array, 2. Nested If, 3. Nested Loop, 4. Latihan Praktik, 5. Sequential Search, 6. Binary Search, 7. Selection Sort, 8. Insertion Sort -->
       </ul>
 
       <div class="sidebar-card-info" style="margin-top: auto; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+        <button class="btn btn-sm btn-primary" style="width: 100%; margin-bottom: 0.75rem; justify-content: center;" onclick="App.openMobileGuide()">
+          📱 Buka Web ini di HP
+        </button>
         <button class="btn btn-sm btn-outline" style="width: 100%; margin-bottom: 0.75rem; justify-content: center;" onclick="App.toggleTheme()">
           🌓 Ganti tema terang/gelap
         </button>
@@ -86,6 +103,9 @@
         </div>
       </div>
     </aside>
+
+    <!-- Backdrop Overlay for Mobile Sidebar -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="App.closeSidebar()"></div>
 
     <!-- Center/Right: Interactive Content Viewport -->
     <article class="content-viewport" id="moduleContentArea">
@@ -176,6 +196,64 @@ for i in range(len(matriks)):
               <div class="sign-title">Dewan Instruktur</div>
               <div class="sign-name">ArrayMaster Python Board</div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: PANDUAN BUKA DI HANDPHONE -->
+  <div class="modal-overlay" id="mobileGuideModal">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3>📱 Cara Membuka Web di Handphone</h3>
+        <button class="modal-close-btn" onclick="App.closeMobileGuide()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="mobile-guide-content">
+          <div class="alert-box tip" style="margin-top: 0; margin-bottom: 1.25rem;">
+            <span class="icon">💡</span>
+            <div>
+              <strong>Mengapa tidak bisa dibuka dengan "localhost"?</strong><br>
+              Alamat <code>localhost</code> hanya berlaku di dalam komputer ini sendiri. Untuk membukanya di HP, HP dan Komputer harus berada di <strong>jaringan Wi-Fi / Hotspot yang sama</strong>, lalu buka menggunakan <strong>Alamat IP Komputer Anda</strong> di bawah ini.
+            </div>
+          </div>
+
+          <div class="ip-address-card">
+            <div class="ip-card-label">Link Langsung untuk Browser HP Anda:</div>
+            <div class="ip-card-row">
+              <input type="text" id="mobileAccessUrl" class="vis-input ip-input" value="http://10.1.63.35/belajar" readonly>
+              <button class="btn btn-primary" onclick="App.copyMobileUrl()">
+                <span id="copyUrlBtnText">📋 Salin URL</span>
+              </button>
+            </div>
+            <div class="ip-card-hint">
+              Ketik alamat di atas pada browser HP Anda (Google Chrome / Safari).
+            </div>
+          </div>
+
+          <h4 style="margin: 1.25rem 0 0.75rem; font-size: 1rem; color: #fff;">✅ 3 Langkah Mudah Menghubungkan HP:</h4>
+          <ol class="mobile-steps-list">
+            <li>
+              <strong>1. Hubungkan ke Jaringan yang Sama</strong><br>
+              Pastikan HP dan Komputer terhubung ke <strong>Wi-Fi yang sama</strong>.<br>
+              <em>⚡ Solusi Praktis:</em> Jika Wi-Fi di tempat Anda (sekolah/kampus/kantor) membatasi komunikasi antar perangkat, cukup nyalakan <strong>Hotspot Pribadi (Tethering) di HP</strong>, lalu sambungkan Laptop ke hotspot HP Anda!
+            </li>
+            <li>
+              <strong>2. Pastikan Apache XAMPP Sudah Berjalan (Start)</strong><br>
+              Buka aplikasi <strong>XAMPP Control Panel</strong> di komputer, lalu klik tombol <strong>Start</strong> pada modul <strong>Apache</strong> hingga tombol berubah jadi <em>Stop</em> dengan indikator <strong>Hijau (Port 80)</strong>.
+            </li>
+            <li>
+              <strong>3. Buka URL di Browser HP</strong><br>
+              Buka aplikasi Google Chrome atau Safari di HP, lalu ketik alamat IP komputer Anda: <br>
+              <code style="font-size: 1.05rem; color: var(--accent-cyan); display: inline-block; margin-top: 0.25rem; font-weight: 700;">http://10.1.63.35/belajar</code>
+            </li>
+          </ol>
+
+          <div style="margin-top: 1.5rem; text-align: center;">
+            <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="App.closeMobileGuide()">
+              Mengerti & Tutup Panduan
+            </button>
           </div>
         </div>
       </div>

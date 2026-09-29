@@ -1449,6 +1449,24 @@ print("Selesai! Array terurut:", A)`,
               </tbody>
             </table>
           </div>
+
+          <!-- Gambar Ilustrasi Pohon Keputusan Sesuai Buku Hal. 59 -->
+          <div class="dt-image-banner-wrap" style="margin: 2rem 0 1rem 0; text-align: center;">
+            <div style="font-weight: 700; margin-bottom: 0.75rem; color: var(--accent-cyan); display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1rem;">
+              <span>🖼️ Gambar Bagan Pohon Keputusan: Mengelompokkan Jenis Hewan (Buku Teks SMA Hal. 59)</span>
+            </div>
+            <div class="dt-image-card" style="position: relative; display: inline-block; border-radius: var(--radius-lg); overflow: hidden; border: 2px solid rgba(16, 185, 129, 0.4); box-shadow: 0 12px 36px rgba(0,0,0,0.5); max-width: 100%; background: #0f172a;">
+              <img src="assets/pohon_keputusan_hewan.jpg" alt="Gambar Pohon Keputusan Mengelompokkan Jenis Hewan" style="width: 100%; max-width: 860px; height: auto; display: block; cursor: pointer; transition: transform 0.3s ease;" onclick="Visualizer.openTreeImageModal()" title="Klik untuk melihat ukuran penuh">
+              <div style="padding: 0.75rem 1.25rem; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); border-top: 1px solid var(--border-subtle); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem; font-size: 0.85rem;">
+                <div style="text-align: left; color: var(--text-muted);">
+                  <strong style="color: #fff;">Struktur Visual Pohon:</strong> Batang Utama (Root Node), Cabang Ranting (Decision Nodes), dan Dedaunan/Hewan (Leaf Nodes).
+                </div>
+                <button class="btn btn-xs btn-outline" style="border-color: #10b981; color: #10b981;" onclick="Visualizer.openTreeImageModal()">
+                  🔍 Perbesar Gambar Penuh
+                </button>
+              </div>
+            </div>
+          </div>
         `
       },
       {

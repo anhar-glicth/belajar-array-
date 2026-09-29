@@ -29,6 +29,18 @@ const App = (function () {
     loadModule(0);
     initPlayground();
     updateOverallProgress();
+    setupKeyEvents();
+  }
+
+  function setupKeyEvents() {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeSidebar();
+        closeSandbox();
+        closeCertificateModal();
+        closeMobileGuide();
+      }
+    });
   }
 
   /**
@@ -194,6 +206,7 @@ const App = (function () {
   function loadModule(idx) {
     if (idx < 0 || idx >= CURRICULUM_DATA.length) return;
     currentModuleIndex = idx;
+    closeSidebar();
     renderSidebar();
 
     const mod = CURRICULUM_DATA[idx];
@@ -836,6 +849,95 @@ const App = (function () {
     window.print();
   }
 
+  /**
+   * Manajemen Sidebar Responsif (Mobile Drawer)
+   */
+  function toggleSidebar() {
+    const sidebar = document.getElementById("curriculumSidebar");
+    const backdrop = document.getElementById("sidebarBackdrop");
+    if (!sidebar) return;
+    const isOpen = sidebar.classList.contains("open");
+    if (isOpen) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  }
+
+  function openSidebar() {
+    const sidebar = document.getElementById("curriculumSidebar");
+    const backdrop = document.getElementById("sidebarBackdrop");
+    if (sidebar) sidebar.classList.add("open");
+    if (backdrop) backdrop.classList.add("open");
+    if (window.innerWidth <= 1024) {
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  function closeSidebar() {
+    const sidebar = document.getElementById("curriculumSidebar");
+    const backdrop = document.getElementById("sidebarBackdrop");
+    if (sidebar) sidebar.classList.remove("open");
+    if (backdrop) backdrop.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  /**
+   * Modal Panduan Membuka di Handphone
+   */
+  function openMobileGuide() {
+    closeSidebar();
+    const modal = document.getElementById("mobileGuideModal");
+    const input = document.getElementById("mobileAccessUrl");
+    if (input) {
+      let host = window.location.hostname;
+      let port = window.location.port ? `:${window.location.port}` : "";
+      let path = window.location.pathname;
+      if (host === "localhost" || host === "127.0.0.1" || !host) {
+        input.value = `http://10.1.63.35${port || ''}${path || '/belajar'}`;
+      } else {
+        input.value = `${window.location.protocol}//${host}${port}${path}`;
+      }
+    }
+    if (modal) modal.classList.add("open");
+  }
+
+  function closeMobileGuide() {
+    const modal = document.getElementById("mobileGuideModal");
+    if (modal) modal.classList.remove("open");
+  }
+
+  async function copyMobileUrl() {
+    const input = document.getElementById("mobileAccessUrl");
+    const btnText = document.getElementById("copyUrlBtnText");
+    if (!input) return;
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(input.value);
+      } else {
+        input.select();
+        document.execCommand("copy");
+      }
+      if (btnText) {
+        const old = btnText.textContent;
+        btnText.textContent = "✅ Berhasil Disalin!";
+        setTimeout(() => {
+          btnText.textContent = old;
+        }, 2000);
+      }
+    } catch (e) {
+      input.select();
+      document.execCommand("copy");
+      if (btnText) {
+        btnText.textContent = "✅ Berhasil Disalin!";
+        setTimeout(() => {
+          btnText.textContent = "📋 Salin URL";
+        }, 2000);
+      }
+    }
+  }
+
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, "&amp;")
@@ -850,6 +952,12 @@ const App = (function () {
     toggleTheme,
     setLanguage,
     loadModule,
+    toggleSidebar,
+    openSidebar,
+    closeSidebar,
+    openMobileGuide,
+    closeMobileGuide,
+    copyMobileUrl,
     runCobaSendiri,
     toggleCobaSendiriHint,
     resetCobaSendiri,
