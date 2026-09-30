@@ -65,6 +65,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
 
 7. **7. Selection Sort (Pengurutan Pilihan)**
    - Pengertian Selection Sort: memilih elemen terkecil dari data yang belum terurut lalu menukarnya ke posisi awal.
+   - Video pembelajaran visual interaktif konsep dan penelusuran Selection Sort.
    - Langkah penelusuran (a s.d. d) pada array buku teks SMA Kelas X Hal. 54 `[6, 3, 8, 5, 2]`.
    - Notasi algoritma pseudocode dengan pengulangan bersarang (*nested loop*): outer loop `for i = 0 to n - 2` dan inner loop `for j = i + 1 to n - 1`.
    - Implementasi kode nyata dalam JavaScript dan Python (termasuk teknik tuple swap Python).
@@ -73,6 +74,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
 
 8. **8. Insertion Sort (Pengurutan Penyisipan)**
    - Pengertian Insertion Sort: bekerja seperti seseorang menyusun kartu di tangan saat bermain kartu, menyisipkan elemen satu per satu ke posisi yang tepat.
+   - Video pembelajaran visual interaktif analogi kartu dan algoritma Insertion Sort.
    - Langkah penelusuran (Langkah 1 s.d. 4) pada array buku teks SMA Kelas X Hal. 55 `[5, 2, 4, 6, 1]`.
    - Notasi algoritma pseudocode standar SMA dengan variabel kunci `key`, perbandingan mundur, dan pergeseran elemen ke kanan.
    - Implementasi kode nyata dalam JavaScript dan Python.
@@ -81,6 +83,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
 
 9. **9. Decision Tree (Pohon Keputusan)**
    - Pengertian Decision Tree: metode atau algoritma yang menggunakan struktur berbentuk pohon untuk membantu pengambilan keputusan atau prediksi (Buku Teks SMA Kelas X Hal. 59).
+   - Video pembelajaran visual interaktif konsep simpul Root, Decision, dan Leaf Node.
    - Tiga komponen utama pohon keputusan:
      1. **Root Node:** Pertanyaan pertama pada pohon keputusan, tempat memulai proses memilih.
      2. **Decision Node:** Pertanyaan lanjutan yang muncul setelah jawaban dari root node atau pertanyaan sebelumnya.
@@ -91,6 +94,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
 
 10. **10. Regresi Linear (Linear Regression & Machine Learning)**
     - Pengertian Regresi Linear sebagai metode *Supervised Learning* untuk memprediksi nilai kontinu berdasarkan variabel independen $X$.
+    - Video pembelajaran visual interaktif rumus OLS, garis tren, dan prediksi nilai kontinu.
     - Perbedaan mendasar antara *Regression* (memprediksi nilai kuantitas kontinu) dan *Classification* (memprediksi kategori/label).
     - Pemodelan matematis garis lurus: $\hat{y} = mx + c$ (atau $y = ax + b$).
     - Metode **Ordinary Least Squares (OLS)**: rumus perhitungan kemiringan (*slope* $m$) dan titik potong (*intercept* $c$).

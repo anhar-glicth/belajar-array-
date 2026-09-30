@@ -911,6 +911,29 @@ if posisi == -1:
               </ol>
             </div>
           </div>
+
+          <div class="video-container-card">
+            <div class="video-card-header">
+              <div class="video-card-info">
+                <span class="video-badge">🎥 Video Pembelajaran</span>
+                <h4 class="video-title">Video Penjelasan: Konsep & Simulasi Selection Sort</h4>
+                <p class="video-desc">Simak visualisasi dan penjelasan algoritma pengurutan pilihan (Selection Sort) langkah demi langkah melalui video berikut:</p>
+              </div>
+              <a href="https://youtu.be/l8wiqsy3yxc" target="_blank" rel="noopener noreferrer" class="video-external-btn" title="Buka video di tab baru YouTube">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <span>Buka di YouTube</span>
+              </a>
+            </div>
+            <div class="video-iframe-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/l8wiqsy3yxc"
+                title="Video Penjelasan Selection Sort"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
         `
       },
       {
@@ -1132,6 +1155,29 @@ print("Selesai! Array terurut: " + str(A))`,
               <li>Jika kartu di tangan kiri bernilai lebih besar dari kartu baru, <strong>geser kartu tersebut ke kanan</strong>.</li>
               <li>Sisipkan kartu baru ke celah kosong yang tepat. Ulangi proses ini hingga semua kartu di tangan terurut rapi!</li>
             </ol>
+          </div>
+
+          <div class="video-container-card">
+            <div class="video-card-header">
+              <div class="video-card-info">
+                <span class="video-badge">🎥 Video Pembelajaran</span>
+                <h4 class="video-title">Video Penjelasan: Konsep & Simulasi Insertion Sort</h4>
+                <p class="video-desc">Simak visualisasi analogi kartu remi dan algoritma pengurutan penyisipan (Insertion Sort) melalui video berikut:</p>
+              </div>
+              <a href="https://youtu.be/GH_DNBojOck" target="_blank" rel="noopener noreferrer" class="video-external-btn" title="Buka video di tab baru YouTube">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <span>Buka di YouTube</span>
+              </a>
+            </div>
+            <div class="video-iframe-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/GH_DNBojOck"
+                title="Video Penjelasan Insertion Sort"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
         `
       },
@@ -1408,6 +1454,29 @@ print("Selesai! Array terurut:", A)`,
           <div class="note-box" style="border-left-color: #10b981; background: rgba(16, 185, 129, 0.08);">
             <strong>🌳 Mengapa Menggunakan Struktur Pohon?</strong>
             <p>Pohon keputusan meniru cara berpikir logis manusia dalam menyelesaikan masalah: memecah keputusan besar yang rumit menjadi rangkaian pertanyaan sederhana yang berurutan (<em>Top-Down Decision Making</em>). Dalam bidang <strong>Kecerdasan Artifisial (AI) & Machine Learning</strong>, decision tree merupakan salah satu algoritma paling populer karena sangat transparan dan mudah diinterpretasikan.</p>
+          </div>
+
+          <div class="video-container-card">
+            <div class="video-card-header">
+              <div class="video-card-info">
+                <span class="video-badge">🎥 Video Pembelajaran</span>
+                <h4 class="video-title">Video Penjelasan: Konsep & Struktur Decision Tree</h4>
+                <p class="video-desc">Simak visualisasi simpul pohon keputusan (Root, Decision, dan Leaf Node) dalam machine learning melalui video berikut:</p>
+              </div>
+              <a href="https://youtu.be/0VPMI0ParhA" target="_blank" rel="noopener noreferrer" class="video-external-btn" title="Buka video di tab baru YouTube">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <span>Buka di YouTube</span>
+              </a>
+            </div>
+            <div class="video-iframe-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/0VPMI0ParhA"
+                title="Video Penjelasan Decision Tree"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
         `
       },
@@ -1737,6 +1806,29 @@ print(f"Hasil Klasifikasi (Leaf Node): {hasil}")`,
             <li><strong>Pengalaman Kerja (X) & Tingkat Gaji (Y):</strong> Semakin banyak tahun pengalaman, kompensasi kerja meningkat secara bertahap.</li>
             <li><strong>Suhu Udara (X) & Penjualan Es Krim (Y):</strong> Saat cuaca semakin panas, permintaan minuman/es krim meningkat.</li>
           </ul>
+
+          <div class="video-container-card">
+            <div class="video-card-header">
+              <div class="video-card-info">
+                <span class="video-badge">🎥 Video Pembelajaran</span>
+                <h4 class="video-title">Video Penjelasan: Konsep & Perhitungan Regresi Linear</h4>
+                <p class="video-desc">Simak visualisasi metode Ordinary Least Squares (OLS), garis tren terbaik, dan prediksi kontinu melalui video berikut:</p>
+              </div>
+              <a href="https://youtu.be/FcPeK9Ksabk" target="_blank" rel="noopener noreferrer" class="video-external-btn" title="Buka video di tab baru YouTube">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <span>Buka di YouTube</span>
+              </a>
+            </div>
+            <div class="video-iframe-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/FcPeK9Ksabk"
+                title="Video Penjelasan Regresi Linear"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
         `
       },
       {
