@@ -201,7 +201,7 @@ const App = (function () {
   }
 
   /**
-   * Membuka Modul tertentu (1. Dasar Array, 2. Nested If, 3. Nested Loop, 4. Latihan Praktik, 5. Sequential Search, 6. Binary Search, 7. Selection Sort, 8. Insertion Sort, 9. Decision Tree)
+   * Membuka Modul tertentu (1. Dasar Array, 2. Nested If, 3. Nested Loop, 4. Latihan Praktik, 5. Sequential Search, 6. Binary Search, 7. Selection Sort, 8. Insertion Sort, 9. Decision Tree, 10. Regresi Linear)
    */
   function loadModule(idx) {
     if (idx < 0 || idx >= CURRICULUM_DATA.length) return;
@@ -231,6 +231,8 @@ const App = (function () {
       visualizerHtml = `<div id="visInsertionSortContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "decision-tree-simulator") {
       visualizerHtml = `<div id="visDecisionTreeContainer" class="vis-mount-point"></div>`;
+    } else if (mod.interactiveTool === "linear-regression-simulator") {
+      visualizerHtml = `<div id="visLinearRegressionContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "nested-if-simulator") {
       visualizerHtml = `<div id="visNestedIfContainer" class="vis-mount-point"></div>`;
     } else if (mod.interactiveTool === "nested-loop-visualizer" || mod.interactiveTool === "matrix-analyzer") {
@@ -343,6 +345,8 @@ const App = (function () {
       Visualizer.initInsertionSortSimulator("visInsertionSortContainer");
     } else if (mod.interactiveTool === "decision-tree-simulator") {
       Visualizer.initDecisionTreeSimulator("visDecisionTreeContainer");
+    } else if (mod.interactiveTool === "linear-regression-simulator") {
+      Visualizer.initLinearRegressionSimulator("visLinearRegressionContainer");
     } else if (mod.interactiveTool === "nested-if-simulator") {
       Visualizer.initNestedIfSimulator("visNestedIfContainer");
     } else if (mod.interactiveTool === "nested-loop-visualizer" || mod.interactiveTool === "matrix-analyzer") {

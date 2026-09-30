@@ -375,7 +375,7 @@ for i in range(len(matriks)):
     title: "Latihan Praktik Koding",
     subtitle: "Praktekkan langsung keahlian koding Anda dengan sistem verifikasi otomatis!",
     readTime: "Praktik Mengetik & Uji Solusi",
-    summary: "Selesaikan 6 tantangan koding terstruktur: operasi array, evaluasi kelulusan nested if, predikat nilai, tabel perkalian matriks, sequential search, dan sistem rule-based diagnosis AI.",
+    summary: "Selesaikan 11 tantangan koding terstruktur: operasi array, evaluasi kelulusan nested if, predikat nilai, tabel perkalian matriks, sequential search, rule-based AI, binary search, selection sort, insertion sort, decision tree, dan regresi linear machine learning.",
     sections: [
       {
         heading: "Ayo Berlatih! Ruang Latihan Koding Mandiri",
@@ -392,6 +392,7 @@ for i in range(len(matriks)):
             <li><strong>Latihan 8:</strong> Algoritma Pengurutan Selection Sort pada Array</li>
             <li><strong>Latihan 9:</strong> Algoritma Pengurutan Insertion Sort pada Array</li>
             <li><strong>Latihan 10:</strong> Algoritma Decision Tree Klasifikasi Jenis Hewan</li>
+            <li><strong>Latihan 11:</strong> Algoritma Regresi Linear (Prediksi Nilai Berdasarkan Jam Belajar)</li>
           </ul>
         `
       }

@@ -2847,7 +2847,19 @@ const Visualizer = (function () {
     dtState.statusBadge = `Kembali ke ${prevNode.type === 'root' ? 'Root Node' : 'Decision Node'}`;
     dtState.statusType = "primary";
     dtState.explanation = `Kembali ke pertanyaan: <em>"${prevNode.title}"</em>. Silakan pilih jawaban Anda.`;
-    resetDtTree();
+    renderDecisionTree();
+  }
+
+  function resetDtTree() {
+    dtState.currentNodeId = "ROOT";
+    dtState.pathHistory = ["ROOT"];
+    dtState.answersHistory = {};
+    dtState.activePresetKey = null;
+    dtState.isFinished = false;
+    dtState.statusBadge = "Di Root Node";
+    dtState.statusType = "primary";
+    dtState.explanation = "Pohon keputusan dimulai dari <strong>Root Node</strong>: <em>'Apakah hewan ini bertelur?'</em>. Silakan klik tombol <strong>Ya</strong> atau <strong>Tidak</strong>.";
+    renderDecisionTree();
   }
 
   /* ==========================================================================
