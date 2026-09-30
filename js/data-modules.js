@@ -611,6 +611,29 @@ if posisi == -1:
               Pada simulator interaktif di atas, Anda dapat mencoba urutan yang sudah diperbaiki maupun bereksperimen dengan data acak buku asli untuk melihat efek kegagalannya secara nyata!
             </div>
           </div>
+
+          <div class="video-container-card">
+            <div class="video-card-header">
+              <div class="video-card-info">
+                <span class="video-badge">🎥 Video Pembelajaran</span>
+                <h4 class="video-title">Video Penjelasan: Konsep & Simulasi Binary Search</h4>
+                <p class="video-desc">Simak visualisasi dan penjelasan algoritma pencarian biner (Binary Search) langkah demi langkah melalui video berikut:</p>
+              </div>
+              <a href="https://youtu.be/If97MehCnB4" target="_blank" rel="noopener noreferrer" class="video-external-btn" title="Buka video di tab baru YouTube">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <span>Buka di YouTube</span>
+              </a>
+            </div>
+            <div class="video-iframe-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/If97MehCnB4"
+                title="Video Penjelasan Binary Search"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
         `
       },
       {

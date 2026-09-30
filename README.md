@@ -55,6 +55,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
 
 6. **6. Binary Search (Pencarian Biner)**
    - Pengertian Binary Search dengan metode *Divide and Conquer* (membagi array menjadi dua bagian berulang).
+   - Video pembelajaran visual interaktif konsep dan simulasi pencarian Binary Search.
    - Prasyarat mutlak: array wajib terurut (*sorted*), beserta telaah edukatif terhadap contoh data buku teks SMA Kelas X (`[1, 5, 10, 7, 15]` vs `[1, 5, 7, 10, 15]`).
    - Notasi algoritma pseudocode standar SMA (Kamus, Deskripsi, perulangan `while (awal <= akhir)`, dan pembagian `div 2`).
    - Implementasi kode nyata dalam JavaScript dan Python.
