@@ -196,7 +196,7 @@ const App = (function () {
   }
 
   function getModuleIcon(idx) {
-    const icons = ["📦", "🔀", "🔄", "🎯", "🔍", "⚡", "📶", "🃏", "🌳"];
+    const icons = ["📦", "🔀", "🔄", "🎯", "🔍", "⚡", "📶", "🃏", "🌳", "📈"];
     return icons[idx] || "📄";
   }
 

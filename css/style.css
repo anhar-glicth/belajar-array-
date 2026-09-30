@@ -5041,6 +5041,83 @@ body.light-theme .lr-table td {
   border-bottom-color: #f1f5f9;
 }
 
+/* Mobile Optimizations for Video Cards & Linear Regression */
+@media (max-width: 640px) {
+  .lr-visualizer-panel {
+    padding: 1rem 0.65rem;
+    border-radius: var(--radius-md);
+  }
+
+  .lr-chart-card {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .lr-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lr-chart-footer-note {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .lr-chart-footer-note > div {
+    display: flex;
+    gap: 0.4rem;
+    width: 100%;
+  }
+
+  .lr-chart-footer-note > div .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .video-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.85rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .video-external-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .lr-metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .lr-metric-val {
+    font-size: 1.1rem;
+  }
+
+  .lr-predict-form {
+    flex-direction: column;
+  }
+
+  .lr-predict-form .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .lr-add-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lr-add-form .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
 
 
 
