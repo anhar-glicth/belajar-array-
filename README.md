@@ -32,7 +32,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
    - Simulator visualisasi traversal sel matriks.
 
 4. **4. Latihan Praktik Koding**
-   - 10 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
+   - 11 tantangan koding mandiri langsung di browser dengan verifikasi otomatis (*unit tests*):
      - **Latihan 1:** Operasi Penjumlahan dalam Array
      - **Latihan 2:** Evaluasi Kelulusan Siswa (Nested If)
      - **Latihan 3:** Algoritma Predikat Nilai Akhir
@@ -43,6 +43,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
      - **Latihan 8:** Algoritma Pengurutan Selection Sort pada Array
      - **Latihan 9:** Algoritma Pengurutan Insertion Sort pada Array
      - **Latihan 10:** Algoritma Decision Tree Klasifikasi Jenis Hewan
+     - **Latihan 11:** Algoritma Regresi Linear (Prediksi Nilai Berdasarkan Jam Belajar)
 
 5. **5. Sequential Search (Linear Search)**
    - Pengertian Sequential Search dan cara kerja membandingkan elemen satu per satu.
@@ -87,6 +88,16 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
    - Studi kasus dunia nyata: **"Mengelompokkan Jenis Hewan"** (Burung/Unggas, Ikan, Reptil/Amfibi, Mamalia Air, dan Mamalia Darat).
    - Pemetaan ke kode program nyata dengan *Nested If* (JavaScript & Python).
    - **Simulator Animasi Interaktif:** Pohon hierarki visual bercabang dengan penanda glowing aktif untuk Root Node, Decision Node, dan Leaf Node, mode pemilihan hewan preset instan (Ayam, Ikan Mas, Ular, Paus, Kucing), mode kuis tanya-jawab langkah demi langkah ("Ya" / "Tidak"), breadcrumb jalur keputusan, penjelajah kode percabangan bertingkat live, serta box *"Coba sendiri"*.
+
+10. **10. Regresi Linear (Linear Regression & Machine Learning)**
+    - Pengertian Regresi Linear sebagai metode *Supervised Learning* untuk memprediksi nilai kontinu berdasarkan variabel independen $X$.
+    - Perbedaan mendasar antara *Regression* (memprediksi nilai kuantitas kontinu) dan *Classification* (memprediksi kategori/label).
+    - Pemodelan matematis garis lurus: $\hat{y} = mx + c$ (atau $y = ax + b$).
+    - Metode **Ordinary Least Squares (OLS)**: rumus perhitungan kemiringan (*slope* $m$) dan titik potong (*intercept* $c$).
+    - Evaluasi performa model: Residu ($e_i = y_i - \hat{y}_i$), Mean Squared Error (MSE), Root Mean Squared Error (RMSE), serta Koefisien Determinasi ($R^2$ Score).
+    - Contoh studi kasus terstruktur dengan tabel manual: Jam Belajar vs Nilai Ujian, Pengalaman Kerja vs Gaji, dan Suhu vs Penjualan Es Krim.
+    - Implementasi algoritma OLS murni berbasis array dan looping dalam JavaScript dan Python.
+    - **Simulator Interaktif:** Diagram pencaran (*scatter plot*) SVG dinamis dengan garis regresi best-fit glow, visualisasi garis residu galat putus-putus merah, fitur **klik di mana saja pada grafik untuk menambah titik data instan**, kalkulator prediksi nilai baru dengan uraian rumus, kartu metrik AI real-time ($m$, $c$, $R^2$, RMSE), pemilihan preset multi-dataset, tabel data interaktif dengan fitur hapus baris, serta box *"Coba sendiri"*.
 
 ---
 

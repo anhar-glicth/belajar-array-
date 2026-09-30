@@ -1706,10 +1706,250 @@ print("-----------------------------------------")
 print(f"Hasil Klasifikasi (Leaf Node): {hasil}")`,
       hint: "Cobalah ganti nilai `bertelur = false` dan `hidup_di_air = true` untuk melihat paus/lumba-lumba terdeteksi sebagai Mamalia Air."
     }
+  },
+
+  {
+    id: "modul-linear-regression",
+    badge: "10. Regresi Linear",
+    title: "Regresi Linear (Linear Regression & Machine Learning)",
+    subtitle: "Memahami pemodelan prediktif nilai kontinu, metode kuadrat terkecil (OLS), koefisien determinasi R², dan implementasinya",
+    readTime: "16 menit baca & simulator interaktif",
+    summary: "Regresi Linear adalah salah satu algoritma dasar terpenting dalam statistika, data science, dan Machine Learning (AI). Metode ini mencari garis tren terbaik (best-fit line) yang menghubungkan variabel independen (X) dengan variabel dependen (Y) untuk memprediksi nilai kontinu di masa depan.",
+    sections: [
+      {
+        heading: "1. Pengertian Regresi Linear (Linear Regression)",
+        content: `
+          <p><strong>Regresi Linear</strong> adalah metode analisis data dan algoritma <em>Supervised Machine Learning</em> yang digunakan untuk memodelkan hubungan antara satu variabel penjelas/independen (biasanya disimbolkan dengan <code>X</code>) dengan satu variabel target kontinu (disimbolkan dengan <code>Y</code>).</p>
+          <p>Tujuan utama dari regresi linear adalah menemukan <strong>garis lurus terbaik (best-fit line)</strong> yang dapat meminimalkan selisih antara data aktual dengan nilai yang diprediksi oleh garis tersebut.</p>
+          
+          <div class="alert-box tip">
+            <span class="icon">💡</span>
+            <div>
+              <strong>Perbedaan Regresi vs Klasifikasi dalam AI:</strong><br>
+              &bull; <strong>Klasifikasi (contoh: Decision Tree):</strong> Memprediksi <em>kategori / label diskrit</em> (misal: "Apakah ini Mamalia atau Burung?", "Lulus atau Tidak Lulus").<br>
+              &bull; <strong>Regresi (Linear Regression):</strong> Memprediksi <em>angka kontinu / kuantitas</em> (misal: "Berapa nilai ujian jika belajar 6 jam?", "Berapa taksiran gaji untuk pengalaman 5 tahun?").
+            </div>
+          </div>
+
+          <p>Contoh hubungan linear dalam kehidupan sehari-hari:</p>
+          <ul>
+            <li><strong>Jam Belajar (X) & Nilai Ujian (Y):</strong> Semakin banyak waktu belajar, nilai ujian cenderung semakin tinggi (korelasi positif).</li>
+            <li><strong>Pengalaman Kerja (X) & Tingkat Gaji (Y):</strong> Semakin banyak tahun pengalaman, kompensasi kerja meningkat secara bertahap.</li>
+            <li><strong>Suhu Udara (X) & Penjualan Es Krim (Y):</strong> Saat cuaca semakin panas, permintaan minuman/es krim meningkat.</li>
+          </ul>
+        `
+      },
+      {
+        heading: "2. Persamaan Garis Regresi & Metode Kuadrat Terkecil (OLS)",
+        content: `
+          <p>Hubungan matematis antara variabel <code>X</code> dan <code>Y</code> dinyatakan dalam bentuk persamaan garis lurus:</p>
+          <div class="code-preview" style="text-align: center; font-size: 1.15rem; color: #38bdf8; padding: 1rem;">
+            <code>ŷ = m · x + c &nbsp; &nbsp; (atau &nbsp; y = ax + b)</code>
+          </div>
+          <ul>
+            <li><strong>ŷ (y-topi / y-hat):</strong> Nilai taksiran/prediksi variabel dependen.</li>
+            <li><strong>x:</strong> Nilai input variabel independen.</li>
+            <li><strong>m (atau a):</strong> <em>Slope</em> (kemiringan / gradien garis), menunjukkan seberapa besar perubahan nilai Y untuk setiap 1 unit kenaikan X.</li>
+            <li><strong>c (atau b):</strong> <em>Intercept</em> (titik potong sumbu Y), yaitu taksiran nilai Y ketika X bernilai 0.</li>
+          </ul>
+
+          <h4 style="margin-top: 1.25rem; color: var(--text-main);">Rumus Ordinary Least Squares (OLS)</h4>
+          <p>Metode <strong>Ordinary Least Squares (OLS)</strong> mencari nilai $m$ dan $c$ sedemikian rupa sehingga jumlah kuadrat selisih (galat/residu) antara data aktual ($y_i$) dan garis prediksi ($\hat{y}_i$) bernilai sekecil mungkin:</p>
+          
+          <div class="code-preview">
+            <pre><code>Rumus Kemiringan (Slope m):
+       n · Σ(xy) - (Σx) · (Σy)
+  m = ─────────────────────────
+         n · Σ(x²) - (Σx)²
+
+Rumus Titik Potong (Intercept c):
+       Σy - m · Σx
+  c = ───────────── = ȳ - m · x̄
+            n</code></pre>
+          </div>
+          <p>Di mana <code>n</code> adalah banyaknya pasangan data sampel, <code>x̄</code> adalah rata-rata X, dan <code>ȳ</code> adalah rata-rata Y.</p>
+        `
+      },
+      {
+        heading: "3. Contoh Perhitungan Manual Langkah demi Langkah",
+        content: `
+          <p>Misalkan kita memiliki data sampel 5 siswa mengenai <strong>Jam Belajar (X)</strong> dan <strong>Nilai Ujian (Y)</strong>:</p>
+          <ul>
+            <li><code>X = [1, 2, 3, 4, 5]</code></li>
+            <li><code>Y = [55, 65, 70, 80, 90]</code></li>
+          </ul>
+
+          <div style="overflow-x: auto; margin: 1rem 0;">
+            <table class="lr-table" style="width: 100%; border: 1px solid var(--border-subtle); border-radius: 8px;">
+              <thead>
+                <tr style="background: rgba(255,255,255,0.05);">
+                  <th style="padding: 8px;">Siswa</th>
+                  <th style="padding: 8px;">X (Jam)</th>
+                  <th style="padding: 8px;">Y (Nilai)</th>
+                  <th style="padding: 8px;">X²</th>
+                  <th style="padding: 8px;">X · Y</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td style="padding: 6px;">1</td><td>1</td><td>55</td><td>1</td><td>55</td></tr>
+                <tr><td style="padding: 6px;">2</td><td>2</td><td>65</td><td>4</td><td>130</td></tr>
+                <tr><td style="padding: 6px;">3</td><td>3</td><td>70</td><td>9</td><td>210</td></tr>
+                <tr><td style="padding: 6px;">4</td><td>4</td><td>80</td><td>16</td><td>320</td></tr>
+                <tr><td style="padding: 6px;">5</td><td>5</td><td>90</td><td>25</td><td>450</td></tr>
+                <tr style="font-weight: 700; background: rgba(56, 189, 248, 0.1); color: #38bdf8;">
+                  <td style="padding: 8px;">Total (Σ)</td>
+                  <td>Σx = 15</td>
+                  <td>Σy = 360</td>
+                  <td>Σx² = 55</td>
+                  <td>Σxy = 1165</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p><strong>Langkah 1: Hitung Slope (m)</strong></p>
+          <div class="code-preview">
+            <pre><code>m = (5 · 1165 - 15 · 360) / (5 · 55 - 15²)
+m = (5825 - 5400) / (275 - 225)
+m = 425 / 50 = 8.5</code></pre>
+          </div>
+
+          <p><strong>Langkah 2: Hitung Intercept (c)</strong></p>
+          <div class="code-preview">
+            <pre><code>c = (360 - 8.5 · 15) / 5
+c = (360 - 127.5) / 5 = 232.5 / 5 = 46.5</code></pre>
+          </div>
+
+          <p><strong>Langkah 3: Persamaan Model Garis Regresi</strong></p>
+          <p>Persamaan model yang diperoleh adalah: <strong style="color: #38bdf8;">ŷ = 8.5 · x + 46.5</strong>.</p>
+          <div class="alert-box tip">
+            <span class="icon">🎯</span>
+            <div><strong>Taksiran Prediksi:</strong> Jika seorang siswa belajar selama <strong>6 jam</strong> (<code>x = 6</code>), maka perkiraan nilainya adalah: <code>ŷ = (8.5 × 6) + 46.5 = 51 + 46.5 = 97.5</code>!</div>
+          </div>
+        `
+      },
+      {
+        heading: "4. Evaluasi Model: Residu, MSE, dan Koefisien Determinasi (R²)",
+        content: `
+          <p>Bagaimana kita mengetahui apakah garis regresi yang dihasilkan benar-benar akurat mencerminkan data aktual?</p>
+          <ul>
+            <li><strong>Residu / Galat Error ($e_i$):</strong> Selisih antara nilai riil dan nilai tebakan: <code>e = y - ŷ</code>. Garis putus-putus merah pada simulator interaktif di atas memperlihatkan jarak residu ini secara visual.</li>
+            <li><strong>Mean Squared Error (MSE) & RMSE:</strong> Rata-rata dari kuadrat residu: <code>MSE = Σ(y - ŷ)² / n</code>. Akar kuadratnya (RMSE) merepresentasikan rata-rata simpangan prediksi dalam satuan nilai asli.</li>
+            <li><strong>Koefisien Determinasi (R²):</strong> Angka antara <code>0 s.d. 1</code> (atau <code>0% s.d. 100%</code>) yang menyatakan seberapa besar variasi nilai Y berhasil dijelaskan oleh variabel X. Semakin mendekati 1 (100%), semakin kuat dan akurat model regresi tersebut!</li>
+          </ul>
+        `
+      },
+      {
+        heading: "5. Implementasi Algoritma dalam JavaScript dan Python",
+        content: `
+          <p>Berikut implementasi algoritma Regresi Linear OLS dari nol menggunakan struktur data array dan perulangan standar dalam <span class="lang-text" data-lang-js="JavaScript" data-lang-py="Python">JavaScript</span>:</p>
+          
+          <div class="code-preview">
+            <pre><code class="lang-code-block" data-lang="js">// Data Jam Belajar (X) dan Nilai Ujian (Y)
+let X = [1, 2, 3, 4, 5];
+let Y = [55, 65, 70, 80, 90];
+let n = X.length;
+
+let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+
+for (let i = 0; i < n; i++) {
+  sumX += X[i];
+  sumY += Y[i];
+  sumXY += X[i] * Y[i];
+  sumX2 += X[i] * X[i];
+}
+
+// Rumus OLS untuk Slope (m) dan Intercept (c)
+let slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+let intercept = (sumY - slope * sumX) / n;
+
+console.log("Persamaan Garis: ŷ = " + slope.toFixed(2) + "x + " + intercept.toFixed(2));
+
+// Fungsi Prediksi
+function predict(x_new) {
+  return slope * x_new + intercept;
+}
+
+let jamBaru = 6;
+let taksiranNilai = predict(jamBaru);
+console.log("Prediksi nilai jika belajar " + jamBaru + " jam: " + taksiranNilai.toFixed(1));</code>
+<code class="lang-code-block" data-lang="py" style="display:none;"># Data Jam Belajar (X) dan Nilai Ujian (Y)
+X = [1, 2, 3, 4, 5]
+Y = [55, 65, 70, 80, 90]
+n = len(X)
+
+sum_x = sum(X)
+sum_y = sum(Y)
+sum_xy = sum(x * y for x, y in zip(X, Y))
+sum_x2 = sum(x ** 2 for x in X)
+
+# Rumus OLS untuk Slope (m) dan Intercept (c)
+slope = (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x ** 2)
+intercept = (sum_y - slope * sum_x) / n
+
+print(f"Persamaan Garis: ŷ = {slope:.2f}x + {intercept:.2f}")
+
+# Fungsi Prediksi
+def predict(x_new):
+    return slope * x_new + intercept
+
+jam_baru = 6
+taksiran_nilai = predict(jam_baru)
+print(f"Prediksi nilai jika belajar {jam_baru} jam: {taksiran_nilai:.1f}")</code></pre>
+          </div>
+        `
+      }
+    ],
+    interactiveTool: "linear-regression-simulator",
+    cobaSendiri: {
+      id: "coba_regression",
+      title: "Coba Sendiri: Algoritma Regresi Linear & Prediksi Nilai",
+      description: "Jalankan kode berikut untuk menghitung persamaan garis regresi $ŷ = mx + c$ dan lakukan prediksi nilai baru untuk jam belajar yang berbeda.",
+      starterCodeJs: `let X = [1, 2, 3, 4, 5];
+let Y = [55, 65, 70, 80, 90];
+let n = X.length;
+
+let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+for (let i = 0; i < n; i++) {
+  sumX += X[i];
+  sumY += Y[i];
+  sumXY += X[i] * Y[i];
+  sumX2 += X[i] * X[i];
+}
+
+let m = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+let c = (sumY - m * sumX) / n;
+
+console.log("Model AI: ŷ = " + m.toFixed(2) + "x + " + c.toFixed(2));
+
+// Coba prediksi untuk 7 jam belajar:
+let x_uji = 7;
+let y_prediksi = m * x_uji + c;
+console.log("Prediksi nilai ujian (belajar " + x_uji + " jam) = " + y_prediksi.toFixed(1));`,
+      starterCodePy: `X = [1, 2, 3, 4, 5]
+Y = [55, 65, 70, 80, 90]
+n = len(X)
+
+sum_x = sum(X)
+sum_y = sum(Y)
+sum_xy = sum(X[i] * Y[i] for i in range(n))
+sum_x2 = sum(X[i] ** 2 for i in range(n))
+
+m = (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x ** 2)
+c = (sum_y - m * sum_x) / n
+
+print(f"Model AI: ŷ = {m:.2f}x + {c:.2f}")
+
+# Coba prediksi untuk 7 jam belajar:
+x_uji = 7
+y_prediksi = m * x_uji + c
+print(f"Prediksi nilai ujian (belajar {x_uji} jam) = {y_prediksi:.1f}")`,
+      hint: "Ubah nilai `x_uji = 7` menjadi angka lain seperti `8` atau `4.5` untuk melihat taksiran nilai ujian yang dihasilkan oleh model regresi."
+    }
   }
 ];
 
-// 10 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
+// 11 Latihan Lengkap Terintegrasi (Dual Language Support: JS & Python)
 const PRACTICE_EXERCISES = [
   {
     id: "latihan-1",
@@ -2678,6 +2918,112 @@ const PRACTICE_EXERCISES = [
         input: [false, false, false],
         expected: "Mamalia Darat",
         description: "Kucing/Kuda (bertelur=false, hidup_di_air=false, berbulu=false) -> 'Mamalia Darat'"
+      }
+    ]
+  },
+
+  {
+    id: "latihan-11",
+    level: "Machine Learning / Regresi",
+    category: "Regresi Linear",
+    title: "Latihan 11: Algoritma Regresi Linear (Prediksi Nilai Berdasarkan Jam Belajar)",
+    description: `
+      Tantangan Pemrograman Regresi Linear AI:<br>
+      Diberikan kumpulan data sampel array <code>X</code> (Jam Belajar) dan array <code>Y</code> (Nilai Ujian) yang berukuran sama, serta sebuah nilai baru <code>x_prediksi</code>.<br>
+      Buatlah fungsi <code>regresi_linear(X, Y, x_prediksi)</code> yang melakukan langkah berikut:
+      <ol>
+        <li>Hitung <code>sumX</code>, <code>sumY</code>, <code>sumXY</code>, dan <code>sumX2</code> dari array <code>X</code> dan <code>Y</code>.</li>
+        <li>Hitung kemiringan garis (slope) <code>m</code> dengan rumus OLS: <code>m = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX)</code>.</li>
+        <li>Hitung titik potong (intercept) <code>c</code> dengan rumus OLS: <code>c = (sumY - m * sumX) / n</code>.</li>
+        <li>Hitung nilai taksiran prediksi: <code>y_pred = m * x_prediksi + c</code>.</li>
+        <li>Kembalikan (return) nilai <code>y_pred</code> dibulatkan ke 2 angka desimal (gunakan <code>Math.round(y_pred * 100) / 100</code> di JS atau <code>round(y_pred, 2)</code> di Python).</li>
+      </ol>
+    `,
+    starterCode: `function regresi_linear(X, Y, x_prediksi) {
+  let n = X.length;
+  // 1. Hitung sumX, sumY, sumXY, sumX2 menggunakan perulangan:
+  let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+  for (let i = 0; i < n; i++) {
+    sumX += X[i];
+    sumY += Y[i];
+    sumXY += X[i] * Y[i];
+    sumX2 += X[i] * X[i];
+  }
+
+  // 2. Hitung slope (m) dan intercept (c) menggunakan rumus OLS:
+  let m = 0; // lengkapi rumus ini
+  let c = 0; // lengkapi rumus ini
+
+  // 3. Hitung y_prediksi = m * x_prediksi + c:
+  let y_pred = 0; // lengkapi perhitungan ini
+
+  // 4. Kembalikan hasil dibulatkan ke 2 desimal:
+  return Math.round(y_pred * 100) / 100;
+}`,
+    starterCodePy: `def regresi_linear(X, Y, x_prediksi):
+    n = len(X)
+    # 1. Hitung sum_x, sum_y, sum_xy, sum_x2:
+    sum_x = sum(X)
+    sum_y = sum(Y)
+    sum_xy = sum(X[i] * Y[i] for i in range(n))
+    sum_x2 = sum(X[i] ** 2 for i in range(n))
+
+    # 2. Hitung slope (m) dan intercept (c) menggunakan rumus OLS:
+    m = 0  # lengkapi rumus ini
+    c = 0  # lengkapi rumus ini
+
+    # 3. Hitung y_prediksi = m * x_prediksi + c:
+    y_pred = 0  # lengkapi perhitungan ini
+
+    # 4. Kembalikan hasil dibulatkan ke 2 desimal:
+    return round(y_pred, 2)
+`,
+    solution: `function regresi_linear(X, Y, x_prediksi) {
+  let n = X.length;
+  let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+  for (let i = 0; i < n; i++) {
+    sumX += X[i];
+    sumY += Y[i];
+    sumXY += X[i] * Y[i];
+    sumX2 += X[i] * X[i];
+  }
+  let m = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  let c = (sumY - m * sumX) / n;
+  let y_pred = m * x_prediksi + c;
+  return Math.round(y_pred * 100) / 100;
+}`,
+    solutionPy: `def regresi_linear(X, Y, x_prediksi):
+    n = len(X)
+    sum_x = sum(X)
+    sum_y = sum(Y)
+    sum_xy = sum(X[i] * Y[i] for i in range(n))
+    sum_x2 = sum(X[i] ** 2 for i in range(n))
+    m = (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x ** 2)
+    c = (sum_y - m * sum_x) / n
+    y_pred = m * x_prediksi + c
+    return round(y_pred, 2)
+`,
+    hint: "Gunakan loop for untuk menjumlahkan elemen. Rumus slope: `m = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX)`. Rumus intercept: `c = (sumY - m * sumX) / n`. Nilai prediksi adalah `m * x_prediksi + c`.",
+    testCases: [
+      {
+        input: [[1, 2, 3, 4, 5], [2, 4, 6, 8, 10], 6],
+        expected: 12,
+        description: "Hubungan ideal y = 2x (x_pred=6 -> 12)"
+      },
+      {
+        input: [[1, 2, 3, 4, 5], [55, 65, 70, 80, 90], 6],
+        expected: 97.5,
+        description: "Jam Belajar vs Nilai Ujian (x_pred=6 -> 97.5)"
+      },
+      {
+        input: [[1, 2, 3, 4, 5], [10, 20, 30, 40, 50], 10],
+        expected: 100,
+        description: "Hubungan y = 10x (x_pred=10 -> 100)"
+      },
+      {
+        input: [[2, 4, 6, 8], [3, 7, 11, 15], 5],
+        expected: 9,
+        description: "Garis y = 2x - 1 (x_pred=5 -> 9)"
       }
     ]
   }
