@@ -46,6 +46,7 @@ Dilengkapi dengan editor kode mandiri, visualisasi memori dinamis, pengetesan ot
 
 5. **5. Sequential Search (Linear Search)**
    - Pengertian Sequential Search dan cara kerja membandingkan elemen satu per satu.
+   - Video pembelajaran visual interaktif konsep dan cara kerja Sequential Search.
    - Contoh kasus pencarian data pada array `A = [1, 5, 10, 7, 15]` dengan target `x`.
    - Notasi algoritma pseudocode (Kamus & Deskripsi).
    - Implementasi kode nyata dalam JavaScript dan Python.
