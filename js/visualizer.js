@@ -2847,19 +2847,651 @@ const Visualizer = (function () {
     dtState.statusBadge = `Kembali ke ${prevNode.type === 'root' ? 'Root Node' : 'Decision Node'}`;
     dtState.statusType = "primary";
     dtState.explanation = `Kembali ke pertanyaan: <em>"${prevNode.title}"</em>. Silakan pilih jawaban Anda.`;
-    renderDecisionTree();
+    resetDtTree();
   }
 
-  function resetDtTree() {
-    dtState.currentNodeId = "ROOT";
-    dtState.pathHistory = ["ROOT"];
-    dtState.answersHistory = {};
-    dtState.activePresetKey = null;
-    dtState.isFinished = false;
-    dtState.statusBadge = "Di Root Node";
-    dtState.statusType = "primary";
-    dtState.explanation = "Pohon keputusan dimulai dari <strong>Root Node</strong>: <em>'Apakah hewan ini bertelur?'</em>. Silakan klik tombol <strong>Ya</strong> atau <strong>Tidak</strong>.";
-    renderDecisionTree();
+  /* ==========================================================================
+   * 9. Simulator Interaktif Regresi Linear (Ordinary Least Squares - OLS)
+   * ========================================================================== */
+
+  const lrDatasets = {
+    study_scores: {
+      name: "Jam Belajar vs Nilai Ujian",
+      xName: "Jam Belajar (jam)",
+      yName: "Nilai Ujian (skor)",
+      points: [
+        { x: 1, y: 52 },
+        { x: 2, y: 58 },
+        { x: 3, y: 65 },
+        { x: 4, y: 70 },
+        { x: 5, y: 82 },
+        { x: 6, y: 85 },
+        { x: 7, y: 92 },
+        { x: 8, y: 95 }
+      ],
+      desc: "Korelasi positif kuat: semakin banyak jam belajar, semakin tinggi taksiran nilai ujian."
+    },
+    experience_salary: {
+      name: "Pengalaman vs Gaji",
+      xName: "Pengalaman (Tahun)",
+      yName: "Gaji (Juta Rp)",
+      points: [
+        { x: 1, y: 5.5 },
+        { x: 2, y: 7.2 },
+        { x: 3, y: 9.0 },
+        { x: 4, y: 11.5 },
+        { x: 5, y: 14.0 },
+        { x: 6, y: 16.8 },
+        { x: 7, y: 19.5 },
+        { x: 8, y: 22.0 }
+      ],
+      desc: "Hubungan linear antara tahun pengalaman kerja dan tingkat gaji bulanan."
+    },
+    temperature_icecream: {
+      name: "Suhu Udara vs Es Krim",
+      xName: "Suhu (°C)",
+      yName: "Penjualan (Porsi)",
+      points: [
+        { x: 24, y: 65 },
+        { x: 26, y: 82 },
+        { x: 28, y: 105 },
+        { x: 30, y: 130 },
+        { x: 32, y: 155 },
+        { x: 34, y: 182 },
+        { x: 36, y: 210 }
+      ],
+      desc: "Makin panas temperatur udara, permintaan es krim meningkat secara konsisten."
+    },
+    perfect_linear: {
+      name: "Garis Linear Ideal (R² = 1.0)",
+      xName: "Variabel X",
+      yName: "Variabel Y",
+      points: [
+        { x: 1, y: 15 },
+        { x: 2, y: 25 },
+        { x: 3, y: 35 },
+        { x: 4, y: 45 },
+        { x: 5, y: 55 },
+        { x: 6, y: 65 }
+      ],
+      desc: "Model linear ideal sempurna dengan rumus y = 10x + 5 tanpa residu/galat (R² = 100%)."
+    },
+    noisy_data: {
+      name: "Data Acak / Variansi Realistis",
+      xName: "Lama Latihan (Sesi)",
+      yName: "Skor Performa",
+      points: [
+        { x: 1, y: 45 },
+        { x: 2, y: 38 },
+        { x: 3, y: 68 },
+        { x: 4, y: 55 },
+        { x: 5, y: 79 },
+        { x: 6, y: 72 },
+        { x: 7, y: 92 },
+        { x: 8, y: 85 }
+      ],
+      desc: "Menunjukkan peran garis regresi dalam memodelkan rata-rata tren pada data berfluktuasi."
+    }
+  };
+
+  const lrState = {
+    containerId: null,
+    points: JSON.parse(JSON.stringify(lrDatasets.study_scores.points)),
+    xName: lrDatasets.study_scores.xName,
+    yName: lrDatasets.study_scores.yName,
+    activePresetKey: "study_scores",
+    showResiduals: true,
+    predictedPoint: null,
+    predictInputX: "6.5",
+    message: null
+  };
+
+  function calculateOLS(pts) {
+    const n = pts.length;
+    if (n < 2) return null;
+
+    let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
+    for (let i = 0; i < n; i++) {
+      const x = pts[i].x;
+      const y = pts[i].y;
+      sumX += x;
+      sumY += y;
+      sumXY += x * y;
+      sumX2 += x * x;
+      sumY2 += y * y;
+    }
+
+    const meanX = sumX / n;
+    const meanY = sumY / n;
+
+    const denom = n * sumX2 - (sumX * sumX);
+    if (Math.abs(denom) < 1e-12) {
+      return { isVertical: true, n, meanX, meanY };
+    }
+
+    const slope = (n * sumXY - sumX * sumY) / denom;
+    const intercept = (sumY - slope * sumX) / n;
+
+    let ssTot = 0;
+    let ssRes = 0;
+    const residuals = [];
+
+    for (let i = 0; i < n; i++) {
+      const x = pts[i].x;
+      const y = pts[i].y;
+      const yHat = slope * x + intercept;
+      const res = y - yHat;
+      residuals.push({ x, y, yHat, error: res });
+      ssTot += Math.pow(y - meanY, 2);
+      ssRes += Math.pow(res, 2);
+    }
+
+    const r2 = ssTot > 0 ? Math.max(0, 1 - (ssRes / ssTot)) : 1;
+    const mse = ssRes / n;
+    const rmse = Math.sqrt(mse);
+
+    const ssXX = sumX2 - (sumX * sumX) / n;
+    const ssYY = sumY2 - (sumY * sumY) / n;
+    const ssXY = sumXY - (sumX * sumY) / n;
+    const r = (ssXX > 0 && ssYY > 0) ? ssXY / Math.sqrt(ssXX * ssYY) : 0;
+
+    return {
+      n,
+      sumX,
+      sumY,
+      sumXY,
+      sumX2,
+      meanX,
+      meanY,
+      slope,
+      intercept,
+      r,
+      r2,
+      mse,
+      rmse,
+      residuals
+    };
+  }
+
+  function initLinearRegressionSimulator(containerId) {
+    lrState.containerId = containerId;
+    renderLinearRegression();
+  }
+
+  function selectLrPreset(key) {
+    if (!lrDatasets[key]) return;
+    lrState.activePresetKey = key;
+    lrState.points = JSON.parse(JSON.stringify(lrDatasets[key].points));
+    lrState.xName = lrDatasets[key].xName;
+    lrState.yName = lrDatasets[key].yName;
+    lrState.predictedPoint = null;
+    lrState.message = `Preset <strong>${escapeHtml(lrDatasets[key].name)}</strong> berhasil dimuat.`;
+    renderLinearRegression();
+  }
+
+  function addLrPoint(x, y) {
+    if (isNaN(x) || isNaN(y)) return;
+    lrState.points.push({ x, y });
+    lrState.predictedPoint = null;
+    lrState.message = `Titik baru <strong>(${x}, ${y})</strong> berhasil ditambahkan. Garis regresi diperbarui!`;
+    renderLinearRegression();
+  }
+
+  function addLrPointManual() {
+    const inputX = document.getElementById("lrInputX");
+    const inputY = document.getElementById("lrInputY");
+    if (!inputX || !inputY) return;
+    const x = parseFloat(inputX.value);
+    const y = parseFloat(inputY.value);
+    if (isNaN(x) || isNaN(y)) {
+      alert("Masukkan nilai angka valid untuk koordinat X dan Y!");
+      return;
+    }
+    addLrPoint(x, y);
+    inputX.value = "";
+    inputY.value = "";
+  }
+
+  function removeLastLrPoint() {
+    if (lrState.points.length <= 2) {
+      alert("Dibutuhkan minimal 2 titik data untuk membentuk garis regresi linear!");
+      return;
+    }
+    const popped = lrState.points.pop();
+    lrState.predictedPoint = null;
+    lrState.message = `Titik terakhir (${popped.x}, ${popped.y}) dihapus.`;
+    renderLinearRegression();
+  }
+
+  function removeLrPointAt(index) {
+    if (lrState.points.length <= 2) {
+      alert("Dibutuhkan minimal 2 titik data untuk membentuk garis regresi linear!");
+      return;
+    }
+    lrState.points.splice(index, 1);
+    lrState.predictedPoint = null;
+    renderLinearRegression();
+  }
+
+  function resetLrData() {
+    const key = lrState.activePresetKey || "study_scores";
+    lrState.points = JSON.parse(JSON.stringify(lrDatasets[key].points));
+    lrState.predictedPoint = null;
+    lrState.message = "Data telah di-reset ke nilai default preset.";
+    renderLinearRegression();
+  }
+
+  function toggleLrResiduals() {
+    lrState.showResiduals = !lrState.showResiduals;
+    renderLinearRegression();
+  }
+
+  function predictLrValue() {
+    const inp = document.getElementById("lrPredictInput");
+    if (!inp) return;
+    const xVal = parseFloat(inp.value);
+    if (isNaN(xVal)) {
+      alert("Masukkan angka yang valid untuk nilai X!");
+      return;
+    }
+
+    const ols = calculateOLS(lrState.points);
+    if (!ols || ols.isVertical) {
+      alert("Model regresi tidak dapat dihitung karena jumlah data kurang atau titik vertikal.");
+      return;
+    }
+
+    const yHat = ols.slope * xVal + ols.intercept;
+    const roundedY = Math.round(yHat * 100) / 100;
+
+    lrState.predictedPoint = {
+      x: xVal,
+      y: roundedY,
+      stepHtml: `Hasil Perhitungan: &nbsp; <code>ŷ = (${ols.slope.toFixed(3)} × ${xVal}) + (${ols.intercept.toFixed(3)}) = <strong>${roundedY}</strong></code>`
+    };
+    renderLinearRegression();
+  }
+
+  function handleLrChartClick(evt) {
+    const svg = evt.currentTarget;
+    const rect = svg.getBoundingClientRect();
+    const scaleX = 600 / rect.width;
+    const scaleY = 340 / rect.height;
+    const px = (evt.clientX - rect.left) * scaleX;
+    const py = (evt.clientY - rect.top) * scaleY;
+
+    const padL = 55, padR = 25, padT = 25, padB = 45;
+    const plotW = 600 - padL - padR;
+    const plotH = 340 - padT - padB;
+
+    if (px < padL || px > padL + plotW || py < padT || py > padT + plotH) return;
+
+    // Hitung range
+    let allX = lrState.points.map(p => p.x);
+    let allY = lrState.points.map(p => p.y);
+    if (lrState.predictedPoint) {
+      allX.push(lrState.predictedPoint.x);
+      allY.push(lrState.predictedPoint.y);
+    }
+    const minX = Math.min(...allX);
+    const maxX = Math.max(...allX);
+    const minY = Math.min(...allY);
+    const maxY = Math.max(...allY);
+
+    const spanX = Math.max(1, maxX - minX);
+    const spanY = Math.max(1, maxY - minY);
+
+    const xMin = Math.max(0, Math.floor(minX - spanX * 0.12));
+    const xMax = Math.ceil(maxX + spanX * 0.18);
+    const yMin = Math.max(0, Math.floor(minY - spanY * 0.12));
+    const yMax = Math.ceil(maxY + spanY * 0.18);
+
+    const dataX = xMin + ((px - padL) / plotW) * (xMax - xMin);
+    const dataY = yMin + ((padT + plotH - py) / plotH) * (yMax - yMin);
+
+    const roundedX = Math.round(dataX * 10) / 10;
+    const roundedY = Math.round(dataY * 10) / 10;
+
+    addLrPoint(roundedX, roundedY);
+  }
+
+  function renderLinearRegression() {
+    if (!lrState.containerId) return;
+    const container = document.getElementById(lrState.containerId);
+    if (!container) return;
+
+    const ols = calculateOLS(lrState.points);
+    const pts = lrState.points;
+
+    // SVG coordinates setup
+    const SVG_W = 600;
+    const SVG_H = 340;
+    const padL = 55, padR = 25, padT = 25, padB = 45;
+    const plotW = SVG_W - padL - padR;
+    const plotH = SVG_H - padT - padB;
+
+    let allX = pts.map(p => p.x);
+    let allY = pts.map(p => p.y);
+    if (lrState.predictedPoint) {
+      allX.push(lrState.predictedPoint.x);
+      allY.push(lrState.predictedPoint.y);
+    }
+    const minX = Math.min(...allX);
+    const maxX = Math.max(...allX);
+    const minY = Math.min(...allY);
+    const maxY = Math.max(...allY);
+
+    const spanX = Math.max(1, maxX - minX);
+    const spanY = Math.max(1, maxY - minY);
+
+    const xMin = Math.max(0, Math.floor(minX - spanX * 0.12));
+    const xMax = Math.ceil(maxX + spanX * 0.18);
+    const yMin = Math.max(0, Math.floor(minY - spanY * 0.12));
+    const yMax = Math.ceil(maxY + spanY * 0.18);
+
+    const toSvgX = (v) => padL + ((v - xMin) / (xMax - xMin)) * plotW;
+    const toSvgY = (v) => padT + plotH - ((v - yMin) / (yMax - yMin)) * plotH;
+
+    // Generate grid lines
+    let gridLinesSvg = "";
+    const numTicks = 5;
+    for (let i = 0; i <= numTicks; i++) {
+      // Y Grid
+      const yVal = yMin + (i / numTicks) * (yMax - yMin);
+      const svgY = toSvgY(yVal);
+      gridLinesSvg += `
+        <line x1="${padL}" y1="${svgY}" x2="${padL + plotW}" y2="${svgY}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="3,3" />
+        <text x="${padL - 8}" y="${svgY + 4}" text-anchor="end" fill="var(--text-dim)" font-size="10" font-family="var(--font-mono)">${yVal.toFixed(yVal % 1 === 0 ? 0 : 1)}</text>
+      `;
+
+      // X Grid
+      const xVal = xMin + (i / numTicks) * (xMax - xMin);
+      const svgX = toSvgX(xVal);
+      gridLinesSvg += `
+        <line x1="${svgX}" y1="${padT}" x2="${svgX}" y2="${padT + plotH}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="3,3" />
+        <text x="${svgX}" y="${padT + plotH + 18}" text-anchor="middle" fill="var(--text-dim)" font-size="10" font-family="var(--font-mono)">${xVal.toFixed(xVal % 1 === 0 ? 0 : 1)}</text>
+      `;
+    }
+
+    // Residual lines
+    let residualLinesSvg = "";
+    if (lrState.showResiduals && ols && !ols.isVertical) {
+      ols.residuals.forEach(r => {
+        const sx = toSvgX(r.x);
+        const syActual = toSvgY(r.y);
+        const syHat = toSvgY(r.yHat);
+        residualLinesSvg += `
+          <line x1="${sx}" y1="${syActual}" x2="${sx}" y2="${syHat}" stroke="#f43f5e" stroke-width="1.8" stroke-dasharray="3,2" opacity="0.85">
+            <title>Residu (Galat): y - ŷ = ${(r.error).toFixed(2)}</title>
+          </line>
+        `;
+      });
+    }
+
+    // Regression Line
+    let regLineSvg = "";
+    if (ols && !ols.isVertical) {
+      const y1 = ols.slope * xMin + ols.intercept;
+      const y2 = ols.slope * xMax + ols.intercept;
+      regLineSvg = `
+        <line x1="${toSvgX(xMin)}" y1="${toSvgY(y1)}" x2="${toSvgX(xMax)}" y2="${toSvgY(y2)}" stroke="#38bdf8" stroke-width="3" stroke-linecap="round">
+          <title>Garis Regresi: ŷ = ${ols.slope.toFixed(3)}x + ${ols.intercept.toFixed(3)}</title>
+        </line>
+      `;
+    }
+
+    // Scatter Points
+    let scatterPointsSvg = "";
+    pts.forEach((p, idx) => {
+      const sx = toSvgX(p.x);
+      const sy = toSvgY(p.y);
+      scatterPointsSvg += `
+        <g style="cursor: pointer;">
+          <circle cx="${sx}" cy="${sy}" r="6" fill="#10b981" stroke="#ffffff" stroke-width="2" opacity="0.95">
+            <title>Titik #${idx + 1}: (${p.x}, ${p.y})</title>
+          </circle>
+          <text x="${sx}" y="${sy - 10}" text-anchor="middle" fill="#a7f3d0" font-size="9" font-family="var(--font-mono)">(${p.x}, ${p.y})</text>
+        </g>
+      `;
+    });
+
+    // Predicted point highlight
+    let predPointSvg = "";
+    if (lrState.predictedPoint) {
+      const px = toSvgX(lrState.predictedPoint.x);
+      const py = toSvgY(lrState.predictedPoint.y);
+      predPointSvg = `
+        <g>
+          <circle cx="${px}" cy="${py}" r="12" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.6">
+            <animate attributeName="r" values="8;16;8" dur="2s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="${px}" cy="${py}" r="7" fill="#f59e0b" stroke="#ffffff" stroke-width="2">
+            <title>Titik Prediksi: (${lrState.predictedPoint.x}, ${lrState.predictedPoint.y})</title>
+          </circle>
+          <text x="${px}" y="${py - 12}" text-anchor="middle" fill="#fbbf24" font-weight="700" font-size="10" font-family="var(--font-mono)">
+            PREDIKSI: (${lrState.predictedPoint.x}, ${lrState.predictedPoint.y})
+          </text>
+        </g>
+      `;
+    }
+
+    // Format OLS display values
+    const slopeStr = ols ? ols.slope.toFixed(3) : "-";
+    const interceptStr = ols ? (ols.intercept >= 0 ? `+ ${ols.intercept.toFixed(3)}` : `- ${Math.abs(ols.intercept).toFixed(3)}`) : "-";
+    const equationStr = ols ? `ŷ = ${slopeStr}x ${interceptStr}` : "Perlu min. 2 titik";
+    const r2Pct = ols ? (ols.r2 * 100).toFixed(1) + "%" : "-";
+    const rmseStr = ols ? ols.rmse.toFixed(3) : "-";
+    const pearsonR = ols ? ols.r.toFixed(3) : "-";
+
+    let r2Quality = "Belum terhitung";
+    if (ols) {
+      if (ols.r2 >= 0.85) r2Quality = "Sangat Kuat (Prediksi Sangat Akurat)";
+      else if (ols.r2 >= 0.65) r2Quality = "Kuat (Tren Jelas)";
+      else if (ols.r2 >= 0.40) r2Quality = "Moderat (Variasi Cukup Tinggi)";
+      else r2Quality = "Lemah (Data Sangat Tersebar)";
+    }
+
+    container.innerHTML = `
+      <div class="visualizer-panel lr-visualizer-panel">
+        <!-- Header Info -->
+        <div class="vis-header">
+          <div class="vis-title">
+            <span class="badge-tag" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #0b0f19; font-weight: 700;">
+              📈 Simulator Interaktif Regresi Linear (OLS)
+            </span>
+            <h4>Model Prediksi Nilai Kontinu & Garis Tren AI</h4>
+          </div>
+          <div class="vis-stats">
+            <span class="stat-pill">Dataset: <strong>${escapeHtml(lrDatasets[lrState.activePresetKey]?.name || "Kustom")}</strong></span>
+            <span class="stat-pill">Jumlah Data (n): <strong style="color: var(--accent-cyan);">${pts.length} Sampel</strong></span>
+            <span class="stat-pill">Akurasi R²: <strong style="color: #10b981;">${r2Pct}</strong></span>
+          </div>
+        </div>
+
+        <!-- Presets Bar -->
+        <div class="bs-dataset-bar">
+          <span class="bs-dataset-label">Pilih Dataset:</span>
+          ${Object.keys(lrDatasets).map(key => `
+            <button class="btn btn-xs ${lrState.activePresetKey === key ? 'btn-primary' : 'btn-outline'}" onclick="Visualizer.selectLrPreset('${key}')">
+              ${escapeHtml(lrDatasets[key].name)}
+            </button>
+          `).join("")}
+          <button class="btn btn-xs btn-outline" style="margin-left: auto;" onclick="Visualizer.resetLrData()">
+            🔄 Reset Data
+          </button>
+        </div>
+
+        <!-- Main Layout Grid: Chart + Sidebar Tools -->
+        <div class="lr-grid">
+          <!-- Left Column: Interactive SVG Chart -->
+          <div class="lr-chart-card">
+            <div class="lr-chart-header">
+              <div class="lr-chart-title">
+                <span>📊 Diagram Pencaran (Scatter Plot) & Garis Tren OLS</span>
+              </div>
+              <div class="lr-chart-tip">💡 Klik di mana saja pada grafik untuk menambah titik data!</div>
+            </div>
+
+            <div class="lr-svg-wrapper">
+              <svg viewBox="0 0 ${SVG_W} ${SVG_H}" onclick="Visualizer.handleLrChartClick(event)" aria-label="Grafik Regresi Linear">
+                <!-- Grid Lines -->
+                ${gridLinesSvg}
+
+                <!-- Axes -->
+                <line x1="${padL}" y1="${padT + plotH}" x2="${padL + plotW}" y2="${padT + plotH}" stroke="var(--text-muted)" stroke-width="1.5" />
+                <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + plotH}" stroke="var(--text-muted)" stroke-width="1.5" />
+
+                <!-- Residual Lines -->
+                ${residualLinesSvg}
+
+                <!-- Regression Line -->
+                ${regLineSvg}
+
+                <!-- Scatter Points -->
+                ${scatterPointsSvg}
+
+                <!-- Predicted Point -->
+                ${predPointSvg}
+
+                <!-- Axis Labels -->
+                <text x="${padL + plotW / 2}" y="${padT + plotH + 36}" text-anchor="middle" fill="var(--text-main)" font-size="11" font-weight="600">
+                  ${escapeHtml(lrState.xName)} &rarr;
+                </text>
+                <text x="${padL - 38}" y="${padT + plotH / 2}" text-anchor="middle" fill="var(--text-main)" font-size="11" font-weight="600" transform="rotate(-90, ${padL - 38}, ${padT + plotH / 2})">
+                  ${escapeHtml(lrState.yName)} &rarr;
+                </text>
+              </svg>
+            </div>
+
+            <div class="lr-chart-footer-note">
+              <div class="lr-chart-legend">
+                <span class="lr-legend-item"><span class="lr-legend-dot" style="background: #10b981;"></span> Titik Sampel Aktual (x, y)</span>
+                <span class="lr-legend-item"><span class="lr-legend-line" style="background: #38bdf8;"></span> Garis Prediksi ŷ = mx + c</span>
+                <span class="lr-legend-item"><span class="lr-legend-line" style="background: #f43f5e; border-top: 1px dashed #f43f5e; height: 0;"></span> Residu Galat (e)</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-xs btn-outline" onclick="Visualizer.toggleLrResiduals()">
+                  ${lrState.showResiduals ? '🙈 Sembunyikan Residu' : '👁️ Tampilkan Residu'}
+                </button>
+                <button class="btn btn-xs btn-outline" onclick="Visualizer.removeLastLrPoint()">
+                  🗑️ Hapus Titik Terakhir
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Metrics & Tools -->
+          <div class="lr-sidebar-column">
+            <!-- Model Metrics Cards -->
+            <div class="lr-metrics-grid">
+              <div class="lr-metric-card full-width">
+                <span class="lr-metric-label">📐 Persamaan Garis Regresi (Model AI)</span>
+                <span class="lr-metric-val equation">${equationStr}</span>
+                <span class="lr-metric-desc">Garis kecocokan terbaik (Best-Fit Line) metode Ordinary Least Squares</span>
+              </div>
+
+              <div class="lr-metric-card">
+                <span class="lr-metric-label">📈 Kemiringan (Slope m)</span>
+                <span class="lr-metric-val highlight-amber">${slopeStr}</span>
+                <span class="lr-metric-desc">Kenaikan y per 1 unit x</span>
+              </div>
+
+              <div class="lr-metric-card">
+                <span class="lr-metric-label">📍 Intercept (Titik Potong c)</span>
+                <span class="lr-metric-val">${ols ? ols.intercept.toFixed(2) : '-'}</span>
+                <span class="lr-metric-desc">Taksiran y saat x = 0</span>
+              </div>
+
+              <div class="lr-metric-card">
+                <span class="lr-metric-label">🎯 Koefisien Determinasi (R²)</span>
+                <span class="lr-metric-val highlight-green">${r2Pct}</span>
+                <span class="lr-metric-desc">${r2Quality} (r = ${pearsonR})</span>
+              </div>
+
+              <div class="lr-metric-card">
+                <span class="lr-metric-label">📉 Rata-rata Galat (RMSE)</span>
+                <span class="lr-metric-val">${rmseStr}</span>
+                <span class="lr-metric-desc">Deviasi rata-rata prediksi</span>
+              </div>
+            </div>
+
+            <!-- Prediction Calculator Box -->
+            <div class="lr-predict-card">
+              <div class="lr-predict-header">
+                <span>🎯 Kalkulator Prediksi Nilai Baru:</span>
+              </div>
+              <div class="lr-predict-form">
+                <input type="number" step="0.1" id="lrPredictInput" class="lr-predict-input" value="${lrState.predictInputX}" placeholder="Nilai X baru..." />
+                <button class="btn btn-sm btn-primary" onclick="Visualizer.predictLrValue()">Hitung ŷ</button>
+              </div>
+              ${lrState.predictedPoint ? `
+                <div class="lr-predict-result-box">
+                  ${lrState.predictedPoint.stepHtml}
+                </div>
+              ` : `
+                <div style="font-size: 0.78rem; color: var(--text-dim);">
+                  Masukkan nilai X di atas untuk melihat bagaimana model regresi menaksir nilai Y secara instan.
+                </div>
+              `}
+            </div>
+
+            <!-- Data Management: Manual Add & Table -->
+            <div class="lr-data-management-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-main);">📋 Tambah & Kelola Data:</span>
+                <span style="font-size: 0.75rem; color: var(--text-dim);">${pts.length} baris data</span>
+              </div>
+
+              <div class="lr-add-form">
+                <div class="lr-add-input-group">
+                  <label for="lrInputX">X:</label>
+                  <input type="number" step="any" id="lrInputX" class="lr-add-input" placeholder="contoh: 4.5" />
+                </div>
+                <div class="lr-add-input-group">
+                  <label for="lrInputY">Y:</label>
+                  <input type="number" step="any" id="lrInputY" class="lr-add-input" placeholder="contoh: 75" />
+                </div>
+                <button class="btn btn-xs btn-success" onclick="Visualizer.addLrPointManual()">+ Tambah</button>
+              </div>
+
+              <div class="lr-table-scroll">
+                <table class="lr-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>X</th>
+                      <th>Y</th>
+                      <th>ŷ (Prediksi)</th>
+                      <th>Residu (e)</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${pts.map((p, i) => {
+                      const yHat = ols && !ols.isVertical ? (ols.slope * p.x + ols.intercept).toFixed(2) : "-";
+                      const err = ols && !ols.isVertical ? (p.y - (ols.slope * p.x + ols.intercept)).toFixed(2) : "-";
+                      return `
+                        <tr>
+                          <td>${i + 1}</td>
+                          <td>${p.x}</td>
+                          <td>${p.y}</td>
+                          <td style="color: var(--accent-cyan);">${yHat}</td>
+                          <td style="color: ${Number(err) >= 0 ? '#10b981' : '#f43f5e'};">${err}</td>
+                          <td>
+                            <button class="lr-del-btn" onclick="Visualizer.removeLrPointAt(${i})" title="Hapus titik ini">&times;</button>
+                          </td>
+                        </tr>
+                      `;
+                    }).join("")}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   return {
@@ -2921,9 +3553,21 @@ const Visualizer = (function () {
     selectDtAnimal,
     answerDtQuestion,
     stepDtBack,
-    resetDtTree
+    resetDtTree,
+
+    initLinearRegressionSimulator,
+    selectLrPreset,
+    addLrPoint,
+    addLrPointManual,
+    handleLrChartClick,
+    removeLastLrPoint,
+    removeLrPointAt,
+    resetLrData,
+    toggleLrResiduals,
+    predictLrValue
   };
 })();
+
 
 
 
